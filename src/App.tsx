@@ -2,17 +2,22 @@ import { Route, Routes, useLocation } from "react-router-dom";
 
 import Admin from "./pages/Admin";
 import Login from "./pages/Login";
+import CRVOLogo from "/public/images/CRVOLogo.png";
 
 const App = () => {
   const location = useLocation();
 
-  const hideHeaderAndFooter = location.pathname === '/login';
+  const hideHeaderAndFooter = location.pathname === "/login";
 
   return (
     <>
       {!hideHeaderAndFooter && (
         <header className="max-w-7xl px-4 mx-auto w-full flex justify-between items-center bg-white py-4 border-b border-b-[#e6ebf4]">
-          CRVO
+          <img
+            src={CRVOLogo}
+            alt="Logo CRVO"
+            className=" w-24 text-white "
+          />
         </header>
       )}
 
@@ -24,8 +29,8 @@ const App = () => {
       </main>
 
       {!hideHeaderAndFooter && (
-        <footer className="flex flex-col gap-y-2 items-center w-full bg-white sm:px-8 px-4 py-4 border-t border-b-[#e6ebf4]">
-          CRVO
+        <footer className="flex font-bold flex-col gap-y-2 items-center w-full bg-white sm:px-8 px-4 py-4 border-t border-b-[#e6ebf4]">
+          CRVO - Lyon @ 2024
         </footer>
       )}
     </>
