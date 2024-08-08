@@ -1,18 +1,16 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Cookies from "js-cookie";
-import { ArrowLeftToLine } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import logo from "/public/images/CRVO.png";
-import loginImg from "/public/images/loginImg.webp";
+import CRVOImg from "/public/images/CRVOImg.jpg";
+import CRVOLogo from "/public/images/CRVOLogo.png";
 
 import { useState } from "react";
 import { BiHide, BiShow } from "react-icons/bi";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useAuth } from "@/lib/auth";
 import { useMutation } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
 
 interface LoginResponse {
   token: string;
@@ -71,20 +69,17 @@ export default function Login() {
   };
 
   return (
-    <main className="flex flex-col-reverse items-center text-white md:flex-col xl:mx-40 xl:flex-row">
+    <div className="flex h-screen flex-col-reverse items-center text-white md:flex-col xl:mx-32 xl:flex-row">
       <div className="mt-4 flex w-full flex-col items-center text-foreground md:mb-4 md:mt-0 xl:mb-0 xl:w-1/2 xl:items-start xl:p-8">
         <div className="w-[300px] md:w-[400px]">
           <img
-            src={logo}
-            alt="Logo Galopins"
-            className="mb-4 hidden w-24 text-white lg:w-28 xl:flex"
+            src={CRVOLogo}
+            alt="Logo CRVO"
+            className="mb-4 hidden w-24 text-white lg:w-40 xl:w-60 xl:flex"
           />
           <div className="mb-6 flex flex-col gap-y-2 text-center xl:text-left">
-            <span className="text-2xl font-bold leading-[40px] md:text-3xl md:leading-[44px] xl:text-4xl xl:leading-[48px]">
-              Les Galopins de Montélimar
-            </span>
-            <span className="text-md font-medium xl:text-lg">
-              Espace Administrateur
+            <span className="text-lg lg:text-xl font-bold ">
+              Connexion à votre espace
             </span>
           </div>
           <form
@@ -132,19 +127,13 @@ export default function Login() {
             <Button className="w-full" type="submit">
               Se connecter
             </Button>
-            <Link
-              to="/"
-              className="flex flex-row items-center gap-x-1 hover:font-bold"
-            >
-              <ArrowLeftToLine size={20} /> Retour site
-            </Link>
           </form>
         </div>
       </div>
 
-      <div className="w-full xl:w-3/4 xl:p-4">
-        <img src={loginImg} alt="Image de voiture" className="lg:rounded-lg" />
+      <div className="w-full  ">
+        <img src={CRVOImg} alt="Image de voiture" className="lg:rounded-lg" />
       </div>
-    </main>
+    </div>
   );
 }
