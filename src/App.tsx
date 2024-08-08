@@ -3,8 +3,9 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Footer from "./components/ui/Footer";
-import Admin from "./pages/Admin";
+
 import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
 
 const App = () => {
   const location = useLocation();
@@ -18,10 +19,10 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route
-            path="/admin"
+            path="/"
             element={
               <ProtectedRoute>
-                <Admin />
+                <Dashboard />
               </ProtectedRoute>
             }
           />
