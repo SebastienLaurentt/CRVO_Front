@@ -1,10 +1,10 @@
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { authService } from './authService';
 
-import { createContext, useContext, useState } from 'react';
-import { ReactNode } from 'react';
-import Cookies from 'js-cookie';
 
 interface AuthContextType {
   isLogged: boolean;
+  role: string | null;
   login: () => void;
   logout: () => void;
 }
@@ -12,21 +12,30 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isLogged, setIsLogged] = useState(Cookies.get('isLogged') === 'true');
+  const [isLogged, setIsLogged] = useState(authService.isLoggedIn());
+  const [role, setRole] = useState<string | null>(authService.getUserRole());
+
+  useEffect(() => {
+    if (isLogged) {
+      setRole(authService.getUserRole());
+    } else {
+      setRole(null);
+    }
+  }, [isLogged]);
 
   const login = () => {
     setIsLogged(true);
-    Cookies.set('isLogged', 'true', { expires: 1/24 });
+    setRole(authService.getUserRole());
   };
 
   const logout = () => {
+    authService.logout();
     setIsLogged(false);
-    Cookies.remove('isLogged');
-    Cookies.remove('token');
+    setRole(null);
   };
 
   return (
-    <AuthContext.Provider value={{ isLogged, login, logout }}>
+    <AuthContext.Provider value={{ isLogged, role, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -39,4 +48,3 @@ export const useAuth = () => {
   }
   return context;
 };
-
