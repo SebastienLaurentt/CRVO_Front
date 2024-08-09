@@ -1,9 +1,10 @@
-import FileInput from "@/components/FileInput";
+import VehicleList from "@/components/VehicleList";
 
 const AdminDashboard = () => {
   return (
     <div>
-      <FileInput />
+      {/* <FileInput /> */}
+      <VehicleList />
     </div>
   );
 };
