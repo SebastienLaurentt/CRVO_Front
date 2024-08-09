@@ -1,6 +1,6 @@
-import { useAuth } from '@/lib/auth';
-import AdminDashboard from './AdminDashboard';
-import MemberDashboard from './MemberDashboard';
+import { useAuth } from "@/lib/auth";
+import AdminDashboard from "./AdminDashboard";
+import MemberDashboard from "./MemberDashboard";
 
 const Dashboard = () => {
   const { isLogged, role } = useAuth();
@@ -10,14 +10,13 @@ const Dashboard = () => {
   }
 
   return (
-    <div>
-      {role === 'admin' && <AdminDashboard />}
-      {role === 'member' && <MemberDashboard />}
+    <div className="mx-2 md:mx-4 lg:mx-10 flex flex-col items-center">
+      <h1>Tableau de bord</h1>
+      {role === "admin" && <AdminDashboard />}
+      {role === "member" && <MemberDashboard />}
       {!role && <p>Loading...</p>}
     </div>
   );
 };
-
-
 
 export default Dashboard;
