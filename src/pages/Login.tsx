@@ -86,7 +86,7 @@ export default function Login() {
             onSubmit={handleSubmit}
             className="flex flex-col items-center gap-y-3 xl:items-start"
           >
-            <div className="flex w-full flex-col items-center space-y-1 xl:items-start">
+            <div className="flex w-full relative flex-col items-center space-y-1 xl:items-start">
               <Label htmlFor="username">Nom d&apos;utilisateur</Label>
               <Input
                 type="username"
@@ -113,15 +113,16 @@ export default function Login() {
                   }}
                   required
                 />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 flex items-center p-2 text-black"
-                  onClick={togglePasswordVisibility}
-                >
-                  {showPassword ? <BiHide /> : <BiShow />}
-                </button>
               </div>
             </div>
+            
+            <button
+              type="button"
+              className="absolute inset-y-0 right-0 flex items-center p-2 text-black"
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? <BiHide /> : <BiShow />}
+            </button>
 
             {error && <p className="text-red-500">{error}</p>}
             <Button className="w-full" type="submit">

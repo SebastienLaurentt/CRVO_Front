@@ -1,8 +1,9 @@
-// components/VehicleList.tsx
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import { Download, FolderPlus } from "lucide-react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 
-// Définition du type pour un véhicule
 interface Vehicle {
   _id: string;
   immatriculation: string;
@@ -13,9 +14,8 @@ interface Vehicle {
   };
 }
 
-
 const fetchVehicles = async (): Promise<Vehicle[]> => {
-  const response = await fetch("http://localhost:5000/api/vehicles"); 
+  const response = await fetch("http://localhost:5000/api/vehicles");
   if (!response.ok) {
     throw new Error("Erreur lors de la récupération des véhicules.");
   }
@@ -24,6 +24,8 @@ const fetchVehicles = async (): Promise<Vehicle[]> => {
 };
 
 const VehicleList: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
   const {
     data: vehicles,
     isLoading,
@@ -40,19 +42,48 @@ const VehicleList: React.FC = () => {
       <p>Error: {error instanceof Error ? error.message : "Unknown error"}</p>
     );
 
+  const filteredVehicles = vehicles?.filter((vehicle) => {
+    const searchLower = searchQuery.toLowerCase();
+    return (
+      vehicle.immatriculation.toLowerCase().includes(searchLower) ||
+      vehicle.modele.toLowerCase().includes(searchLower) ||
+      vehicle.user.username.toLowerCase().includes(searchLower)
+    );
+  });
+
   return (
-    <div className="py-8 px-20 border rounded-lg">
+    <div className="py-8 px-12 border rounded-lg">
+      <div className="flex flex-row justify-between mb-4">
+        <div className="flex flex-row gap-x-3">
+          <Input
+            placeholder="Recherche"
+            className="text-sm"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+
+        </div>
+        <div className="flex flex-row gap-x-2 ml-8 2xl:ml-60">
+          <Button className="space-x-[5px]">
+            <Download size={18} /> <span className="text-xs">Infos Client</span>
+          </Button>
+          <Button className="space-x-[5px]">
+            <FolderPlus size={18} /> <span className="text-xs">Nouveau Fichier</span>
+          </Button>
+        </div>
+      </div>
+
       <table>
         <thead>
           <tr className="text-left bg-primary border-b ">
-            <th className="py-3 px-6">Username</th>
+            <th className="py-3 px-6">Client</th>
             <th className="py-3 px-6">Immatriculation</th>
             <th className="py-3 px-6">Modèle</th>
             <th className="py-3 px-6">Jours depuis Reception</th>
           </tr>
         </thead>
         <tbody>
-          {vehicles?.map((vehicle: Vehicle) => (
+          {filteredVehicles?.map((vehicle: Vehicle) => (
             <tr key={vehicle._id} className="border-b">
               <td className="py-4 px-6">{vehicle.user.username}</td>
               <td className="py-4 px-6">{vehicle.immatriculation}</td>
