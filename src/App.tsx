@@ -2,7 +2,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 
 import Header from "./components/Header";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Footer from "./components/ui/Footer";
+import Footer from "./components/Footer";
 
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -15,7 +15,7 @@ const App = () => {
     <>
       {!hideHeaderAndFooter && <Header />}
 
-      <main className="px-2 w-full bg-[#f9fafe] min-h-screen">
+      <main className="w-full min-h-screen">
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route

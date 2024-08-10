@@ -41,21 +41,21 @@ const VehicleListByUserId: React.FC = () => {
 
 
   return (
-    <div className='py-4'>
+    <div className='py-8 px-20 border rounded-lg'>
       <table>
         <thead>
-          <tr className='text-left'>
-            <th className='px-3'>Immatriculation</th>
-            <th className='px-3'>Modèle</th>
-            <th className='px-3'>Jours depuis Reception</th>
+          <tr className='text-left bg-primary border-b'>
+            <th className='py-3 px-6'>Immatriculation</th>
+            <th className='py-3 px-6'>Modèle</th>
+            <th className='py-3 px-6'>Jours depuis Reception</th>
           </tr>
         </thead>
         <tbody>
           {vehicles?.map((vehicle: Vehicle) => (
             <tr key={vehicle._id}>
-              <td className='px-3'>{vehicle.immatriculation}</td>
-              <td className='px-3'>{vehicle.modele}</td>
-              <td className='px-3'>{vehicle.joursDepuisReception}</td>
+              <td className='py-4 px-6'>{vehicle.immatriculation}</td>
+              <td className='py-4 px-6'>{vehicle.modele}</td>
+              <td className='py-4 px-6'>{vehicle.joursDepuisReception}</td>
             </tr>
           ))}
         </tbody>

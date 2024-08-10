@@ -11,8 +11,8 @@ const Header = () => {
   };
 
   return (
-    <header className="max-w-7xl px-4 mx-auto w-full flex justify-between items-center bg-white py-4 border-b border-b-[#e6ebf4]">
-      <img src={CRVOLogo} alt="Logo CRVO" className="w-24 text-white" />
+    <header className="max-w-7xl px-4 mx-auto w-full flex justify-between items-center  py-4 ">
+      <img src={CRVOLogo} alt="Logo CRVO" className="w-24 " />
       <Button asChild onClick={handleLogout} variant="destructive">
         <Link to="/" aria-label="Se déconnecter de l'espace administrateur">
           Déconnexion

@@ -13,9 +13,9 @@ interface Vehicle {
   };
 }
 
-// Fonction pour récupérer les véhicules depuis l'API
+
 const fetchVehicles = async (): Promise<Vehicle[]> => {
-  const response = await fetch("http://localhost:5000/api/vehicles"); // Assurez-vous que l'URL est correcte
+  const response = await fetch("http://localhost:5000/api/vehicles"); 
   if (!response.ok) {
     throw new Error("Erreur lors de la récupération des véhicules.");
   }
@@ -41,23 +41,23 @@ const VehicleList: React.FC = () => {
     );
 
   return (
-    <div className="py-4">
+    <div className="py-8 px-20 border rounded-lg">
       <table>
         <thead>
-          <tr className="text-left">
-            <th className="px-2">Username</th>
-            <th className="px-2">Immatriculation</th>
-            <th className="px-2">Modèle</th>
-            <th className="px-2">Jours depuis Reception</th>
+          <tr className="text-left bg-primary border-b ">
+            <th className="py-3 px-6">Username</th>
+            <th className="py-3 px-6">Immatriculation</th>
+            <th className="py-3 px-6">Modèle</th>
+            <th className="py-3 px-6">Jours depuis Reception</th>
           </tr>
         </thead>
         <tbody>
           {vehicles?.map((vehicle: Vehicle) => (
-            <tr key={vehicle._id}>
-              <td className="px-2">{vehicle.user.username}</td>
-              <td className="px-2">{vehicle.immatriculation}</td>
-              <td className="px-2">{vehicle.modele}</td>
-              <td className="px-2">{vehicle.joursDepuisReception}</td>
+            <tr key={vehicle._id} className="border-b">
+              <td className="py-4 px-6">{vehicle.user.username}</td>
+              <td className="py-4 px-6">{vehicle.immatriculation}</td>
+              <td className="py-4 px-6">{vehicle.modele}</td>
+              <td className="py-4 px-6">{vehicle.joursDepuisReception}</td>
             </tr>
           ))}
         </tbody>

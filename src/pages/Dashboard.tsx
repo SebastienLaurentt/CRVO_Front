@@ -10,8 +10,8 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="mx-2 md:mx-4 lg:mx-10 flex flex-col items-center">
-      <h1>Tableau de bord</h1>
+    <div className=" flex flex-col items-center">
+      
       {role === "admin" && <AdminDashboard />}
       {role === "member" && <MemberDashboard />}
       {!role && <p>Loading...</p>}
