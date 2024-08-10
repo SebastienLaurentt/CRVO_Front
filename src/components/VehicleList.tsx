@@ -1,6 +1,7 @@
-import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Download, FolderPlus } from "lucide-react";
+import React, { useState } from "react";
+import Loader from "./Loader";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
@@ -36,7 +37,12 @@ const VehicleList: React.FC = () => {
     queryFn: fetchVehicles,
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading)
+    return (
+      <div className="flex flex-col items-center mt-60">
+        <Loader />
+      </div>
+    );
   if (isError)
     return (
       <p>Error: {error instanceof Error ? error.message : "Unknown error"}</p>
@@ -62,14 +68,14 @@ const VehicleList: React.FC = () => {
             hasSearchIcon
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-
         </div>
         <div className="flex flex-row gap-x-2 ml-8 2xl:ml-60">
           <Button className="space-x-[5px]">
             <Download size={18} /> <span className="text-xs">Infos Client</span>
           </Button>
           <Button className="space-x-[5px]">
-            <FolderPlus size={18} /> <span className="text-xs">Nouveau Fichier</span>
+            <FolderPlus size={18} />{" "}
+            <span className="text-xs">Nouveau Fichier</span>
           </Button>
         </div>
       </div>
