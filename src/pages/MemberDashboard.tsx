@@ -1,5 +1,11 @@
+import UserVehicleList from "@/components/VehicleListByUserId";
+
 const MemberDashboard = () => {
-  return <div>MemberDashboard</div>;
+  return (
+    <div>
+      <UserVehicleList />
+    </div>
+  );
 };
 
 export default MemberDashboard;
