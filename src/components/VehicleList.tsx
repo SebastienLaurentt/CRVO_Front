@@ -59,6 +59,7 @@ const VehicleList: React.FC = () => {
             placeholder="Recherche"
             className="text-sm"
             value={searchQuery}
+            hasSearchIcon
             onChange={(e) => setSearchQuery(e.target.value)}
           />
 
