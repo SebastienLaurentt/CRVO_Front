@@ -77,10 +77,10 @@ const VehicleList: React.FC = () => {
       <table>
         <thead>
           <tr className="text-left bg-primary border-b ">
-            <th className="py-3 px-6">Client</th>
-            <th className="py-3 px-6">Immatriculation</th>
-            <th className="py-3 px-6">Modèle</th>
-            <th className="py-3 px-6">Jours depuis Reception</th>
+            <th className="py-3 px-6 w-[300px]">Client</th>
+            <th className="py-3 px-6 w-[200px]">Immatriculation</th>
+            <th className="py-3 px-6 w-[300px]">Modèle</th>
+            <th className="py-3 px-6 w-[250px]">Jours depuis Reception</th>
           </tr>
         </thead>
         <tbody>
