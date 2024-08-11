@@ -18,6 +18,18 @@ interface FileInputProps {
   onClose: () => void;
 }
 
+const deleteExistingData = async () => {
+  const response = await fetch("http://localhost:5000/api/cleanup", {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete existing data");
+  }
+
+  return response.json();
+};
+
 const uploadVehicleData = async (vehicle: ExcelRow) => {
   const response = await fetch("http://localhost:5000/api/vehicles", {
     method: "POST",
@@ -93,6 +105,7 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
 
   const { mutate: uploadVehicles, isPending } = useMutation({
     mutationFn: async () => {
+      await deleteExistingData();
       const promises = data.map((vehicle) => uploadVehicleData(vehicle));
       await Promise.all(promises);
     },
