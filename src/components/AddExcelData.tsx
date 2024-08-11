@@ -4,7 +4,7 @@ import * as XLSX from "xlsx";
 import FileUploader from "./FileUploader";
 import { Button } from "./ui/button";
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "./ui/use-toast";
 
 type ExcelRow = {
@@ -89,14 +89,17 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
     reader.readAsArrayBuffer(file);
   };
 
+  const queryClient = useQueryClient();
+
   const { mutate: uploadVehicles, isPending } = useMutation({
     mutationFn: async () => {
       const promises = data.map((vehicle) => uploadVehicleData(vehicle));
       await Promise.all(promises);
     },
     onSuccess: () => {
-      toast({ title: "Les données ont été mises à jour avec succès !" });
-      onClose(); // Ferme la modale
+      toast({ title: "Données mises à jour avec succès !" });
+      queryClient.invalidateQueries({ queryKey: ["vehicles"] });
+      onClose(); 
     },
     onError: (error) => {
       toast({
