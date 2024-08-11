@@ -75,16 +75,16 @@ const VehicleList: React.FC = () => {
         <div className="flex flex-row gap-x-2 ml-8 2xl:ml-60">
           <Button className="space-x-[5px]" asChild>
             <Link to="/clients">
-              <User size={18} />
-              <span className="text-xs">Infos Client</span>
+              <User size={20} />
+              <span >Infos Client</span>
             </Link>
           </Button>
           <Button
             className="space-x-[5px]"
             onClick={() => setIsFileInputVisible(true)}
           >
-            <Upload size={18} />{" "}
-            <span className="text-xs">Nouveau Fichier</span>
+            <Upload size={20} />{" "}
+            <span>Nouveau Fichier</span>
           </Button>
         </div>
       </div>
