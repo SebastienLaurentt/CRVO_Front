@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Download, FolderPlus } from "lucide-react";
 import React, { useState } from "react";
-import AddExcelData from "./AddExcelData"; 
+import AddExcelData from "./AddExcelData";
 import Loader from "./Loader";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -95,18 +95,25 @@ const VehicleList: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredVehicles?.map((vehicle: Vehicle) => (
-            <tr key={vehicle._id} className="border-b">
-              <td className="py-4 px-6">{vehicle.user.username}</td>
-              <td className="py-4 px-6">{vehicle.immatriculation}</td>
-              <td className="py-4 px-6">{vehicle.modele}</td>
-              <td className="py-4 px-6">{vehicle.joursDepuisReception}</td>
+          {filteredVehicles && filteredVehicles.length > 0 ? (
+            filteredVehicles.map((vehicle: Vehicle) => (
+              <tr key={vehicle._id} className="border-b">
+                <td className="py-4 px-6">{vehicle.user.username}</td>
+                <td className="py-4 px-6">{vehicle.immatriculation}</td>
+                <td className="py-4 px-6">{vehicle.modele}</td>
+                <td className="py-4 px-6">{vehicle.joursDepuisReception}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={4} className="text-center pt-8 font-medium">
+                Aucune donnée disponible actuellement. <br /> Veuillez ajouter un fichier Excel.
+              </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
 
-      {/* Affichage conditionnel du FileInput */}
       {isFileInputVisible && (
         <AddExcelData onClose={() => setIsFileInputVisible(false)} />
       )}
