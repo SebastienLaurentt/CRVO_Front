@@ -1,11 +1,13 @@
 import { Route, Routes, useLocation } from "react-router-dom";
 
+import Footer from "./components/Footer";
 import Header from "./components/Header";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Footer from "./components/Footer";
 
-import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
+import Users from "./pages/Users";
+import AdminRoute from "./components/AdminRoute";
 
 const App = () => {
   const location = useLocation();
@@ -24,6 +26,14 @@ const App = () => {
               <ProtectedRoute>
                 <Dashboard />
               </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/clients"
+            element={
+              <AdminRoute>  
+                <Users />
+              </AdminRoute>
             }
           />
         </Routes>

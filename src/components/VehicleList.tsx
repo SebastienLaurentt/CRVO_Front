@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Download, FolderPlus } from "lucide-react";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import AddExcelData from "./AddExcelData";
 import Loader from "./Loader";
 import { Button } from "./ui/button";
@@ -72,8 +73,11 @@ const VehicleList: React.FC = () => {
           />
         </div>
         <div className="flex flex-row gap-x-2 ml-8 2xl:ml-60">
-          <Button className="space-x-[5px]">
-            <Download size={18} /> <span className="text-xs">Infos Client</span>
+          <Button className="space-x-[5px]" asChild>
+            <Link to="/clients">
+              <Download size={18} />
+              <span className="text-xs">Infos Client</span>
+            </Link>
           </Button>
           <Button
             className="space-x-[5px]"
@@ -107,7 +111,8 @@ const VehicleList: React.FC = () => {
           ) : (
             <tr>
               <td colSpan={4} className="text-center pt-8 font-medium">
-                Aucune donnée disponible actuellement. <br /> Veuillez ajouter un fichier Excel.
+                Aucune donnée disponible actuellement. <br /> Veuillez ajouter
+                un fichier Excel.
               </td>
             </tr>
           )}
