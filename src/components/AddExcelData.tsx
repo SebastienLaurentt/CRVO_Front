@@ -23,7 +23,7 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setFileName(file.name); // Mettre à jour le nom du fichier dans l'état
+    setFileName(file.name); 
 
     const reader = new FileReader();
 
