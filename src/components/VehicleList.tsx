@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Download, FolderPlus } from "lucide-react";
+import { Upload, User } from "lucide-react";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import AddExcelData from "./AddExcelData";
@@ -75,7 +75,7 @@ const VehicleList: React.FC = () => {
         <div className="flex flex-row gap-x-2 ml-8 2xl:ml-60">
           <Button className="space-x-[5px]" asChild>
             <Link to="/clients">
-              <Download size={18} />
+              <User size={18} />
               <span className="text-xs">Infos Client</span>
             </Link>
           </Button>
@@ -83,7 +83,7 @@ const VehicleList: React.FC = () => {
             className="space-x-[5px]"
             onClick={() => setIsFileInputVisible(true)}
           >
-            <FolderPlus size={18} />{" "}
+            <Upload size={18} />{" "}
             <span className="text-xs">Nouveau Fichier</span>
           </Button>
         </div>
