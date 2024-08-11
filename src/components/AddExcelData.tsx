@@ -4,6 +4,9 @@ import * as XLSX from "xlsx";
 import FileUploader from "./FileUploader";
 import { Button } from "./ui/button";
 
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "./ui/use-toast";
+
 type ExcelRow = {
   client: string | null;
   immatriculation: string | null;
@@ -15,15 +18,37 @@ interface FileInputProps {
   onClose: () => void;
 }
 
+const uploadVehicleData = async (vehicle: ExcelRow) => {
+  const response = await fetch("http://localhost:5000/api/vehicles", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username: vehicle.client,
+      password: "motdepasse",
+      immatriculation: vehicle.immatriculation,
+      modele: vehicle.modele,
+      joursDepuisReception: vehicle.joursDepuisReception,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to upload vehicle data");
+  }
+
+  return response.json();
+};
+
 const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
   const [data, setData] = useState<ExcelRow[]>([]);
-  const [fileName, setFileName] = useState<string | null>(null); // Ajouter un état pour le nom du fichier
+  const [fileName, setFileName] = useState<string | null>(null);
 
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setFileName(file.name); 
+    setFileName(file.name);
 
     const reader = new FileReader();
 
@@ -64,29 +89,26 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
     reader.readAsArrayBuffer(file);
   };
 
+  const { mutate: uploadVehicles, isPending } = useMutation({
+    mutationFn: async () => {
+      const promises = data.map((vehicle) => uploadVehicleData(vehicle));
+      await Promise.all(promises);
+    },
+    onSuccess: () => {
+      toast({ title: "Les données ont été mises à jour avec succès !" });
+      onClose(); // Ferme la modale
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Erreur lors de la mise à jour des données",
+        description: error.message,
+      });
+    },
+  });
+
   const handleDataSubmit = () => {
-    data.forEach((vehicle) => {
-      fetch("http://localhost:5000/api/vehicles", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: vehicle.client,
-          password: "motdepasse",
-          immatriculation: vehicle.immatriculation,
-          modele: vehicle.modele,
-          joursDepuisReception: vehicle.joursDepuisReception,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Success:", data);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    });
+    uploadVehicles();
   };
 
   return (
@@ -114,9 +136,9 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
           <Button
             className="mt-3"
             onClick={handleDataSubmit}
-            disabled={!fileName}  
+            disabled={!fileName || isPending}
           >
-            Mettre à jour
+            {isPending ? "Chargement..." : "Mettre à jour"}
           </Button>
         </div>
       </div>

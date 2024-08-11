@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Users from "./pages/Users";
 import AdminRoute from "./components/AdminRoute";
+import { Toaster } from "./components/ui/toaster";
 
 const App = () => {
   const location = useLocation();
@@ -37,6 +38,7 @@ const App = () => {
             }
           />
         </Routes>
+        <Toaster />
       </main>
 
       {!hideHeaderAndFooter && <Footer />}
