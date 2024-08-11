@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Download, FolderPlus } from "lucide-react";
 import React, { useState } from "react";
+import AddExcelData from "./AddExcelData"; 
 import Loader from "./Loader";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -26,6 +27,7 @@ const fetchVehicles = async (): Promise<Vehicle[]> => {
 
 const VehicleList: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [isFileInputVisible, setIsFileInputVisible] = useState(false);
 
   const {
     data: vehicles,
@@ -73,7 +75,10 @@ const VehicleList: React.FC = () => {
           <Button className="space-x-[5px]">
             <Download size={18} /> <span className="text-xs">Infos Client</span>
           </Button>
-          <Button className="space-x-[5px]">
+          <Button
+            className="space-x-[5px]"
+            onClick={() => setIsFileInputVisible(true)}
+          >
             <FolderPlus size={18} />{" "}
             <span className="text-xs">Nouveau Fichier</span>
           </Button>
@@ -82,7 +87,7 @@ const VehicleList: React.FC = () => {
 
       <table>
         <thead>
-          <tr className="text-left bg-primary border-b ">
+          <tr className="text-left bg-primary border-b">
             <th className="py-3 px-6 w-[300px]">Client</th>
             <th className="py-3 px-6 w-[200px]">Immatriculation</th>
             <th className="py-3 px-6 w-[300px]">Modèle</th>
@@ -100,6 +105,11 @@ const VehicleList: React.FC = () => {
           ))}
         </tbody>
       </table>
+
+      {/* Affichage conditionnel du FileInput */}
+      {isFileInputVisible && (
+        <AddExcelData onClose={() => setIsFileInputVisible(false)} />
+      )}
     </div>
   );
 };
