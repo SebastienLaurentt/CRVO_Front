@@ -9,7 +9,7 @@ interface FileUploaderProps {
 
 const FileUploader = ({ onChange }: FileUploaderProps) => {
   return (
-    <div className="space-y-1 text-left">
+    <div className="space-y-1 text-left ">
       <Label>
         <div className="flex h-40 mt-12 cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed bg-slate-50 ">
           <FileUp size={56} />

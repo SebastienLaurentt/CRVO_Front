@@ -61,7 +61,7 @@ const VehicleList: React.FC = () => {
   });
 
   return (
-    <div className="py-8 px-12 border rounded-lg">
+    <div className="py-8 px-12 border rounded-lg shadow-2xl">
       <div className="flex flex-row justify-between mb-4">
         <div className="flex flex-row gap-x-3">
           <Input

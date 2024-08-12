@@ -66,8 +66,7 @@ const VehicleListByUserId: React.FC = () => {
   });
 
   return (
-    <div className="py-8 px-12 border rounded-lg">
-      {/* Barre de recherche */}
+    <div className="py-8 px-12 border rounded-lg shadow-2xl">
       <div className="flex flex-row justify-between mb-4">
         <Input
           placeholder="Recherche"

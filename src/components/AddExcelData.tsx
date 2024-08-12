@@ -128,7 +128,7 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center ">
       <div className="relative bg-white p-4 rounded-lg shadow-lg w-[90%] max-w-lg">
         <button
           className="absolute top-2 right-2 text-gray-600 hover:text-black"

@@ -60,7 +60,7 @@ const Users: React.FC = () => {
     <div className="flex flex-col items-center py-8 px-12 rounded-lg">
       <h1 className="mb-4">Liste des Clients</h1>
 
-      <div className="py-8 px-12 border rounded-lg">
+      <div className="py-8 px-12 border rounded-lg shadow-2xl">
         <table className="border-gray-200">
           <thead>
             <tr className="text-left bg-primary border-b">
