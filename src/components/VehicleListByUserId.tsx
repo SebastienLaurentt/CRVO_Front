@@ -108,8 +108,8 @@ const VehicleListByUserId: React.FC = () => {
             <th className="py-3 px-6 w-[300px]">Immatriculation</th>
             <th className="py-3 px-6 w-[300px]">Modèle</th>
             <th className="py-3 px-6 w-[150px] text-center">Jours depuis Création</th>
-            <th className="py-3 px-6 w-[100px]">Mécanique</th>
-            <th className="py-3 px-6 w-[100px]">Carrosserie</th>
+            <th className="py-3 px-6 w-[150px]">Mécanique</th>
+            <th className="py-3 px-6 w-[150px]">Carrosserie</th>
             <th className="py-3 px-6 w-[100px]">CT</th>
             <th className="py-3 px-6 w-[100px]">DSP</th>
             <th className="py-3 px-6 w-[100px]">Jantes</th>
@@ -122,11 +122,11 @@ const VehicleListByUserId: React.FC = () => {
                 <td className="py-4 px-6">{vehicle.immatriculation}</td>
                 <td className="py-4 px-6">{vehicle.modele}</td>
                 <td className="py-4 px-6 text-center">{daysSince(vehicle.dateCreation)}</td>
-                <td className="py-4 px-6">{vehicle.mecanique ? <Wrench /> : ""}</td>
-                <td className="py-4 px-6">{vehicle.carrosserie ? <Car /> : ""}</td>
-                <td className="py-4 px-6">{vehicle.ct ? <ShieldCheck /> : ""}</td>
-                <td className="py-4 px-6">{vehicle.dsp ? <AudioLines /> : ""}</td>
-                <td className="py-4 px-6">{vehicle.jantes ? <LifeBuoy /> : ""}</td>
+                <td className="py-4 px-6 flex flex-row justify-center">{vehicle.mecanique ? <Wrench /> : ""}</td>
+                <td className="py-4 px-6 flex flex-row justify-center">{vehicle.carrosserie ? <Car /> : ""}</td>
+                <td className="py-4 px-6 flex flex-row justify-center">{vehicle.ct ? <ShieldCheck /> : ""}</td>
+                <td className="py-4 px-6 flex flex-row justify-center">{vehicle.dsp ? <AudioLines /> : ""}</td>
+                <td className="py-4 px-6 flex flex-row justify-center">{vehicle.jantes ? <LifeBuoy /> : ""}</td>
               </tr>
             ))
           ) : (
