@@ -11,11 +11,19 @@ interface Vehicle {
   _id: string;
   immatriculation: string;
   modele: string;
-  dateCreation: string; // Changement de 'joursDepuisReception' à 'dateCreation'
+  dateCreation: string;
   user: {
     username: string;
   };
 }
+
+
+const daysSince = (dateString: string): number => {
+  const creationDate = new Date(dateString);
+  const today = new Date();
+  const timeDiff = today.getTime() - creationDate.getTime();
+  return Math.floor(timeDiff / (1000 * 3600 * 24));
+};
 
 const fetchVehicles = async (): Promise<Vehicle[]> => {
   const response = await fetch("https://crvo-back.onrender.com/api/vehicles");
@@ -95,7 +103,7 @@ const VehicleList: React.FC = () => {
             <th className="py-3 px-6 w-[300px]">Client</th>
             <th className="py-3 px-6 w-[200px]">Immatriculation</th>
             <th className="py-3 px-6 w-[300px]">Modèle</th>
-            <th className="py-3 px-6 w-[250px]">Date de Création</th> 
+            <th className="py-3 px-6 w-[250px]">Jours depuis Création</th> 
           </tr>
         </thead>
         <tbody>
@@ -105,7 +113,7 @@ const VehicleList: React.FC = () => {
                 <td className="py-4 px-6">{vehicle.user.username}</td>
                 <td className="py-4 px-6">{vehicle.immatriculation}</td>
                 <td className="py-4 px-6">{vehicle.modele}</td>
-                <td className="py-4 px-6">{new Date(vehicle.dateCreation).toLocaleDateString()}</td> 
+                <td className="py-4 px-6">{daysSince(vehicle.dateCreation)}</td> 
               </tr>
             ))
           ) : (

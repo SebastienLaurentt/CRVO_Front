@@ -11,11 +11,18 @@ interface Vehicle {
   _id: string;
   immatriculation: string;
   modele: string;
-  dateCreation: number;
+  dateCreation: number; 
   user: {
     username: string;
   };
 }
+
+const daysSince = (timestamp: number): number => {
+  const creationDate = new Date(timestamp);
+  const today = new Date();
+  const timeDiff = today.getTime() - creationDate.getTime();
+  return Math.floor(timeDiff / (1000 * 3600 * 24));
+};
 
 const fetchVehiclesByUser = async (): Promise<Vehicle[]> => {
   const token = Cookies.get("token");
@@ -91,7 +98,7 @@ const VehicleListByUserId: React.FC = () => {
           <tr className="text-left bg-primary border-b">
             <th className="py-3 px-6 w-[300px]">Immatriculation</th>
             <th className="py-3 px-6 w-[300px]">Modèle</th>
-            <th className="py-3 px-6 w-[300px]">Date de Création</th>
+            <th className="py-3 px-6 w-[300px]">Jours depuis Création</th> 
           </tr>
         </thead>
         <tbody>
@@ -100,7 +107,7 @@ const VehicleListByUserId: React.FC = () => {
               <tr key={vehicle._id}>
                 <td className="py-4 px-6">{vehicle.immatriculation}</td>
                 <td className="py-4 px-6">{vehicle.modele}</td>
-                <td className="py-4 px-6">{new Date(vehicle.dateCreation).toLocaleDateString()}</td>
+                <td className="py-4 px-6">{daysSince(vehicle.dateCreation)}</td> 
               </tr>
             ))
           ) : (
