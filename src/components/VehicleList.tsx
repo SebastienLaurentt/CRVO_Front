@@ -17,7 +17,6 @@ interface Vehicle {
   };
 }
 
-
 const daysSince = (dateString: string): number => {
   const creationDate = new Date(dateString);
   const today = new Date();
@@ -68,6 +67,8 @@ const VehicleList: React.FC = () => {
     );
   });
 
+  const sortedVehicles = filteredVehicles?.sort((a, b) => daysSince(b.dateCreation) - daysSince(a.dateCreation));
+
   return (
     <div className="py-8 px-12 border rounded-lg shadow-2xl">
       <div className="flex flex-row justify-between mb-4">
@@ -107,8 +108,8 @@ const VehicleList: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredVehicles && filteredVehicles.length > 0 ? (
-            filteredVehicles.map((vehicle: Vehicle) => (
+          {sortedVehicles && sortedVehicles.length > 0 ? (
+            sortedVehicles.map((vehicle: Vehicle) => (
               <tr key={vehicle._id} className="border-b">
                 <td className="py-4 px-6">{vehicle.user.username}</td>
                 <td className="py-4 px-6">{vehicle.immatriculation}</td>

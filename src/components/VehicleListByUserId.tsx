@@ -75,6 +75,9 @@ const VehicleListByUserId: React.FC = () => {
     );
   });
 
+  
+  const sortedVehicles = filteredVehicles?.sort((a, b) => daysSince(b.dateCreation) - daysSince(a.dateCreation));
+
   return (
     <div className="py-8 px-12 border rounded-lg shadow-2xl">
       <div className="flex flex-row justify-between mb-4">
@@ -102,8 +105,8 @@ const VehicleListByUserId: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredVehicles && filteredVehicles.length > 0 ? (
-            filteredVehicles.map((vehicle: Vehicle) => (
+          {sortedVehicles && sortedVehicles.length > 0 ? (
+            sortedVehicles.map((vehicle: Vehicle) => (
               <tr key={vehicle._id}>
                 <td className="py-4 px-6">{vehicle.immatriculation}</td>
                 <td className="py-4 px-6">{vehicle.modele}</td>
