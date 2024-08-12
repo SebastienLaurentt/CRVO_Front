@@ -128,7 +128,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
               {isTextareaEnabled && (
                 <button
                   onClick={handleCopy}
-                  className="absolute top-10 right-3 text-gray-600 hover:text-black"
+                  className="absolute top-12 right-6 text-gray-600 hover:text-black"
                 >
                   <Files />
                 </button>

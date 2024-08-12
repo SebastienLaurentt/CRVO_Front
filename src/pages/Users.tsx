@@ -2,6 +2,7 @@ import EditUserModal from "@/components/EditUserModal";
 import Loader from "@/components/Loader";
 import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
+import { Settings } from "lucide-react";
 import React, { useState } from "react";
 
 interface User {
@@ -75,12 +76,12 @@ const Users: React.FC = () => {
                 <tr key={user._id} className="border-b">
                   <td className="py-4 px-6">{user.username}</td>
                   <td className="py-4 px-6">{user.role}</td>
-                  <td className="py-4 px-6">
+                  <td className="py-4 px-6 text-center">
                     <button
                       onClick={() => handleEditClick(user)}
-                      className="text-blue-500 hover:underline"
+                      className="text-gray-600 hover:text-black"
                     >
-                      Edit
+                      <Settings size={18}/>
                     </button>
                   </td>
                 </tr>
