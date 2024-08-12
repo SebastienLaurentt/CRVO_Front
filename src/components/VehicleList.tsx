@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Upload, User } from "lucide-react";
+import { AudioLines, Car, LifeBuoy, ShieldCheck, Upload, User, Wrench } from "lucide-react";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import AddExcelData from "./AddExcelData";
@@ -15,6 +15,11 @@ interface Vehicle {
   user: {
     username: string;
   };
+  mecanique: boolean; 
+  carrosserie: boolean; 
+  ct: boolean; 
+  dsp: boolean; 
+  jantes: boolean; 
 }
 
 const daysSince = (dateString: string): number => {
@@ -103,8 +108,13 @@ const VehicleList: React.FC = () => {
           <tr className="text-left bg-primary border-b">
             <th className="py-3 px-6 w-[300px]">Client</th>
             <th className="py-3 px-6 w-[200px]">Immatriculation</th>
-            <th className="py-3 px-6 w-[300px]">Modèle</th>
-            <th className="py-3 px-6 w-[250px]">Jours depuis Création</th> 
+            <th className="py-3 px-6 w-[250px]">Modèle</th>
+            <th className="py-3 px-6 w-[200px] text-center">Jours depuis Création</th>
+            <th className="py-3 px-6 w-[100px]">Mécanique</th> 
+            <th className="py-3 px-6 w-[100px]">Carrosserie</th> 
+            <th className="py-3 px-6 w-[100px]">CT</th> 
+            <th className="py-3 px-6 w-[100px]">DSP</th> 
+            <th className="py-3 px-6 w-[100px]">Jantes</th> 
           </tr>
         </thead>
         <tbody>
@@ -114,12 +124,17 @@ const VehicleList: React.FC = () => {
                 <td className="py-4 px-6">{vehicle.user.username}</td>
                 <td className="py-4 px-6">{vehicle.immatriculation}</td>
                 <td className="py-4 px-6">{vehicle.modele}</td>
-                <td className="py-4 px-6">{daysSince(vehicle.dateCreation)}</td> 
+                <td className="py-4 px-6 text-center">{daysSince(vehicle.dateCreation)}</td>
+                <td className="py-4 px-6">{vehicle.mecanique ? <Wrench /> : ""}</td> 
+                <td className="py-4 px-6">{vehicle.carrosserie ? <Car /> : ""}</td> 
+                <td className="py-4 px-6">{vehicle.ct ? <ShieldCheck /> : ""}</td> 
+                <td className="py-4 px-6">{vehicle.dsp ? <AudioLines /> : ""}</td> 
+                <td className="py-4 px-6">{vehicle.jantes ? <LifeBuoy /> : ""}</td> 
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan={4} className="text-center pt-8 font-medium">
+              <td colSpan={9} className="text-center pt-8 font-medium">
                 Aucune donnée disponible actuellement. <br /> Veuillez ajouter
                 un fichier Excel.
               </td>

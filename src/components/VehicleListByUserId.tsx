@@ -1,20 +1,25 @@
 import { useQuery } from "@tanstack/react-query";
-import Cookies from "js-cookie";
-import { BookText } from "lucide-react";
+import { AudioLines, BookText, Car, LifeBuoy, ShieldCheck, Wrench } from "lucide-react";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Loader from "./Loader";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import Cookies from "js-cookie";
 
 interface Vehicle {
   _id: string;
   immatriculation: string;
   modele: string;
-  dateCreation: number; 
+  dateCreation: number;
   user: {
     username: string;
   };
+  mecanique: boolean;
+  carrosserie: boolean;
+  ct: boolean;
+  dsp: boolean;
+  jantes: boolean;
 }
 
 const daysSince = (timestamp: number): number => {
@@ -75,8 +80,9 @@ const VehicleListByUserId: React.FC = () => {
     );
   });
 
-  
-  const sortedVehicles = filteredVehicles?.sort((a, b) => daysSince(b.dateCreation) - daysSince(a.dateCreation));
+  const sortedVehicles = filteredVehicles?.sort(
+    (a, b) => daysSince(b.dateCreation) - daysSince(a.dateCreation)
+  );
 
   return (
     <div className="py-8 px-12 border rounded-lg shadow-2xl">
@@ -101,21 +107,31 @@ const VehicleListByUserId: React.FC = () => {
           <tr className="text-left bg-primary border-b">
             <th className="py-3 px-6 w-[300px]">Immatriculation</th>
             <th className="py-3 px-6 w-[300px]">Modèle</th>
-            <th className="py-3 px-6 w-[300px]">Jours depuis Création</th> 
+            <th className="py-3 px-6 w-[150px] text-center">Jours depuis Création</th>
+            <th className="py-3 px-6 w-[100px]">Mécanique</th>
+            <th className="py-3 px-6 w-[100px]">Carrosserie</th>
+            <th className="py-3 px-6 w-[100px]">CT</th>
+            <th className="py-3 px-6 w-[100px]">DSP</th>
+            <th className="py-3 px-6 w-[100px]">Jantes</th>
           </tr>
         </thead>
         <tbody>
           {sortedVehicles && sortedVehicles.length > 0 ? (
             sortedVehicles.map((vehicle: Vehicle) => (
-              <tr key={vehicle._id}>
+              <tr key={vehicle._id} className="border-b">
                 <td className="py-4 px-6">{vehicle.immatriculation}</td>
                 <td className="py-4 px-6">{vehicle.modele}</td>
-                <td className="py-4 px-6">{daysSince(vehicle.dateCreation)}</td> 
+                <td className="py-4 px-6 text-center">{daysSince(vehicle.dateCreation)}</td>
+                <td className="py-4 px-6">{vehicle.mecanique ? <Wrench /> : ""}</td>
+                <td className="py-4 px-6">{vehicle.carrosserie ? <Car /> : ""}</td>
+                <td className="py-4 px-6">{vehicle.ct ? <ShieldCheck /> : ""}</td>
+                <td className="py-4 px-6">{vehicle.dsp ? <AudioLines /> : ""}</td>
+                <td className="py-4 px-6">{vehicle.jantes ? <LifeBuoy /> : ""}</td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan={3} className="text-center pt-8 font-medium">
+              <td colSpan={9} className="text-center pt-8 font-medium">
                 Aucune donnée disponible actuellement.
               </td>
             </tr>
