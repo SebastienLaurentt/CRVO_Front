@@ -1,16 +1,16 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import React, { ChangeEvent, useState } from "react";
 import * as XLSX from "xlsx";
 import FileUploader from "./FileUploader";
 import { Button } from "./ui/button";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "./ui/use-toast";
 
 type ExcelRow = {
   client: string | null;
   immatriculation: string | null;
   modele: string | null;
-  dateCreation: Date | null; // Mise à jour du type pour utiliser dateCreation
+  dateCreation: Date | null;
 };
 
 interface FileInputProps {
@@ -40,7 +40,7 @@ const uploadVehicleData = async (vehicle: ExcelRow) => {
       password: "motdepasse",
       immatriculation: vehicle.immatriculation,
       modele: vehicle.modele,
-      dateCreation: vehicle.dateCreation, // Envoyer la date de création au lieu des jours
+      dateCreation: vehicle.dateCreation,
     }),
   });
 
@@ -49,6 +49,37 @@ const uploadVehicleData = async (vehicle: ExcelRow) => {
   }
 
   return response.json();
+};
+
+// Fonction pour convertir un numéro de série Excel en Date
+const excelDateToJSDate = (serial: number): Date => {
+  const epoch = new Date(Date.UTC(1899, 11, 30)); // 30 décembre 1899
+  const days = Math.floor(serial);
+  const milliseconds = Math.round((serial - days) * 86400000); // Fraction du jour en millisecondes
+
+  return new Date(epoch.getTime() + days * 86400000 + milliseconds);
+};
+
+// Fonction améliorée pour convertir une chaîne de date ou un numéro de série en objet Date
+const convertToDate = (value: string | number): Date | null => {
+  if (typeof value === 'number') {
+    return excelDateToJSDate(value);
+  }
+
+  const dateString = String(value);
+
+  // Vérifie si le format est bien DD/MM/YYYY
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) {
+    const [day, month, year] = dateString.split("/");
+    const dayInt = parseInt(day, 10);
+    const monthInt = parseInt(month, 10) - 1; // Les mois sont indexés à partir de 0
+    const yearInt = parseInt(year, 10);
+
+    return new Date(yearInt, monthInt, dayInt);
+  }
+
+  console.error(`Invalid format: ${value}`);
+  return null;
 };
 
 const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
@@ -93,7 +124,7 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
             row[3] !== null && row[3] !== undefined
               ? String(row[3]).trim()
               : null,
-          dateCreation: row[8] ? new Date(row[8]) : null, // Extraire la date de création
+          dateCreation: row[8] ? convertToDate(row[8]) : null,
         }))
         .filter(
           (row) =>
