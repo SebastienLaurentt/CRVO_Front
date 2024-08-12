@@ -124,7 +124,7 @@ const VehicleList: React.FC = () => {
                 <td className="py-4 px-6">{vehicle.user.username}</td>
                 <td className="py-4 px-6">{vehicle.immatriculation}</td>
                 <td className="py-4 px-6">{vehicle.modele}</td>
-                <td className="py-4 px-6 flex flex-row justify-center">{daysSince(vehicle.dateCreation)}</td>
+                <td className="py-4 px-6">{daysSince(vehicle.dateCreation)}</td>
                 <td className="py-4 px-6 flex flex-row justify-center">{vehicle.mecanique ? <Wrench /> : ""}</td> 
                 <td className="py-4 px-6 flex flex-row justify-center">{vehicle.carrosserie ? <Car /> : ""}</td> 
                 <td className="py-4 px-6 flex flex-row justify-center">{vehicle.ct ? <ShieldCheck /> : ""}</td> 
