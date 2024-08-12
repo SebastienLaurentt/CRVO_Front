@@ -4,21 +4,21 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import ProtectedRoute from "./components/ProtectedRoute";
 
+import AdminRoute from "./components/AdminRoute";
+import { Toaster } from "./components/ui/toaster";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Users from "./pages/Users";
-import AdminRoute from "./components/AdminRoute";
-import { Toaster } from "./components/ui/toaster";
 
 const App = () => {
   const location = useLocation();
   const hideHeaderAndFooter = location.pathname === "/login";
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       {!hideHeaderAndFooter && <Header />}
 
-      <main className="w-full min-h-screen">
+      <main className="w-full flex-1">
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route
@@ -32,7 +32,7 @@ const App = () => {
           <Route
             path="/clients"
             element={
-              <AdminRoute>  
+              <AdminRoute>
                 <Users />
               </AdminRoute>
             }
@@ -42,7 +42,7 @@ const App = () => {
       </main>
 
       {!hideHeaderAndFooter && <Footer />}
-    </>
+    </div>
   );
 };
 
