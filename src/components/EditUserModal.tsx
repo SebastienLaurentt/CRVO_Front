@@ -29,7 +29,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
       try {
         const token = Cookies.get("token");
         const response = await fetch(
-          `http://localhost:5000/api/users/${user._id}/password`,
+          `https://crvo-back.onrender.com/api/users/${user._id}/password`,
           {
             method: "PATCH",
             headers: {
@@ -46,10 +46,8 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
           throw new Error("Erreur lors de la mise à jour du mot de passe.");
         }
 
-        // Création du message personnalisé
         const updatedMessage = `Bonjour Mr ${username},\n\nVoici vos identifiants pour vous connecter sur la plateforme CRVO :\n\nNom d'utilisateur : ${username}\nMot de passe : ${password}\n\nBien Cordialement,\n\nDamien Jouve,`;
 
-        // Mettre à jour l'état du message et activer le textarea
         setMessage(updatedMessage);
         setTextareaEnabled(true);
 

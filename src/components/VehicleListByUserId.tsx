@@ -16,7 +16,7 @@ interface Vehicle {
 const fetchVehiclesByUser = async (): Promise<Vehicle[]> => {
   const token = Cookies.get("token");
 
-  const response = await fetch("http://localhost:5000/api/user/vehicles", {
+  const response = await fetch("https://crvo-back.onrender.com/api/user/vehicles", {
     headers: {
       Authorization: `Bearer ${token}`,
     },

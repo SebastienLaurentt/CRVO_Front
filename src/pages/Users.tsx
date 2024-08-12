@@ -13,7 +13,7 @@ interface User {
 
 const fetchUsers = async (): Promise<User[]> => {
   const token = Cookies.get("token");
-  const response = await fetch("http://localhost:5000/api/users", {
+  const response = await fetch("https://crvo-back.onrender.com/api/users", {
     headers: {
       Authorization: `Bearer ${token}`,
     },

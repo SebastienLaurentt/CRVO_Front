@@ -18,7 +18,7 @@ interface Vehicle {
 }
 
 const fetchVehicles = async (): Promise<Vehicle[]> => {
-  const response = await fetch("http://localhost:5000/api/vehicles");
+  const response = await fetch("https://crvo-back.onrender.com/api/vehicles");
   if (!response.ok) {
     throw new Error("Erreur lors de la récupération des véhicules.");
   }
