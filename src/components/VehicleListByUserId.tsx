@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import React, { useState } from "react";
 import { Input } from "./ui/input";
+import Loader from "./Loader";
 
 interface Vehicle {
   _id: string;
@@ -16,11 +17,14 @@ interface Vehicle {
 const fetchVehiclesByUser = async (): Promise<Vehicle[]> => {
   const token = Cookies.get("token");
 
-  const response = await fetch("https://crvo-back.onrender.com/api/user/vehicles", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await fetch(
+    "https://crvo-back.onrender.com/api/user/vehicles",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
   if (!response.ok) {
     throw new Error("Erreur lors de la récupération des véhicules.");
@@ -42,7 +46,12 @@ const VehicleListByUserId: React.FC = () => {
     queryFn: fetchVehiclesByUser,
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading)
+    return (
+      <div className="flex flex-col items-center mt-60">
+        <Loader />
+      </div>
+    );
   if (isError)
     return (
       <p>Error: {error instanceof Error ? error.message : "Unknown error"}</p>

@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import React, { useState } from "react";
 
-
 interface User {
   _id: string;
   username: string;
@@ -45,9 +44,12 @@ const Users: React.FC = () => {
     setSelectedUser(null);
   };
 
-
-
-  if (isLoading) return <Loader />;
+  if (isLoading)
+    return (
+      <div className="flex flex-col items-center mt-60">
+        <Loader />
+      </div>
+    );
 
   if (isError)
     return (
@@ -95,11 +97,7 @@ const Users: React.FC = () => {
       </div>
 
       {selectedUser && (
-        <EditUserModal
-          user={selectedUser}
-          onClose={handleCloseModal}
-
-        />
+        <EditUserModal user={selectedUser} onClose={handleCloseModal} />
       )}
     </div>
   );
