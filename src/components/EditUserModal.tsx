@@ -23,6 +23,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isTextareaEnabled, setTextareaEnabled] = useState(false);
+  const [isPasswordSaved, setPasswordSaved] = useState(false);
 
   const handleSave = async () => {
     if (user) {
@@ -50,6 +51,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
 
         setMessage(updatedMessage);
         setTextareaEnabled(true);
+        setPasswordSaved(true);
 
         toast({ title: "Mot de passe mis à jour avec succès" });
       } catch (error) {
@@ -107,6 +109,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
               onChange={(e) => setPassword(e.target.value)}
               className="border rounded px-4 py-2 mt-1"
               placeholder="Nouveau mot de passe"
+              disabled={isPasswordSaved}
             />
           </div>
 
@@ -127,7 +130,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
                   onClick={handleCopy}
                   className="absolute top-10 right-3 text-gray-600 hover:text-black"
                 >
-                  <Files  />
+                  <Files />
                 </button>
               )}
             </div>
