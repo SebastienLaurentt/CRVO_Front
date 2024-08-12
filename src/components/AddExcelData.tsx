@@ -3,7 +3,6 @@ import React, { ChangeEvent, useState } from "react";
 import * as XLSX from "xlsx";
 import FileUploader from "./FileUploader";
 import { Button } from "./ui/button";
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "./ui/use-toast";
 
@@ -11,7 +10,7 @@ type ExcelRow = {
   client: string | null;
   immatriculation: string | null;
   modele: string | null;
-  joursDepuisReception: number | null;
+  dateCreation: Date | null; // Mise à jour du type pour utiliser dateCreation
 };
 
 interface FileInputProps {
@@ -41,7 +40,7 @@ const uploadVehicleData = async (vehicle: ExcelRow) => {
       password: "motdepasse",
       immatriculation: vehicle.immatriculation,
       modele: vehicle.modele,
-      joursDepuisReception: vehicle.joursDepuisReception,
+      dateCreation: vehicle.dateCreation, // Envoyer la date de création au lieu des jours
     }),
   });
 
@@ -82,17 +81,26 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
       const filteredData: ExcelRow[] = sheetData
         .slice(1)
         .map((row) => ({
-          client: (row[1] as string)?.trim() || null,
-          immatriculation: (row[2] as string)?.trim() || null,
-          modele: (row[3] as string)?.trim() || null,
-          joursDepuisReception: typeof row[13] === "number" ? row[13] : null,
+          client:
+            row[1] !== null && row[1] !== undefined
+              ? String(row[1]).trim()
+              : null,
+          immatriculation:
+            row[2] !== null && row[2] !== undefined
+              ? String(row[2]).trim()
+              : null,
+          modele:
+            row[3] !== null && row[3] !== undefined
+              ? String(row[3]).trim()
+              : null,
+          dateCreation: row[8] ? new Date(row[8]) : null, // Extraire la date de création
         }))
         .filter(
           (row) =>
             row.client ||
             row.immatriculation ||
             row.modele ||
-            row.joursDepuisReception !== null
+            row.dateCreation !== null
         );
 
       setData(filteredData);
@@ -112,13 +120,13 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
     onSuccess: () => {
       toast({ title: "Données mises à jour avec succès !" });
       queryClient.invalidateQueries({ queryKey: ["vehicles"] });
-      onClose(); 
+      onClose();
     },
     onError: (error) => {
       toast({
         variant: "destructive",
         title: "Erreur lors de la mise à jour des données",
-        description: error.message,
+        description: (error as Error).message,
       });
     },
   });
@@ -128,7 +136,7 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center ">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
       <div className="relative bg-white p-4 rounded-lg shadow-lg w-[90%] max-w-lg">
         <button
           className="absolute top-2 right-2 text-gray-600 hover:text-black"
@@ -141,7 +149,8 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
 
           {fileName ? (
             <span className="mt-2 text-gray-700 flex flex-col items-center">
-              <span className="font-bold">Fichier sélectionné :</span> {fileName}
+              <span className="font-bold">Fichier sélectionné :</span>{" "}
+              {fileName}
             </span>
           ) : (
             <span className="mt-2 text-destructive text-center font-bold">

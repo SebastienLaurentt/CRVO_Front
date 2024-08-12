@@ -11,7 +11,7 @@ interface Vehicle {
   _id: string;
   immatriculation: string;
   modele: string;
-  joursDepuisReception: number;
+  dateCreation: string; // Changement de 'joursDepuisReception' à 'dateCreation'
   user: {
     username: string;
   };
@@ -76,7 +76,7 @@ const VehicleList: React.FC = () => {
           <Button className="space-x-[5px]" asChild>
             <Link to="/clients">
               <User size={20} />
-              <span >Infos Client</span>
+              <span>Infos Client</span>
             </Link>
           </Button>
           <Button
@@ -95,7 +95,7 @@ const VehicleList: React.FC = () => {
             <th className="py-3 px-6 w-[300px]">Client</th>
             <th className="py-3 px-6 w-[200px]">Immatriculation</th>
             <th className="py-3 px-6 w-[300px]">Modèle</th>
-            <th className="py-3 px-6 w-[250px]">Jours depuis Reception</th>
+            <th className="py-3 px-6 w-[250px]">Date de Création</th> 
           </tr>
         </thead>
         <tbody>
@@ -105,7 +105,7 @@ const VehicleList: React.FC = () => {
                 <td className="py-4 px-6">{vehicle.user.username}</td>
                 <td className="py-4 px-6">{vehicle.immatriculation}</td>
                 <td className="py-4 px-6">{vehicle.modele}</td>
-                <td className="py-4 px-6">{vehicle.joursDepuisReception}</td>
+                <td className="py-4 px-6">{new Date(vehicle.dateCreation).toLocaleDateString()}</td> 
               </tr>
             ))
           ) : (
