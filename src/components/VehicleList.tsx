@@ -124,12 +124,12 @@ const VehicleList: React.FC = () => {
                 <td className="py-4 px-6">{vehicle.user.username}</td>
                 <td className="py-4 px-6">{vehicle.immatriculation}</td>
                 <td className="py-4 px-6">{vehicle.modele}</td>
-                <td className="py-4 px-6">{daysSince(vehicle.dateCreation)}</td>
-                <td className="py-4 px-6 flex flex-row justify-center">{vehicle.mecanique ? <Wrench /> : ""}</td> 
-                <td className="py-4 px-6 flex flex-row justify-center">{vehicle.carrosserie ? <Car /> : ""}</td> 
-                <td className="py-4 px-6 flex flex-row justify-center">{vehicle.ct ? <ShieldCheck /> : ""}</td> 
-                <td className="py-4 px-6 flex flex-row justify-center">{vehicle.dsp ? <AudioLines /> : ""}</td> 
-                <td className="py-4 px-6 flex flex-row justify-center">{vehicle.jantes ? <LifeBuoy /> : ""}</td> 
+                <td className="py-4 px-6 text-center">{daysSince(vehicle.dateCreation)}</td>
+                <td className="py-4 px-6 ">{vehicle.mecanique ? <Wrench /> : ""}</td> 
+                <td className="py-4 px-6 ">{vehicle.carrosserie ? <Car /> : ""}</td> 
+                <td className="py-4 px-6 ">{vehicle.ct ? <ShieldCheck /> : ""}</td> 
+                <td className="py-4 px-6 ">{vehicle.dsp ? <AudioLines /> : ""}</td> 
+                <td className="py-4 px-6 ">{vehicle.jantes ? <LifeBuoy /> : ""}</td> 
               </tr>
             ))
           ) : (
