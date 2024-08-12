@@ -126,8 +126,8 @@ export default function Login() {
             </div>
 
             {error && <p className="text-red-500">{error}</p>}
-            <Button className="w-full" type="submit">
-              Se connecter
+            <Button className="w-full" type="submit" disabled={mutation.isPending}>
+              {mutation.isPending ? "Connexion..." : "Se connecter"}
             </Button>
           </form>
         </div>
