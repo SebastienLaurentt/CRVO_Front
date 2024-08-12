@@ -15,7 +15,7 @@ type ExcelRow = {
 
 interface FileInputProps {
   onClose: () => void;
-}
+};
 
 const deleteExistingData = async () => {
   const response = await fetch("http://localhost:5000/api/cleanup", {
@@ -51,34 +51,52 @@ const uploadVehicleData = async (vehicle: ExcelRow) => {
   return response.json();
 };
 
-// Fonction pour convertir un numéro de série Excel en Date
+// Fonction pour convertir un numéro de série Excel en Date avec inversion des jours et mois
 const excelDateToJSDate = (serial: number): Date => {
+  // Excel utilise le 30 décembre 1899 comme point de départ pour les dates
   const epoch = new Date(Date.UTC(1899, 11, 30)); // 30 décembre 1899
   const days = Math.floor(serial);
   const milliseconds = Math.round((serial - days) * 86400000); // Fraction du jour en millisecondes
 
-  return new Date(epoch.getTime() + days * 86400000 + milliseconds);
+  // Calculer la date de base
+  const baseDate = new Date(epoch.getTime() + days * 86400000 + milliseconds);
+
+  // Récupérer le jour, le mois et l'année de la date de base
+  const day = baseDate.getUTCDate();
+  const month = baseDate.getUTCMonth(); // Les mois sont indexés de 0 à 11
+  const year = baseDate.getUTCFullYear();
+
+  // Créer une nouvelle date avec jour et mois inversés
+  // Les mois en JavaScript sont indexés de 0 à 11, donc on ajuste cela pour obtenir le mois correct
+  const correctedDate = new Date(Date.UTC(year, day - 1, month + 1)); // Inverser jour et mois
+
+  console.log(`Converted Excel serial ${serial} to base date ${baseDate.toISOString()}`);
+  console.log(`Corrected Excel serial ${serial} to date ${correctedDate.toISOString()}`);
+
+  return correctedDate;
 };
 
 // Fonction améliorée pour convertir une chaîne de date ou un numéro de série en objet Date
 const convertToDate = (value: string | number): Date | null => {
   if (typeof value === 'number') {
-    return excelDateToJSDate(value);
+    // Traiter les dates sérielles avec inversion des jours et mois
+    const date = excelDateToJSDate(value);
+    console.log(`Converted Excel serial ${value} to date ${date.toISOString()}`);
+    return date;
   }
 
-  const dateString = String(value);
+  const dateString = String(value).trim();
+  console.log(`Processing date string: ${dateString}`);
 
-  // Vérifie si le format est bien DD/MM/YYYY
   if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) {
+    // Traitement des chaînes de dates en format DD/MM/YYYY
     const [day, month, year] = dateString.split("/");
-    const dayInt = parseInt(day, 10);
-    const monthInt = parseInt(month, 10) - 1; // Les mois sont indexés à partir de 0
-    const yearInt = parseInt(year, 10);
-
-    return new Date(yearInt, monthInt, dayInt);
+    const date = new Date(`${year}-${month}-${day}`); // Format ISO 8601
+    console.log(`Converted string ${dateString} to date ${date.toISOString()}`);
+    return date;
   }
 
-  console.error(`Invalid format: ${value}`);
+  console.error(`Invalid date format: ${value}`);
   return null;
 };
 
@@ -109,30 +127,21 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
         | null
       )[][];
 
+      console.log('Raw sheet data:', sheetData);
+
       const filteredData: ExcelRow[] = sheetData
         .slice(1)
         .map((row) => ({
-          client:
-            row[1] !== null && row[1] !== undefined
-              ? String(row[1]).trim()
-              : null,
-          immatriculation:
-            row[2] !== null && row[2] !== undefined
-              ? String(row[2]).trim()
-              : null,
-          modele:
-            row[3] !== null && row[3] !== undefined
-              ? String(row[3]).trim()
-              : null,
+          client: row[1] ? String(row[1]).trim() : null,
+          immatriculation: row[2] ? String(row[2]).trim() : null,
+          modele: row[3] ? String(row[3]).trim() : null,
           dateCreation: row[8] ? convertToDate(row[8]) : null,
         }))
-        .filter(
-          (row) =>
-            row.client ||
-            row.immatriculation ||
-            row.modele ||
-            row.dateCreation !== null
+        .filter((row) =>
+          row.client || row.immatriculation || row.modele || row.dateCreation
         );
+
+      console.log('Filtered data:', filteredData);
 
       setData(filteredData);
     };
