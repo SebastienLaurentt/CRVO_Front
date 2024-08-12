@@ -1,8 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
+import { BookText } from "lucide-react";
 import React, { useState } from "react";
-import { Input } from "./ui/input";
+import { Link } from "react-router-dom";
 import Loader from "./Loader";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 
 interface Vehicle {
   _id: string;
@@ -75,6 +78,12 @@ const VehicleListByUserId: React.FC = () => {
           hasSearchIcon
           onChange={(e) => setSearchQuery(e.target.value)}
         />
+        <Button className="space-x-[5px]" asChild>
+          <Link to="https://facturation.crvo.fr/" target="_blank">
+            <BookText size={20} />
+            <span>Mes Factures</span>
+          </Link>
+        </Button>
       </div>
 
       <table>
