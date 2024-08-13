@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { useQuery } from "@tanstack/react-query";
 import {
   AudioLines,
+  BadgeCheck,
   Car,
   LifeBuoy,
   ShieldCheck,
@@ -86,8 +87,8 @@ const AdminDashboard: React.FC = () => {
 
   return (
     <div className="py-8 px-12 border rounded-lg shadow-2xl my-8">
-      <h1 className="mb-6 text-left">Tableau de bord Admin</h1>
-      <div className="flex flex-row justify-between mb-4">
+      <h1 className="text-left">Tableau de bord Admin</h1>
+      <div className="flex flex-row justify-between pb-4 pt-8 sticky top-0 z-10 bg-white">
         <div className="flex flex-row gap-x-3">
           <Input
             placeholder="Recherche"
@@ -113,20 +114,30 @@ const AdminDashboard: React.FC = () => {
         </div>
       </div>
 
-      <table>
+      <table className="w-full">
         <thead>
-          <tr className="text-left bg-primary border-b">
+          <tr className="text-left bg-primary border-b sticky top-[88px] z-10">
             <th className="py-3 px-6 w-[300px]">Client</th>
             <th className="py-3 px-6 w-[200px]">Immatriculation</th>
             <th className="py-3 px-6 w-[250px]">Modèle</th>
             <th className="py-3 px-6 w-[200px] text-center">
               Jours depuis Création
             </th>
-            <th className="py-3 px-6 w-[150px]">Mécanique</th>
-            <th className="py-3 px-6 w-[150px]">Carrosserie</th>
-            <th className="py-3 px-6 w-[100px]">CT</th>
-            <th className="py-3 px-6 w-[100px]">DSP</th>
-            <th className="py-3 px-6 w-[100px]">Jantes</th>
+            <th className="py-3 px-6 w-[150px] text-center">
+              <Wrench className="inline-block mb-0.5" /> Mécanique
+            </th>
+            <th className="py-3 px-6 w-[150px] text-center">
+              <Car className="inline-block mb-0.5" /> Carrosserie
+            </th>
+            <th className="py-3 px-6 w-[80px] text-center">
+              <ShieldCheck className="inline-block mb-0.5" /> CT
+            </th>
+            <th className="py-3 px-6 w-[100px] text-center">
+              <AudioLines className="inline-block mb-0.5" /> DSP
+            </th>
+            <th className="py-3 px-6 w-[100px] text-center">
+              <LifeBuoy className="inline-block mb-0.5" /> Jantes
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -139,20 +150,32 @@ const AdminDashboard: React.FC = () => {
                 <td className="py-4 px-6 text-center">
                   {daysSince(vehicle.dateCreation)}
                 </td>
-                <td className="py-4 px-6 ">
-                  {vehicle.mecanique ? <Wrench /> : ""}
+                <td className="py-4 px-6 text-center">
+                  {vehicle.mecanique ? (
+                    <BadgeCheck className="inline-block" />
+                  ) : (
+                    ""
+                  )}
                 </td>
-                <td className="py-4 px-6 ">
-                  {vehicle.carrosserie ? <Car /> : ""}
+                <td className="py-4 px-6 text-center">
+                  {vehicle.carrosserie ? (
+                    <BadgeCheck className="inline-block" />
+                  ) : (
+                    ""
+                  )}
                 </td>
-                <td className="py-4 px-6 ">
-                  {vehicle.ct ? <ShieldCheck /> : ""}
+                <td className="py-4 px-6 text-center">
+                  {vehicle.ct ? <BadgeCheck className="inline-block" /> : ""}
                 </td>
-                <td className="py-4 px-6 ">
-                  {vehicle.dsp ? <AudioLines /> : ""}
+                <td className="py-4 px-6 text-center">
+                  {vehicle.dsp ? <BadgeCheck className="inline-block" /> : ""}
                 </td>
-                <td className="py-4 px-6 ">
-                  {vehicle.jantes ? <LifeBuoy /> : ""}
+                <td className="py-4 px-6 text-center">
+                  {vehicle.jantes ? (
+                    <BadgeCheck className="inline-block" />
+                  ) : (
+                    ""
+                  )}
                 </td>
               </tr>
             ))
