@@ -34,6 +34,6 @@
 
 @layer base {
   h1 {
-    @apply text-xl mt-8 font-bold lg:text-3xl;
+    @apply text-xl font-bold lg:text-3xl leading-9;
   }
 }

@@ -58,10 +58,9 @@ const Users: React.FC = () => {
     );
 
   return (
-    <div className="flex flex-col items-center py-8 px-12 rounded-lg">
-      <h1 className="mb-4">Liste des Clients</h1>
-
+    <div className="flex flex-col items-center py-8 px-12">
       <div className="py-8 px-12 border rounded-lg shadow-2xl">
+        <h1 className="mb-6">Liste des Clients</h1>
         <table className="border-gray-200">
           <thead>
             <tr className="text-left bg-primary border-b">
@@ -81,7 +80,7 @@ const Users: React.FC = () => {
                       onClick={() => handleEditClick(user)}
                       className="text-gray-600 hover:text-black"
                     >
-                      <Settings size={18}/>
+                      <Settings size={18} />
                     </button>
                   </td>
                 </tr>
