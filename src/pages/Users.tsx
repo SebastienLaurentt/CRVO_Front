@@ -9,6 +9,7 @@ interface User {
   _id: string;
   username: string;
   role: string;
+  passwordChanged: boolean;
 }
 
 const fetchUsers = async (): Promise<User[]> => {
@@ -21,12 +22,12 @@ const fetchUsers = async (): Promise<User[]> => {
   if (!response.ok) {
     throw new Error("Erreur lors de la récupération des utilisateurs.");
   }
-  const data = await response.json();
-  return data;
+  return response.json();
 };
 
 const Users: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
   const {
     data: users,
     isLoading,
@@ -64,8 +65,9 @@ const Users: React.FC = () => {
         <table className="border-gray-200">
           <thead>
             <tr className="text-left bg-primary border-b">
-              <th className="py-3 px-6 w-[400px]">Client</th>
+              <th className="py-3 px-6 w-[300px]">Client</th>
               <th className="py-3 px-6 w-[200px]">Rôle</th>
+              <th className="py-3 px-6 w-[200px] text-center">Mot de passe</th>
               <th className="py-3 px-6 w-[100px]">Actions</th>
             </tr>
           </thead>
@@ -75,6 +77,13 @@ const Users: React.FC = () => {
                 <tr key={user._id} className="border-b">
                   <td className="py-4 px-6">{user.username}</td>
                   <td className="py-4 px-6">{user.role}</td>
+                  <td
+                    className={`py-4 px-6 text-center font-medium ${
+                      user.passwordChanged ? "text-green-600" : "text-red-600"
+                    }`}
+                  >
+                    {user.passwordChanged ? "Configuré" : "Non configuré"}
+                  </td>
                   <td className="py-4 px-6 text-center">
                     <button
                       onClick={() => handleEditClick(user)}
@@ -87,7 +96,7 @@ const Users: React.FC = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={3} className="text-center py-4">
+                <td colSpan={4} className="text-center py-4">
                   Aucune donnée disponible.
                 </td>
               </tr>

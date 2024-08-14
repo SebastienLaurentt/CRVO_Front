@@ -1,6 +1,7 @@
 import Cookies from "js-cookie";
 import { Files, X } from "lucide-react";
 import React, { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -25,43 +26,58 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
   const [isTextareaEnabled, setTextareaEnabled] = useState(false);
   const [isPasswordSaved, setPasswordSaved] = useState(false);
 
-  const handleSave = async () => {
-    if (user) {
-      try {
-        const token = Cookies.get("token");
-        const response = await fetch(
-          `https://crvo-back.onrender.com/api/users/${user._id}/password`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              newPassword: password,
-            }),
-          }
-        );
+  const queryClient = useQueryClient();
 
-        if (!response.ok) {
-          throw new Error("Erreur lors de la mise à jour du mot de passe.");
+  const { mutate: updateUserPassword } = useMutation({
+    mutationFn: async () => {
+      if (!user) throw new Error("User not provided");
+  
+      const token = Cookies.get("token");
+      const response = await fetch(
+        `https://crvo-back.onrender.com/api/users/${user._id}/password`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ newPassword: password }),
         }
-
-        const updatedMessage = `Bonjour Mr ${username},\n\nVoici vos identifiants pour vous connecter sur la plateforme CRVO :\n\nNom d'utilisateur : ${username}\nMot de passe : ${password}\n\nBien Cordialement,\n\nDamien Jouve,`;
-
-        setMessage(updatedMessage);
-        setTextareaEnabled(true);
-        setPasswordSaved(true);
-
-        toast({ title: "Mot de passe mis à jour avec succès" });
-      } catch (error) {
-        toast({
-          variant: "destructive",
-          title: "Erreur lors de la mise à jour du mot de passe",
-          description: error instanceof Error ? error.message : "Unknown error",
-        });
+      );
+  
+      if (!response.ok) {
+        throw new Error("Erreur lors de la mise à jour du mot de passe.");
       }
-    }
+  
+      return response.json();
+    },
+    onSuccess: () => {
+      const updatedMessage = `Bonjour Mr ${username},\n\nVoici vos identifiants pour vous connecter sur la plateforme CRVO :\n\nNom d'utilisateur : ${username}\nMot de passe : ${password}\n\nBien Cordialement,\n\nDamien Jouve,`;
+  
+      setMessage(updatedMessage);
+      setTextareaEnabled(true);
+      setPasswordSaved(true);
+  
+      toast({ title: "Mot de passe mis à jour avec succès" });
+  
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+  
+      // Fermer le modal
+      onClose();
+    },
+    onError: (error: Error) => {
+      toast({
+        variant: "destructive",
+        title: "Erreur lors de la mise à jour du mot de passe",
+        description: error.message,
+      });
+    },
+  });
+  
+
+  const handleSave = () => {
+    updateUserPassword();
   };
 
   const handleCopy = () => {
@@ -113,7 +129,9 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
             />
           </div>
 
-          <Button onClick={handleSave}>Sauvegarder</Button>
+          <Button onClick={handleSave} disabled={isPasswordSaved}>
+            Sauvegarder
+          </Button>
 
           <div className="">
             <div className="relative mt-6">
