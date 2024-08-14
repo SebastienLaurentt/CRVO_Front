@@ -94,8 +94,8 @@ const MemberDashboard: React.FC = () => {
 
   return (
     <div className="py-8 px-12 border rounded-lg shadow-2xl my-4">
-      <h1 className="mb-6">Tableau de bord</h1>
-      <div className="flex flex-row justify-between mb-4">
+      <h1 >Tableau de bord</h1>
+      <div className="flex flex-row justify-between pb-4 pt-8 sticky top-0 z-10 bg-white">
         <Input
           placeholder="Recherche"
           className="text-sm"
@@ -113,7 +113,7 @@ const MemberDashboard: React.FC = () => {
 
       <table>
         <thead>
-          <tr className="text-left bg-primary border-b">
+          <tr className="text-left bg-primary border-b sticky top-[88px] z-10">
             <th className="py-3 px-6 w-[200px]">Immatriculation</th>
             <th className="py-3 px-6 w-[250px]">Modèle</th>
             <th className="py-3 px-6 w-[200px] text-center">
@@ -145,27 +145,27 @@ const MemberDashboard: React.FC = () => {
                 <td className="py-4 px-6 text-center">
                   {daysSince(vehicle.dateCreation)}
                 </td>
-                <td className="py-4 px-6">
+                <td className="py-4 px-6 text-center">
                   {vehicle.mecanique ? (
                     <BadgeCheck className="inline-block" />
                   ) : (
                     ""
                   )}
                 </td>
-                <td className="py-4 px-6">
+                <td className="py-4 px-6 text-center">
                   {vehicle.carrosserie ? (
                     <BadgeCheck className="inline-block" />
                   ) : (
                     ""
                   )}
                 </td>
-                <td className="py-4 px-6">
+                <td className="py-4 px-6 text-center">
                   {vehicle.ct ? <BadgeCheck className="inline-block" /> : ""}
                 </td>
-                <td className="py-4 px-6">
+                <td className="py-4 px-6 text-center">
                   {vehicle.dsp ? <BadgeCheck className="inline-block" /> : ""}
                 </td>
-                <td className="py-4 px-6">
+                <td className="py-4 px-6 text-center">
                   {vehicle.jantes ? (
                     <BadgeCheck className="inline-block" />
                   ) : (
