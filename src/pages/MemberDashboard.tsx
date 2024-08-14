@@ -22,7 +22,7 @@ interface Vehicle {
   _id: string;
   immatriculation: string;
   modele: string;
-  dateCreation: string;
+  dateCreation: number; 
   user: {
     username: string;
   };
@@ -31,7 +31,7 @@ interface Vehicle {
   ct: boolean;
   dsp: boolean;
   jantes: boolean;
-  esthetique: boolean; 
+  esthetique: boolean;
 }
 
 const daysSince = (timestamp: number): number => {
