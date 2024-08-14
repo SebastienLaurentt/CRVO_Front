@@ -12,7 +12,7 @@ const Header = () => {
 
   return (
     <header className="max-w-7xl px-4 mx-auto w-full flex justify-between items-center py-4">
-      <img src={CRVOLogo} alt="Logo CRVO" className="w-24" />
+      <img src={CRVOLogo} alt="Logo CRVO" className="w-40" />
       <div className="flex items-center gap-4">
         {role === "admin" && (
           <Button asChild>
