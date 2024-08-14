@@ -65,10 +65,9 @@ const Users: React.FC = () => {
         <table className="border-gray-200">
           <thead>
             <tr className="text-left bg-primary border-b">
-              <th className="py-3 px-6 w-[300px]">Client</th>
-              <th className="py-3 px-6 w-[200px]">Rôle</th>
+              <th className="py-3 px-6 w-[500px]">Client</th>
               <th className="py-3 px-6 w-[200px] text-center">Mot de passe</th>
-              <th className="py-3 px-6 w-[100px]">Actions</th>
+              <th className="py-3 px-6 w-[100px]">Paramètres</th>
             </tr>
           </thead>
           <tbody>
@@ -76,7 +75,6 @@ const Users: React.FC = () => {
               users.map((user) => (
                 <tr key={user._id} className="border-b last:border-b-0">
                   <td className="py-4 px-6">{user.username}</td>
-                  <td className="py-4 px-6">{user.role}</td>
                   <td
                     className={`py-4 px-6 text-center font-medium ${
                       user.passwordChanged ? "text-green-600" : "text-red-600"
