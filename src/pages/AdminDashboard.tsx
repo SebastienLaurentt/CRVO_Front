@@ -9,6 +9,7 @@ import {
   Car,
   LifeBuoy,
   ShieldCheck,
+  SprayCan,
   Upload,
   User,
   Wrench,
@@ -29,6 +30,7 @@ interface Vehicle {
   ct: boolean;
   dsp: boolean;
   jantes: boolean;
+  esthetique: boolean; 
 }
 
 const daysSince = (dateString: string): number => {
@@ -138,6 +140,9 @@ const AdminDashboard: React.FC = () => {
             <th className="py-3 px-6 w-[100px] text-center">
               <LifeBuoy className="inline-block mb-0.5" /> Jantes
             </th>
+            <th className="py-3 px-6 w-[100px] text-center">
+              <SprayCan className="inline-block mb-0.5" /> Esthétique
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -177,11 +182,18 @@ const AdminDashboard: React.FC = () => {
                     ""
                   )}
                 </td>
+                <td className="py-4 px-6 text-center">
+                  {vehicle.esthetique ? (
+                    <BadgeCheck className="inline-block" />
+                  ) : (
+                    ""
+                  )}
+                </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan={9} className="text-center pt-8 font-medium">
+              <td colSpan={10} className="text-center pt-8 font-medium">
                 Aucune donnée disponible actuellement. <br /> Veuillez ajouter
                 un fichier Excel.
               </td>
@@ -198,3 +210,4 @@ const AdminDashboard: React.FC = () => {
 };
 
 export default AdminDashboard;
+

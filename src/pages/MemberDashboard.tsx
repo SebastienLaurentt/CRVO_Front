@@ -11,6 +11,7 @@ import {
   ChartArea,
   LifeBuoy,
   ShieldCheck,
+  SprayCan,
   Wrench,
 } from "lucide-react";
 import React, { useState } from "react";
@@ -21,7 +22,7 @@ interface Vehicle {
   _id: string;
   immatriculation: string;
   modele: string;
-  dateCreation: number; 
+  dateCreation: string;
   user: {
     username: string;
   };
@@ -30,6 +31,7 @@ interface Vehicle {
   ct: boolean;
   dsp: boolean;
   jantes: boolean;
+  esthetique: boolean; 
 }
 
 const daysSince = (timestamp: number): number => {
@@ -165,6 +167,9 @@ const MemberDashboard: React.FC = () => {
             <th className="py-3 px-6 w-[100px] text-center">
               <LifeBuoy className="inline-block mb-0.5" /> Jantes
             </th>
+            <th className="py-3 px-6 w-[100px] text-center">
+              <SprayCan className="inline-block mb-0.5" /> Esthétique
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -198,6 +203,13 @@ const MemberDashboard: React.FC = () => {
                 </td>
                 <td className="py-4 px-6 text-center">
                   {vehicle.jantes ? (
+                    <BadgeCheck className="inline-block" />
+                  ) : (
+                    ""
+                  )}
+                </td>
+                <td className="py-4 px-6 text-center">
+                  {vehicle.esthetique ? (
                     <BadgeCheck className="inline-block" />
                   ) : (
                     ""
