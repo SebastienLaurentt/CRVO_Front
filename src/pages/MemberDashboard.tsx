@@ -8,18 +8,20 @@ import {
   BadgeCheck,
   BookText,
   Car,
+  ChartArea,
   LifeBuoy,
   ShieldCheck,
   Wrench,
 } from "lucide-react";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import * as XLSX from "xlsx"; 
 
 interface Vehicle {
   _id: string;
   immatriculation: string;
   modele: string;
-  dateCreation: number;
+  dateCreation: number; 
   user: {
     username: string;
   };
@@ -92,9 +94,32 @@ const MemberDashboard: React.FC = () => {
     (a, b) => daysSince(b.dateCreation) - daysSince(a.dateCreation)
   );
 
+  const exportToExcel = () => {
+    if (!sortedVehicles) return;
+
+    const workbook = XLSX.utils.book_new();
+
+    const data = sortedVehicles.map((vehicle) => ({
+      Immatriculation: vehicle.immatriculation,
+      Modèle: vehicle.modele,
+      "Jours depuis Création": daysSince(vehicle.dateCreation),
+      Mécanique: vehicle.mecanique ? "Oui" : "Non",
+      Carrosserie: vehicle.carrosserie ? "Oui" : "Non",
+      CT: vehicle.ct ? "Oui" : "Non",
+      DSP: vehicle.dsp ? "Oui" : "Non",
+      Jantes: vehicle.jantes ? "Oui" : "Non",
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Véhicules");
+
+    XLSX.writeFile(workbook, "vehicules.xlsx");
+  };
+
   return (
     <div className="py-8 px-12 border rounded-lg shadow-2xl my-4">
-      <h1 >Tableau de bord</h1>
+      <h1>Tableau de bord</h1>
       <div className="flex flex-row justify-between pb-4 pt-8 sticky top-0 z-10 bg-white">
         <Input
           placeholder="Recherche"
@@ -103,12 +128,18 @@ const MemberDashboard: React.FC = () => {
           hasSearchIcon
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <Button className="space-x-[5px]" asChild>
-          <Link to="https://facturation.crvo.fr/" target="_blank">
-            <BookText size={20} />
-            <span>Mes Factures</span>
-          </Link>
-        </Button>
+        <div className="flex gap-x-2">
+          <Button className="space-x-[5px]" asChild>
+            <Link to="https://facturation.crvo.fr/" target="_blank">
+              <BookText size={20} />
+              <span>Mes Factures</span>
+            </Link>
+          </Button>
+          <Button className="space-x-[5px]" onClick={exportToExcel}>
+            <ChartArea size={20} />
+            <span>Exporter en Excel</span>
+          </Button>
+        </div>
       </div>
 
       <table>
