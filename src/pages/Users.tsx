@@ -74,7 +74,7 @@ const Users: React.FC = () => {
           <tbody>
             {users && users.length > 0 ? (
               users.map((user) => (
-                <tr key={user._id} className="border-b">
+                <tr key={user._id} className="border-b last:border-b-0">
                   <td className="py-4 px-6">{user.username}</td>
                   <td className="py-4 px-6">{user.role}</td>
                   <td

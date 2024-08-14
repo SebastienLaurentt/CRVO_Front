@@ -175,7 +175,7 @@ const MemberDashboard: React.FC = () => {
         <tbody>
           {sortedVehicles && sortedVehicles.length > 0 ? (
             sortedVehicles.map((vehicle: Vehicle) => (
-              <tr key={vehicle._id} className="border-b">
+              <tr key={vehicle._id} className="border-b last:border-b-0">
                 <td className="py-4 px-6">{vehicle.immatriculation}</td>
                 <td className="py-4 px-6">{vehicle.modele}</td>
                 <td className="py-4 px-6 text-center">
