@@ -7,6 +7,7 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { toast } from "./ui/use-toast";
+import Loader from "./Loader"; // Assuming Loader is in the same folder
 
 type User = {
   _id: string;
@@ -28,10 +29,10 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
 
   const queryClient = useQueryClient();
 
-  const { mutate: updateUserPassword } = useMutation({
+  const { mutate: updateUserPassword, isPending } = useMutation({
     mutationFn: async () => {
       if (!user) throw new Error("User not provided");
-  
+
       const token = Cookies.get("token");
       const response = await fetch(
         `https://crvo-back.onrender.com/api/users/${user._id}/password`,
@@ -44,27 +45,24 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
           body: JSON.stringify({ newPassword: password }),
         }
       );
-  
+
       if (!response.ok) {
         throw new Error("Erreur lors de la mise à jour du mot de passe.");
       }
-  
+
       return response.json();
     },
     onSuccess: () => {
       const updatedMessage = `Bonjour Mr ${username},\n\nVoici vos identifiants pour vous connecter sur la plateforme CRVO :\n\nNom d'utilisateur : ${username}\nMot de passe : ${password}\n\nBien Cordialement,\n\nDamien Jouve,`;
-  
+
       setMessage(updatedMessage);
       setTextareaEnabled(true);
       setPasswordSaved(true);
-  
+
       toast({ title: "Mot de passe mis à jour avec succès" });
-  
+
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: ["users"] });
-  
-      // Fermer le modal
-      onClose();
     },
     onError: (error: Error) => {
       toast({
@@ -74,7 +72,6 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
       });
     },
   });
-  
 
   const handleSave = () => {
     updateUserPassword();
@@ -129,8 +126,15 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
             />
           </div>
 
-          <Button onClick={handleSave} disabled={isPasswordSaved}>
-            Sauvegarder
+          <Button onClick={handleSave} disabled={isPasswordSaved || isPending}>
+            {isPending ? (
+              <span className="flex items-center gap-3">
+                Sauvegarde en cours
+                <Loader isButtonSize />
+              </span>
+            ) : (
+              "Sauvegarder"
+            )}
           </Button>
 
           <div className="">
@@ -138,8 +142,8 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
               <Label>Email Client</Label>
               <Textarea
                 value={message}
-                rows={12}
-                className="w-full border rounded px-4 py-2 mt-1"
+                rows={14}
+                className="w-full border rounded px-6 py-3 mt-1"
                 placeholder="Le message s'affichera ici après la sauvegarde"
                 disabled={!isTextareaEnabled}
               />

@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import React, { ChangeEvent, useState } from "react";
 import * as XLSX from "xlsx";
 import FileUploader from "./FileUploader";
+import Loader from "./Loader";
 import { Button } from "./ui/button";
 import { toast } from "./ui/use-toast";
 
@@ -15,7 +16,7 @@ type CompletedVehicleRow = {
 
 interface FileInputProps {
   onClose: () => void;
-};
+}
 
 const uploadCompletedVehicleData = async (vehicle: CompletedVehicleRow) => {
   const response = await fetch("https://crvo-back.onrender.com/api/completed", {
@@ -58,14 +59,18 @@ const excelDateToJSDate = (serial: number): Date => {
   // Les mois en JavaScript sont indexés de 0 à 11, donc on ajuste cela pour obtenir le mois correct
   const correctedDate = new Date(Date.UTC(year, day - 1, month + 1)); // Inverser jour et mois
 
-  console.log(`Converted Excel serial ${serial} to base date ${baseDate.toISOString()}`);
-  console.log(`Corrected Excel serial ${serial} to date ${correctedDate.toISOString()}`);
+  console.log(
+    `Converted Excel serial ${serial} to base date ${baseDate.toISOString()}`
+  );
+  console.log(
+    `Corrected Excel serial ${serial} to date ${correctedDate.toISOString()}`
+  );
 
   return correctedDate;
 };
 
 const convertToDate = (value: string | number): Date | null => {
-  if (typeof value === 'number') {
+  if (typeof value === "number") {
     const date = excelDateToJSDate(value);
     return date;
   }
@@ -116,8 +121,8 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
           statut: row[4] ? String(row[4]).trim() : null,
           dateCompletion: row[5] ? convertToDate(row[5]) : null,
         }))
-        .filter((row) =>
-          row.client || row.vin || row.statut || row.dateCompletion
+        .filter(
+          (row) => row.client || row.vin || row.statut || row.dateCompletion
         );
 
       setData(filteredData);
@@ -130,7 +135,9 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
 
   const { mutate: uploadCompletedVehicles, isPending } = useMutation({
     mutationFn: async () => {
-      const promises = data.map((vehicle) => uploadCompletedVehicleData(vehicle));
+      const promises = data.map((vehicle) =>
+        uploadCompletedVehicleData(vehicle)
+      );
       await Promise.all(promises);
     },
     onSuccess: () => {
@@ -179,7 +186,14 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
             onClick={handleDataSubmit}
             disabled={!fileName || isPending}
           >
-            {isPending ? "Chargement..." : "Mettre à jour"}
+            {isPending ? (
+              <span className="flex flex-row gap-x-3">
+                {" "}
+                Import en cours <Loader isButtonSize />
+              </span>
+            ) : (
+              "Mettre à jour"
+            )}
           </Button>
         </div>
       </div>

@@ -1,8 +1,9 @@
- import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import React, { ChangeEvent, useState } from "react";
 import * as XLSX from "xlsx";
 import FileUploader from "./FileUploader";
+import Loader from "./Loader";
 import { Button } from "./ui/button";
 import { toast } from "./ui/use-toast";
 
@@ -11,16 +12,16 @@ type ExcelRow = {
   immatriculation: string | null;
   modele: string | null;
   dateCreation: Date | null;
-  mecanique: boolean; 
-  carrosserie: boolean; 
-  ct: boolean; 
-  dsp: boolean; 
-  jantes: boolean; 
+  mecanique: boolean;
+  carrosserie: boolean;
+  ct: boolean;
+  dsp: boolean;
+  jantes: boolean;
 };
 
 interface FileInputProps {
   onClose: () => void;
-};
+}
 
 const deleteExistingData = async () => {
   const response = await fetch("https://crvo-back.onrender.com/api/cleanup", {
@@ -80,18 +81,24 @@ const excelDateToJSDate = (serial: number): Date => {
   // Les mois en JavaScript sont indexés de 0 à 11, donc on ajuste cela pour obtenir le mois correct
   const correctedDate = new Date(Date.UTC(year, day - 1, month + 1)); // Inverser jour et mois
 
-  console.log(`Converted Excel serial ${serial} to base date ${baseDate.toISOString()}`);
-  console.log(`Corrected Excel serial ${serial} to date ${correctedDate.toISOString()}`);
+  console.log(
+    `Converted Excel serial ${serial} to base date ${baseDate.toISOString()}`
+  );
+  console.log(
+    `Corrected Excel serial ${serial} to date ${correctedDate.toISOString()}`
+  );
 
   return correctedDate;
 };
 
 // Fonction améliorée pour convertir une chaîne de date ou un numéro de série en objet Date
 const convertToDate = (value: string | number): Date | null => {
-  if (typeof value === 'number') {
+  if (typeof value === "number") {
     // Traiter les dates sérielles avec inversion des jours et mois
     const date = excelDateToJSDate(value);
-    console.log(`Converted Excel serial ${value} to date ${date.toISOString()}`);
+    console.log(
+      `Converted Excel serial ${value} to date ${date.toISOString()}`
+    );
     return date;
   }
 
@@ -117,28 +124,28 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-  
+
     setFileName(file.name);
-  
+
     const reader = new FileReader();
-  
+
     reader.onload = (event: ProgressEvent<FileReader>) => {
       const arrayBuffer = event.target?.result;
       if (!arrayBuffer) return;
-  
+
       const data = new Uint8Array(arrayBuffer as ArrayBuffer);
       const workbook = XLSX.read(data, { type: "array" });
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
-  
+
       const sheetData = XLSX.utils.sheet_to_json(sheet, { header: 1 }) as (
         | string
         | number
         | null
       )[][];
-  
-      console.log('Raw sheet data:', sheetData);
-  
+
+      console.log("Raw sheet data:", sheetData);
+
       const filteredData: ExcelRow[] = sheetData
         .slice(1)
         .map((row) => ({
@@ -146,21 +153,22 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
           immatriculation: row[2] ? String(row[2]).trim() : null,
           modele: row[3] ? String(row[3]).trim() : null,
           dateCreation: row[8] ? convertToDate(row[8]) : null,
-          mecanique: String(row[15]).trim().toLowerCase() === 'oui',
-          carrosserie: String(row[16]).trim().toLowerCase() === 'oui',
-          ct: String(row[17]).trim().toLowerCase() === 'oui',
-          dsp: String(row[18]).trim().toLowerCase() === 'oui',
-          jantes: String(row[19]).trim().toLowerCase() === 'oui',
+          mecanique: String(row[15]).trim().toLowerCase() === "oui",
+          carrosserie: String(row[16]).trim().toLowerCase() === "oui",
+          ct: String(row[17]).trim().toLowerCase() === "oui",
+          dsp: String(row[18]).trim().toLowerCase() === "oui",
+          jantes: String(row[19]).trim().toLowerCase() === "oui",
         }))
-        .filter((row) =>
-          row.client || row.immatriculation || row.modele || row.dateCreation
+        .filter(
+          (row) =>
+            row.client || row.immatriculation || row.modele || row.dateCreation
         );
-  
-      console.log('Filtered data:', filteredData);
-  
+
+      console.log("Filtered data:", filteredData);
+
       setData(filteredData);
     };
-  
+
     reader.readAsArrayBuffer(file);
   };
 
@@ -218,7 +226,14 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
             onClick={handleDataSubmit}
             disabled={!fileName || isPending}
           >
-            {isPending ? "Chargement..." : "Mettre à jour"}
+            {isPending ? (
+              <span className="flex flex-row gap-x-3">
+                {" "}
+                Import en cours <Loader isButtonSize />
+              </span>
+            ) : (
+              "Mettre à jour"
+            )}
           </Button>
         </div>
       </div>

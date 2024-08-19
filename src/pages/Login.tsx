@@ -7,6 +7,7 @@ import CRVOLogo from "/public/images/CRVOLogo.png";
 import { useState } from "react";
 import { BiHide, BiShow } from "react-icons/bi";
 
+import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/lib/auth";
@@ -101,7 +102,6 @@ export default function Login() {
                 />
               </div>
             </div>
-
             <div className="flex w-full flex-col items-center space-y-1 xl:items-start">
               <Label htmlFor="password">Mot de passe</Label>
               <div className="relative w-full">
@@ -124,16 +124,27 @@ export default function Login() {
                 </button>
               </div>
             </div>
-
             {error && <p className="text-red-500">{error}</p>}
-            <Button className="w-full" type="submit" disabled={mutation.isPending}>
-              {mutation.isPending ? "Connexion..." : "Se connecter"}
+            <Button
+              className="w-full"
+              type="submit"
+              disabled={mutation.isPending}
+            >
+              {mutation.isPending ? (
+                <span className="flex flex-row gap-x-3">
+                  {" "}
+                  Connexion en cours <Loader isButtonSize />
+                </span>
+              ) : (
+                "Se connecter"
+              )}
             </Button>
+            ..
           </form>
         </div>
       </div>
 
-      <div className="w-full  ">
+      <div className="w-full ">
         <img src={CRVOImg} alt="Image de voiture" className="lg:rounded-lg" />
       </div>
     </div>
