@@ -1,4 +1,4 @@
- import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import React, { ChangeEvent, useState } from "react";
 import * as XLSX from "xlsx";
@@ -6,36 +6,19 @@ import FileUploader from "./FileUploader";
 import { Button } from "./ui/button";
 import { toast } from "./ui/use-toast";
 
-type ExcelRow = {
+type CompletedVehicleRow = {
   client: string | null;
-  immatriculation: string | null;
-  modele: string | null;
-  dateCreation: Date | null;
-  mecanique: boolean; 
-  carrosserie: boolean; 
-  ct: boolean; 
-  dsp: boolean; 
-  jantes: boolean; 
+  vin: string | null;
+  statut: string | null;
+  dateCompletion: Date | null;
 };
 
 interface FileInputProps {
   onClose: () => void;
 };
 
-const deleteExistingData = async () => {
-  const response = await fetch("https://crvo-back.onrender.com/api/cleanup", {
-    method: "DELETE",
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to delete existing data");
-  }
-
-  return response.json();
-};
-
-const uploadVehicleData = async (vehicle: ExcelRow) => {
-  const response = await fetch("https://crvo-back.onrender.com/api/vehicles", {
+const uploadCompletedVehicleData = async (vehicle: CompletedVehicleRow) => {
+  const response = await fetch("https://crvo-back.onrender.com/api/completed", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -43,19 +26,14 @@ const uploadVehicleData = async (vehicle: ExcelRow) => {
     body: JSON.stringify({
       username: vehicle.client,
       password: "motdepasse",
-      immatriculation: vehicle.immatriculation,
-      modele: vehicle.modele,
-      dateCreation: vehicle.dateCreation,
-      mecanique: vehicle.mecanique,
-      carrosserie: vehicle.carrosserie,
-      ct: vehicle.ct,
-      dsp: vehicle.dsp,
-      jantes: vehicle.jantes,
+      vin: vehicle.vin,
+      statut: vehicle.statut,
+      dateCompletion: vehicle.dateCompletion,
     }),
   });
 
   if (!response.ok) {
-    throw new Error("Failed to upload vehicle data");
+    throw new Error("Failed to upload completed vehicle data");
   }
 
   return response.json();
@@ -86,95 +64,78 @@ const excelDateToJSDate = (serial: number): Date => {
   return correctedDate;
 };
 
-// Fonction améliorée pour convertir une chaîne de date ou un numéro de série en objet Date
 const convertToDate = (value: string | number): Date | null => {
   if (typeof value === 'number') {
-    // Traiter les dates sérielles avec inversion des jours et mois
     const date = excelDateToJSDate(value);
-    console.log(`Converted Excel serial ${value} to date ${date.toISOString()}`);
     return date;
   }
 
   const dateString = String(value).trim();
-  console.log(`Processing date string: ${dateString}`);
 
   if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) {
-    // Traitement des chaînes de dates en format DD/MM/YYYY
     const [day, month, year] = dateString.split("/");
-    const date = new Date(`${year}-${month}-${day}`); // Format ISO 8601
-    console.log(`Converted string ${dateString} to date ${date.toISOString()}`);
+    const date = new Date(`${year}-${month}-${day}`);
     return date;
   }
 
-  console.error(`Invalid date format: ${value}`);
   return null;
 };
 
 const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
-  const [data, setData] = useState<ExcelRow[]>([]);
+  const [data, setData] = useState<CompletedVehicleRow[]>([]);
   const [fileName, setFileName] = useState<string | null>(null);
 
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-  
+
     setFileName(file.name);
-  
+
     const reader = new FileReader();
-  
+
     reader.onload = (event: ProgressEvent<FileReader>) => {
       const arrayBuffer = event.target?.result;
       if (!arrayBuffer) return;
-  
+
       const data = new Uint8Array(arrayBuffer as ArrayBuffer);
       const workbook = XLSX.read(data, { type: "array" });
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
-  
+
       const sheetData = XLSX.utils.sheet_to_json(sheet, { header: 1 }) as (
         | string
         | number
         | null
       )[][];
-  
-      console.log('Raw sheet data:', sheetData);
-  
-      const filteredData: ExcelRow[] = sheetData
+
+      const filteredData: CompletedVehicleRow[] = sheetData
         .slice(1)
         .map((row) => ({
-          client: row[1] ? String(row[1]).trim() : null,
-          immatriculation: row[2] ? String(row[2]).trim() : null,
-          modele: row[3] ? String(row[3]).trim() : null,
-          dateCreation: row[8] ? convertToDate(row[8]) : null,
-          mecanique: String(row[15]).trim().toLowerCase() === 'oui',
-          carrosserie: String(row[16]).trim().toLowerCase() === 'oui',
-          ct: String(row[17]).trim().toLowerCase() === 'oui',
-          dsp: String(row[18]).trim().toLowerCase() === 'oui',
-          jantes: String(row[19]).trim().toLowerCase() === 'oui',
+          client: row[0] ? String(row[0]).trim() : null,
+          vin: row[2] ? String(row[2]).trim() : null,
+          statut: row[4] ? String(row[4]).trim() : null,
+          dateCompletion: row[5] ? convertToDate(row[5]) : null,
         }))
         .filter((row) =>
-          row.client || row.immatriculation || row.modele || row.dateCreation
+          row.client || row.vin || row.statut || row.dateCompletion
         );
-  
-      console.log('Filtered data:', filteredData);
-  
+
       setData(filteredData);
     };
-  
+
     reader.readAsArrayBuffer(file);
   };
 
   const queryClient = useQueryClient();
 
-  const { mutate: uploadVehicles, isPending } = useMutation({
+  const { mutate: uploadCompletedVehicles, isPending } = useMutation({
     mutationFn: async () => {
-      await deleteExistingData();
-      const promises = data.map((vehicle) => uploadVehicleData(vehicle));
+      const promises = data.map((vehicle) => uploadCompletedVehicleData(vehicle));
       await Promise.all(promises);
     },
     onSuccess: () => {
       toast({ title: "Données mises à jour avec succès !" });
-      queryClient.invalidateQueries({ queryKey: ["vehicles"] });
+      queryClient.invalidateQueries({ queryKey: ["completed-vehicles"] });
       onClose();
     },
     onError: (error) => {
@@ -187,7 +148,7 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
   });
 
   const handleDataSubmit = () => {
-    uploadVehicles();
+    uploadCompletedVehicles();
   };
 
   return (
