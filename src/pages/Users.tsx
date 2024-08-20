@@ -1,5 +1,6 @@
 import EditUserModal from "@/components/EditUserModal";
 import Loader from "@/components/Loader";
+import Nav from "@/components/Nav";
 import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import { Settings } from "lucide-react";
@@ -59,8 +60,9 @@ const Users: React.FC = () => {
     );
 
   return (
-    <div className="flex flex-col items-center py-8 px-12">
-      <div className="py-8 px-12 border rounded-lg shadow-2xl">
+    <div className="flex flex-row gap-x-4 my-20 ml-8">
+      <Nav />
+      <div className="p-8 border rounded-lg shadow-2xl">
         <h1 className="mb-6">Liste des Clients</h1>
         <table className="border-gray-200">
           <thead>

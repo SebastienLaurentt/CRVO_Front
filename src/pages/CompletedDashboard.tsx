@@ -11,7 +11,7 @@ const CompletedDashboard = () => {
   }
 
   return (
-    <div className="flex flex-row gap-x-4 my-8 ml-8">
+    <div className="flex flex-row gap-x-4 my-20 ml-8">
       <>
         <Nav />
         <AdminCompleted />

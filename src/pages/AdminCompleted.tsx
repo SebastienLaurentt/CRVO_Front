@@ -79,7 +79,7 @@ const AdminCompleted: React.FC = () => {
     );
 
   return (
-    <div className="py-8 px-12 border rounded-lg shadow-2xl ">
+    <div className="p-8 border rounded-lg shadow-2xl ">
       <h1 className="text-left">Véhicules Terminés</h1>
       <div className="flex flex-row justify-between pb-4 pt-8 sticky top-0 z-10 bg-white">
         <div className="flex flex-row gap-x-3">

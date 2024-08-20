@@ -199,7 +199,7 @@ const AdminOngoing: React.FC = () => {
           )}
         </tbody>
       </table>
-      );
+  
       {isFileInputVisible && (
         <AddExcelData onClose={() => setIsFileInputVisible(false)} />
       )}

@@ -1,7 +1,5 @@
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
-import Footer from "./components/Footer";
-import Header from "./components/Header";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 import AdminRoute from "./components/AdminRoute";
@@ -12,13 +10,8 @@ import { default as OngoingDashboard } from "./pages/OngoingDashboard";
 import Users from "./pages/Users";
 
 const App = () => {
-  const location = useLocation();
-  const hideHeaderAndFooter = location.pathname === "/login";
-
   return (
     <div className="min-h-screen flex flex-col">
-      {!hideHeaderAndFooter && <Header />}
-
       <main className="w-full flex-1">
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -49,8 +42,6 @@ const App = () => {
         </Routes>
         <Toaster />
       </main>
-
-      {!hideHeaderAndFooter && <Footer />}
     </div>
   );
 };
