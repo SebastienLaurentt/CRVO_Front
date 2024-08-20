@@ -139,7 +139,7 @@ export default function Login() {
                 "Se connecter"
               )}
             </Button>
-            ..
+        
           </form>
         </div>
       </div>
