@@ -1,6 +1,5 @@
 import EditUserModal from "@/components/EditUserModal";
 import Loader from "@/components/Loader";
-import Nav from "@/components/Nav";
 import { Input } from "@/components/ui/input";
 import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
@@ -41,12 +40,14 @@ const Users: React.FC = () => {
     queryFn: fetchUsers,
   });
 
-  const filteredUsers = users?.filter(user => {
+  const filteredUsers = users?.filter((user) => {
     const searchLower = searchQuery.toLowerCase();
     return (
       user.username.toLowerCase().includes(searchLower) ||
       user.role.toLowerCase().includes(searchLower) ||
-      (user.passwordChanged ? "Configuré" : "Non configuré").toLowerCase().includes(searchLower)
+      (user.passwordChanged ? "Configuré" : "Non configuré")
+        .toLowerCase()
+        .includes(searchLower)
     );
   });
 
@@ -60,7 +61,6 @@ const Users: React.FC = () => {
 
   return (
     <div className="flex flex-row gap-x-4 my-20 ml-8">
-      <Nav />
       <div className="p-8 border rounded-l-lg flex-1 bg-primary">
         <h1>Liste des Clients</h1>
         <div className="flex flex-row justify-between pb-4 pt-8 sticky top-0 z-10 bg-white">
@@ -81,8 +81,12 @@ const Users: React.FC = () => {
               <thead className="bg-background sticky top-0 z-0">
                 <tr className="text-left border-b">
                   <th className="py-3 px-6 w-[500px]">Client</th>
-                  <th className="py-3 px-6 w-[500px] text-center">Mot de passe</th>
-                  <th className="py-3 px-6 w-[300px] text-center">Paramètres</th>
+                  <th className="py-3 px-6 w-[500px] text-center">
+                    Mot de passe
+                  </th>
+                  <th className="py-3 px-6 w-[300px] text-center">
+                    Paramètres
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -97,7 +101,8 @@ const Users: React.FC = () => {
                 ) : isError ? (
                   <tr>
                     <td colSpan={3} className="text-center py-8">
-                      Error: {error instanceof Error ? error.message : "Unknown error"}
+                      Error:{" "}
+                      {error instanceof Error ? error.message : "Unknown error"}
                     </td>
                   </tr>
                 ) : filteredUsers && filteredUsers.length > 0 ? (
@@ -106,7 +111,9 @@ const Users: React.FC = () => {
                       <td className="py-4 px-6">{user.username}</td>
                       <td
                         className={`py-4 px-6 text-center font-medium ${
-                          user.passwordChanged ? "text-green-600" : "text-red-600"
+                          user.passwordChanged
+                            ? "text-green-600"
+                            : "text-red-600"
                         }`}
                       >
                         {user.passwordChanged ? "Configuré" : "Non configuré"}

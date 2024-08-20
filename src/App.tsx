@@ -1,47 +1,50 @@
 import { Route, Routes } from "react-router-dom";
-
-import ProtectedRoute from "./components/ProtectedRoute";
-
 import AdminRoute from "./components/AdminRoute";
+import DashboardLayout from "./components/DashboardLayout";
+import ProtectedRoute from "./components/ProtectedRoute";
 import { Toaster } from "./components/ui/toaster";
+import Users from "./pages/Admin/Users";
 import CompletedDashboard from "./pages/CompletedDashboard";
 import Login from "./pages/Login";
-import { default as OngoingDashboard } from "./pages/OngoingDashboard";
-import Users from "./pages/Admin/Users";
+import OngoingDashboard from "./pages/OngoingDashboard";
 
 const App = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <main className="w-full flex-1">
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout>
                 <OngoingDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/completed"
-            element={
-              <ProtectedRoute>
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/completed"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout>
                 <CompletedDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/clients"
-            element={
-              <AdminRoute>
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/clients"
+          element={
+            <AdminRoute>
+              <DashboardLayout>
                 <Users />
-              </AdminRoute>
-            }
-          />
-        </Routes>
-        <Toaster />
-      </main>
+              </DashboardLayout>
+            </AdminRoute>
+          }
+        />
+      </Routes>
+      <Toaster />
     </div>
   );
 };

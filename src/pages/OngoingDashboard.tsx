@@ -1,7 +1,6 @@
 import { useAuth } from "@/lib/auth";
 import AdminOngoing from "./Admin/AdminOngoing";
 import MemberOngoing from "./Members/MemberOngoing";
-import Nav from "@/components/Nav";
 
 const OngoingDashboard = () => {
   const { isLogged, role } = useAuth();
@@ -11,22 +10,10 @@ const OngoingDashboard = () => {
   }
 
   return (
-<div className="flex flex-row gap-x-4 my-20 ml-8">
-  {role === "admin" && (
     <>
-      <Nav />
-      <AdminOngoing />
+      {role === "admin" && <AdminOngoing />}
+      {role === "member" && <MemberOngoing />}
     </>
-  )}
-  {role === "member" && (
-    <>
-      <Nav />
-      <MemberOngoing />
-    </>
-  )}
-  {!role && <p>Loading...</p>}
-</div>
-
   );
 };
 
