@@ -101,7 +101,6 @@ const AdminCompleted: React.FC = () => {
         </div>
       </div>
 
-      {/* Conteneur scrollable pour la table */}
       <div className="max-h-[550px] overflow-y-auto">
         <table className="w-full border-gray-200">
           <thead className="bg-background sticky top-0 z-10">

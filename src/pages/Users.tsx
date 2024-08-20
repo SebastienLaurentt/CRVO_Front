@@ -1,6 +1,7 @@
 import EditUserModal from "@/components/EditUserModal";
 import Loader from "@/components/Loader";
 import Nav from "@/components/Nav";
+import { Input } from "@/components/ui/input";
 import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import { Settings } from "lucide-react";
@@ -28,6 +29,7 @@ const fetchUsers = async (): Promise<User[]> => {
 
 const Users: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const {
     data: users,
@@ -37,6 +39,15 @@ const Users: React.FC = () => {
   } = useQuery<User[]>({
     queryKey: ["users"],
     queryFn: fetchUsers,
+  });
+
+  const filteredUsers = users?.filter(user => {
+    const searchLower = searchQuery.toLowerCase();
+    return (
+      user.username.toLowerCase().includes(searchLower) ||
+      user.role.toLowerCase().includes(searchLower) ||
+      (user.passwordChanged ? "Configuré" : "Non configuré").toLowerCase().includes(searchLower)
+    );
   });
 
   const handleEditClick = (user: User) => {
@@ -62,9 +73,20 @@ const Users: React.FC = () => {
   return (
     <div className="flex flex-row gap-x-4 my-20 ml-8">
       <Nav />
-      <div className="p-8 border rounded-l-lg  flex-1 bg-primary">
-        <h1 className="mb-6">Liste des Clients</h1>
-        {/* Conteneur pour la table avec un défilement */}
+      <div className="p-8 border rounded-l-lg flex-1 bg-primary">
+        <h1 >Liste des Clients</h1>
+        <div className="flex flex-row justify-between pb-4 pt-8 sticky top-0 z-10 bg-white">
+          <div className="flex flex-row gap-x-3">
+            <Input
+              placeholder="Recherche"
+              className="text-sm"
+              value={searchQuery}
+              hasSearchIcon
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        </div>
+
         <div className="overflow-x-auto">
           <div className="max-h-[550px] overflow-y-auto">
             <table className="w-full border-gray-200">
@@ -76,8 +98,8 @@ const Users: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {users && users.length > 0 ? (
-                  users.map((user) => (
+                {filteredUsers && filteredUsers.length > 0 ? (
+                  filteredUsers.map((user) => (
                     <tr key={user._id} className="border-b last:border-b-0">
                       <td className="py-4 px-6">{user.username}</td>
                       <td
