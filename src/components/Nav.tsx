@@ -23,7 +23,7 @@ const Nav = () => {
                 to="/"
                 aria-label="Revenir à l'accueil"
                 className={({ isActive }) =>
-                  `flex flex-row gap-x-2 items-center font-bold border p-2 rounded-md hover:bg-slate-950 hover:text-slate-50 ${
+                  `flex flex-row gap-x-2 items-center font-bold  p-2 rounded-md hover:bg-slate-950 hover:text-slate-50 ${
                     isActive ? "bg-slate-900 text-slate-50" : ""
                   }`
                 }
@@ -36,7 +36,7 @@ const Nav = () => {
                 to="/completed"
                 aria-label="Terminé"
                 className={({ isActive }) =>
-                  `flex flex-row gap-x-2 items-center font-bold p-2 border rounded-md hover:bg-slate-950 hover:text-slate-50 ${
+                  `flex flex-row gap-x-2 items-center font-bold p-2  rounded-md hover:bg-slate-950 hover:text-slate-50 ${
                     isActive ? "bg-slate-900 text-slate-50" : ""
                   }`
                 }
@@ -52,7 +52,7 @@ const Nav = () => {
               <NavLink
                 to="/clients"
                 className={({ isActive }) =>
-                  `flex flex-row gap-x-2 items-center font-bold border p-2 rounded-md hover:bg-slate-950 hover:text-slate-50 ${
+                  `flex flex-row gap-x-2 items-center font-bold  p-2 rounded-md hover:bg-slate-950 hover:text-slate-50 ${
                     isActive ? "bg-slate-900 text-slate-50" : ""
                   }`
                 }
