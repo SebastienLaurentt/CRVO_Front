@@ -62,26 +62,10 @@ const AdminCompleted: React.FC = () => {
     (a, b) => daysSince(b.dateCompletion) - daysSince(a.dateCompletion)
   );
 
-  if (isLoadingCompletedVehicles)
-    return (
-      <div className="flex flex-col items-center mt-60">
-        <Loader />
-      </div>
-    );
-  if (isErrorCompletedVehicles)
-    return (
-      <p>
-        Error:{" "}
-        {errorCompletedVehicles instanceof Error
-          ? errorCompletedVehicles.message
-          : "Unknown error"}
-      </p>
-    );
-
   return (
     <div className="p-8 border rounded-l-lg flex-1 bg-primary">
-      <h1 className="text-left">Véhicules Terminés</h1>
-      <div className="flex flex-row justify-between pb-4 pt-8 sticky top-0 z-10 bg-white">
+      <h1>Véhicules Terminés</h1>
+      <div className="flex flex-row justify-between pb-4 pt-8">
         <div className="flex flex-row gap-x-3">
           <Input
             placeholder="Recherche"
@@ -101,43 +85,59 @@ const AdminCompleted: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-h-[550px] overflow-y-auto">
-        <table className="w-full border-gray-200">
-          <thead className="bg-background sticky top-0 z-10">
-            <tr className="text-left border-b">
-              <th className="py-3 px-6 w-[300px]">Client</th>
-              <th className="py-3 px-6 w-[200px]">VIN</th>
-              <th className="py-3 px-6 w-[250px]">Statut</th>
-              <th className="py-3 px-6 w-[200px] text-center">Date de Complétion</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedCompletedVehicles && sortedCompletedVehicles.length > 0 ? (
-              sortedCompletedVehicles.map((vehicle: CompletedVehicle) => (
-                <tr key={vehicle._id} className="border-b last:border-b-0">
-                  <td className="py-4 px-6">{vehicle.user.username}</td>
-                  <td className="py-4 px-6">{vehicle.vin}</td>
-                  <td className="py-4 px-6">{vehicle.statut}</td>
-                  <td className="py-4 px-6 text-center">
-                    {new Date(vehicle.dateCompletion).toLocaleDateString()}
+      <div className="relative">
+        <div className="max-h-[550px] overflow-y-auto w-full">
+          <table className="w-full border-gray-200">
+            <thead className="bg-background sticky top-0 z-10">
+              <tr className="text-left border-b">
+                <th className="py-3 px-6 w-[300px]">Client</th>
+                <th className="py-3 px-6 w-[200px]">VIN</th>
+                <th className="py-3 px-6 w-[250px]">Statut</th>
+                <th className="py-3 px-6 w-[200px] text-center">Date de Complétion</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {isLoadingCompletedVehicles ? (
+                <tr>
+                  <td colSpan={4} className="text-center py-20">
+                    <div className="flex items-center justify-center">
+                      <Loader />
+                    </div>
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={4} className="text-center pt-8 font-medium">
-                  Aucune donnée disponible actuellement.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              ) : isErrorCompletedVehicles ? (
+                <tr>
+                  <td colSpan={4} className="text-center py-8">
+                    Error: {errorCompletedVehicles instanceof Error ? errorCompletedVehicles.message : "Unknown error"}
+                  </td>
+                </tr>
+              ) : sortedCompletedVehicles && sortedCompletedVehicles.length > 0 ? (
+                sortedCompletedVehicles.map((vehicle: CompletedVehicle) => (
+                  <tr key={vehicle._id} className="border-b last:border-b-0">
+                    <td className="py-4 px-6">{vehicle.user.username}</td>
+                    <td className="py-4 px-6">{vehicle.vin}</td>
+                    <td className="py-4 px-6">{vehicle.statut}</td>
+                    <td className="py-4 px-6 text-center">
+                      {new Date(vehicle.dateCompletion).toLocaleDateString()}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={4} className="text-center pt-8 font-medium">
+                    Aucune donnée disponible actuellement.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {isFileInputVisible && (
         <AddExcelData onClose={() => setIsFileInputVisible(false)} />
       )}
-
       {isCompletedFileInputVisible && (
         <AddCompletedExcelData
           onClose={() => setIsCompletedFileInputVisible(false)}

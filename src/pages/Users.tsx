@@ -58,23 +58,11 @@ const Users: React.FC = () => {
     setSelectedUser(null);
   };
 
-  if (isLoading)
-    return (
-      <div className="flex flex-col items-center mt-60">
-        <Loader />
-      </div>
-    );
-
-  if (isError)
-    return (
-      <p>Error: {error instanceof Error ? error.message : "Unknown error"}</p>
-    );
-
   return (
     <div className="flex flex-row gap-x-4 my-20 ml-8">
       <Nav />
       <div className="p-8 border rounded-l-lg flex-1 bg-primary">
-        <h1 >Liste des Clients</h1>
+        <h1>Liste des Clients</h1>
         <div className="flex flex-row justify-between pb-4 pt-8 sticky top-0 z-10 bg-white">
           <div className="flex flex-row gap-x-3">
             <Input
@@ -90,7 +78,7 @@ const Users: React.FC = () => {
         <div className="overflow-x-auto">
           <div className="max-h-[550px] overflow-y-auto">
             <table className="w-full border-gray-200">
-              <thead className="bg-background sticky top-0 z-10">
+              <thead className="bg-background sticky top-0 z-0">
                 <tr className="text-left border-b">
                   <th className="py-3 px-6 w-[500px]">Client</th>
                   <th className="py-3 px-6 w-[500px] text-center">Mot de passe</th>
@@ -98,7 +86,21 @@ const Users: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredUsers && filteredUsers.length > 0 ? (
+                {isLoading ? (
+                  <tr>
+                    <td colSpan={3} className="text-center py-20">
+                      <div className="flex items-center justify-center">
+                        <Loader />
+                      </div>
+                    </td>
+                  </tr>
+                ) : isError ? (
+                  <tr>
+                    <td colSpan={3} className="text-center py-8">
+                      Error: {error instanceof Error ? error.message : "Unknown error"}
+                    </td>
+                  </tr>
+                ) : filteredUsers && filteredUsers.length > 0 ? (
                   filteredUsers.map((user) => (
                     <tr key={user._id} className="border-b last:border-b-0">
                       <td className="py-4 px-6">{user.username}</td>
@@ -121,7 +123,7 @@ const Users: React.FC = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={4} className="text-center py-4">
+                    <td colSpan={3} className="text-center py-4">
                       Aucune donnée disponible.
                     </td>
                   </tr>

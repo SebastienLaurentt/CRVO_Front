@@ -77,25 +77,9 @@ const AdminOngoing: React.FC = () => {
     (a, b) => daysSince(b.dateCreation) - daysSince(a.dateCreation)
   );
 
-  if (isLoadingVehicles)
-    return (
-      <div className="flex flex-col items-center justify-center mt-60">
-        <Loader />
-      </div>
-    );
-  if (isErrorVehicles)
-    return (
-      <p>
-        Error:{" "}
-        {errorVehicles instanceof Error
-          ? errorVehicles.message
-          : "Unknown error"}
-      </p>
-    );
-
   return (
-    <div className="p-8 border rounded-l-lg bg-white">
-      <h1 className="text-left">Véhicules En Cours</h1>
+    <div className="p-8 border rounded-l-lg bg-primary">
+      <h1>Véhicules En Cours</h1>
       <div className="flex flex-row justify-between pb-4 pt-8">
         <div className="flex flex-row gap-x-3">
           <Input
@@ -116,93 +100,109 @@ const AdminOngoing: React.FC = () => {
         </div>
       </div>
 
-      {/* Conteneur scrollable pour la table */}
-      <div className="max-h-[550px] overflow-y-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="text-left bg-background border-b sticky top-0 z-10">
-              <th className="py-3 px-6 w-[300px]">Client</th>
-              <th className="py-3 px-6 w-[200px]">Immatriculation</th>
-              <th className="py-3 px-6 w-[250px]">Modèle</th>
-              <th className="py-3 px-6 w-[200px] text-center">
-                Jours depuis Création
-              </th>
-              <th className="py-3 px-4 w-[100px] text-center">
-                <Wrench className="inline-block mb-0.5" /> Mécanique
-              </th>
-              <th className="py-3 px-4 w-[100px] text-center">
-                <Car className="inline-block mb-0.5" /> Carrosserie
-              </th>
-              <th className="py-3 px-4 w-[60px] text-center">
-                <ShieldCheck className="inline-block mb-0.5" /> CT
-              </th>
-              <th className="py-3 px-4 w-[60px] text-center">
-                <AudioLines className="inline-block mb-0.5" /> DSP
-              </th>
-              <th className="py-3 px-4 w-[60px] text-center">
-                <LifeBuoy className="inline-block mb-0.5" /> Jantes
-              </th>
-              <th className="py-3 px-4 w-[80px] text-center">
-                <SprayCan className="inline-block mb-0.5" /> Esthétique
-              </th>
-            </tr>
-          </thead>
+      <div className="relative">
+        <div className="max-h-[550px] overflow-y-auto w-full">
+          <table className="w-full">
+            <thead>
+              <tr className="text-left bg-background border-b sticky top-0 z-10">
+                <th className="py-3 px-6 w-[300px]">Client</th>
+                <th className="py-3 px-6 w-[200px]">Immatriculation</th>
+                <th className="py-3 px-6 w-[250px]">Modèle</th>
+                <th className="py-3 px-6 w-[200px] text-center">
+                  Jours depuis Création
+                </th>
+                <th className="py-3 px-4 w-[100px] text-center">
+                  <Wrench className="inline-block mb-0.5" /> Mécanique
+                </th>
+                <th className="py-3 px-4 w-[100px] text-center">
+                  <Car className="inline-block mb-0.5" /> Carrosserie
+                </th>
+                <th className="py-3 px-4 w-[60px] text-center">
+                  <ShieldCheck className="inline-block mb-0.5" /> CT
+                </th>
+                <th className="py-3 px-4 w-[60px] text-center">
+                  <AudioLines className="inline-block mb-0.5" /> DSP
+                </th>
+                <th className="py-3 px-4 w-[60px] text-center">
+                  <LifeBuoy className="inline-block mb-0.5" /> Jantes
+                </th>
+                <th className="py-3 px-4 w-[80px] text-center">
+                  <SprayCan className="inline-block mb-0.5" /> Esthétique
+                </th>
+              </tr>
+            </thead>
 
-          <tbody>
-            {sortedVehicles && sortedVehicles.length > 0 ? (
-              sortedVehicles.map((vehicle: Vehicle) => (
-                <tr key={vehicle._id} className="border-b last:border-b-0">
-                  <td className="py-4 px-4">{vehicle.user.username}</td>
-                  <td className="py-4 px-4">{vehicle.immatriculation}</td>
-                  <td className="py-4 px-4">{vehicle.modele}</td>
-                  <td className="py-4 px-4 text-center">
-                    {daysSince(vehicle.dateCreation)}
-                  </td>
-                  <td className="py-4 px-4 text-center">
-                    {vehicle.mecanique ? (
-                      <BadgeCheck className="inline-block" />
-                    ) : (
-                      ""
-                    )}
-                  </td>
-                  <td className="py-4 px-4 text-center">
-                    {vehicle.carrosserie ? (
-                      <BadgeCheck className="inline-block" />
-                    ) : (
-                      ""
-                    )}
-                  </td>
-                  <td className="py-4 px-4 text-center">
-                    {vehicle.ct ? <BadgeCheck className="inline-block" /> : ""}
-                  </td>
-                  <td className="py-4 px-4 text-center">
-                    {vehicle.dsp ? <BadgeCheck className="inline-block" /> : ""}
-                  </td>
-                  <td className="py-4 px-4 text-center">
-                    {vehicle.jantes ? (
-                      <BadgeCheck className="inline-block" />
-                    ) : (
-                      ""
-                    )}
-                  </td>
-                  <td className="py-4 px-4 text-center">
-                    {vehicle.esthetique ? (
-                      <BadgeCheck className="inline-block" />
-                    ) : (
-                      ""
-                    )}
+            <tbody>
+              {isLoadingVehicles ? (
+                <tr>
+                  <td colSpan={10} className="text-center py-20">
+                    <div className="flex items-center justify-center">
+                      <Loader />
+                    </div>
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={10} className="text-center pt-8 font-medium">
-                  Aucune donnée disponible actuellement.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              ) : isErrorVehicles ? (
+                <tr>
+                  <td colSpan={10} className="text-center py-8">
+                    Error: {errorVehicles instanceof Error ? errorVehicles.message : "Unknown error"}
+                  </td>
+                </tr>
+              ) : sortedVehicles && sortedVehicles.length > 0 ? (
+                sortedVehicles.map((vehicle: Vehicle) => (
+                  <tr key={vehicle._id} className="border-b last:border-b-0">
+                    <td className="py-4 px-4">{vehicle.user.username}</td>
+                    <td className="py-4 px-4">{vehicle.immatriculation}</td>
+                    <td className="py-4 px-4">{vehicle.modele}</td>
+                    <td className="py-4 px-4 text-center">
+                      {daysSince(vehicle.dateCreation)}
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      {vehicle.mecanique ? (
+                        <BadgeCheck className="inline-block" />
+                      ) : (
+                        ""
+                      )}
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      {vehicle.carrosserie ? (
+                        <BadgeCheck className="inline-block" />
+                      ) : (
+                        ""
+                      )}
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      {vehicle.ct ? <BadgeCheck className="inline-block" /> : ""}
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      {vehicle.dsp ? <BadgeCheck className="inline-block" /> : ""}
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      {vehicle.jantes ? (
+                        <BadgeCheck className="inline-block" />
+                      ) : (
+                        ""
+                      )}
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      {vehicle.esthetique ? (
+                        <BadgeCheck className="inline-block" />
+                      ) : (
+                        ""
+                      )}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={10} className="text-center pt-8 font-medium">
+                    Aucune donnée disponible actuellement.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
       </div>
 
       {isFileInputVisible && (
