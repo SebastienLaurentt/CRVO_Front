@@ -131,8 +131,8 @@ const MemberOngoing: React.FC = () => {
           <table className="w-full border-gray-200">
             <thead>
               <tr className="text-left bg-background border-b sticky top-0 z-10">
-                <th className="py-3 px-6 w-[200px]">Immatriculation</th>
-                <th className="py-3 px-6 w-[250px]">Modèle</th>
+                <th className="py-3 px-6 w-[300px]">Immatriculation</th>
+                <th className="py-3 px-6 w-[300px]">Modèle</th>
                 <th className="py-3 px-6 w-[200px] text-center">
                   Jours depuis Création
                 </th>
