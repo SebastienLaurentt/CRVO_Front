@@ -4,8 +4,10 @@ import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useQuery } from "@tanstack/react-query";
-import { Upload } from "lucide-react";
+import Cookies from "js-cookie";
+import { ChartArea } from "lucide-react";
 import React, { useState } from "react";
+import * as XLSX from "xlsx";
 
 interface CompletedVehicle {
   _id: string;
@@ -25,10 +27,21 @@ const daysSince = (dateString: string): number => {
 };
 
 const fetchCompletedVehicles = async (): Promise<CompletedVehicle[]> => {
-  const response = await fetch("https://crvo-back.onrender.com/api/completed");
+  const token = Cookies.get("token");
+
+  const response = await fetch(
+    "https://crvo-back.onrender.com/api/user/completed",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
   if (!response.ok) {
     throw new Error("Erreur lors de la récupération des véhicules terminés.");
   }
+
   const data = await response.json();
   return data;
 };
@@ -62,6 +75,26 @@ const MemberCompleted: React.FC = () => {
     (a, b) => daysSince(b.dateCompletion) - daysSince(a.dateCompletion)
   );
 
+  const exportToExcel = () => {
+    if (!sortedCompletedVehicles) return;
+
+    const workbook = XLSX.utils.book_new();
+
+    const data = sortedCompletedVehicles.map((vehicle) => ({
+      VIN: vehicle.vin,
+      Statut: vehicle.statut,
+      "Date de Complétion": new Date(
+        vehicle.dateCompletion
+      ).toLocaleDateString(),
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Véhicules Terminés");
+
+    XLSX.writeFile(workbook, "vehicules_termines.xlsx");
+  };
+
   return (
     <div className="p-8 border rounded-l-lg flex-1 bg-primary">
       <h1>Véhicules Terminés</h1>
@@ -75,12 +108,10 @@ const MemberCompleted: React.FC = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <div className="flex flex-row gap-x-2 ml-8 2xl:ml-60">
-          <Button
-            className="space-x-[5px]"
-            onClick={() => setIsFileInputVisible(true)}
-          >
-            <Upload size={20} /> <span>Nouveau Fichier</span>
+        <div className="flex gap-x-2">
+          <Button className="space-x-[5px]" onClick={exportToExcel}>
+            <ChartArea size={20} />
+            <span>Exporter en Excel</span>
           </Button>
         </div>
       </div>
@@ -90,7 +121,6 @@ const MemberCompleted: React.FC = () => {
           <table className="w-full border-gray-200">
             <thead className="bg-background sticky top-0 z-10">
               <tr className="text-left border-b">
-                <th className="py-3 px-6 w-[300px]">Client</th>
                 <th className="py-3 px-6 w-[200px]">VIN</th>
                 <th className="py-3 px-6 w-[250px]">Statut</th>
                 <th className="py-3 px-6 w-[200px] text-center">
@@ -121,7 +151,6 @@ const MemberCompleted: React.FC = () => {
                 sortedCompletedVehicles.length > 0 ? (
                 sortedCompletedVehicles.map((vehicle: CompletedVehicle) => (
                   <tr key={vehicle._id} className="border-b last:border-b-0">
-                    <td className="py-4 px-6">{vehicle.user.username}</td>
                     <td className="py-4 px-6">{vehicle.vin}</td>
                     <td className="py-4 px-6">{vehicle.statut}</td>
                     <td className="py-4 px-6 text-center">
