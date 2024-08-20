@@ -12,11 +12,11 @@ const Nav = () => {
   };
 
   return (
-    <nav className="px-4 h-[600px] w-[300px] flex flex-col justify-between mt-20">
+    <nav className="px-8 w-[300px] flex flex-col h-[600px] justify-between">
       <div>
-        <img src={CRVOLogo} alt="Logo CRVO" className="w-full mb-8" />
+        <img src={CRVOLogo} alt="Logo CRVO" className="w-full mb-12" />
         <div className="flex flex-col">
-          <div className="mb-4">
+          <div className="mb-6">
             <span className="text-slate-700 font-semibold mb-1">Véhicules</span>
             <div className="space-y-1">
               <NavLink

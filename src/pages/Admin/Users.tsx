@@ -60,7 +60,6 @@ const Users: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-row gap-x-4 my-20 ml-8">
       <div className="p-8 border rounded-l-lg flex-1 bg-primary">
         <h1>Liste des Clients</h1>
         <div className="flex flex-row justify-between pb-4 pt-8 sticky top-0 z-10 bg-white">
@@ -76,7 +75,7 @@ const Users: React.FC = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <div className="max-h-[550px] overflow-y-auto">
+          <div className="h-[550px] overflow-y-auto">
             <table className="w-full border-gray-200">
               <thead className="bg-background sticky top-0 z-0">
                 <tr className="text-left border-b">
@@ -139,7 +138,7 @@ const Users: React.FC = () => {
             </table>
           </div>
         </div>
-      </div>
+     
 
       {selectedUser && (
         <EditUserModal user={selectedUser} onClose={handleCloseModal} />

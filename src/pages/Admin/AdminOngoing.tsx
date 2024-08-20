@@ -98,7 +98,7 @@ const AdminOngoing: React.FC = () => {
       </div>
 
       <div className="relative">
-        <div className="max-h-[550px] overflow-y-auto w-full">
+        <div className="h-[550px] overflow-y-auto w-full">
           <table className="w-full">
             <thead>
               <tr className="text-left bg-background border-b sticky top-0 z-10">

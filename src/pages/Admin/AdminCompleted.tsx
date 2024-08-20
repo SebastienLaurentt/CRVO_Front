@@ -84,7 +84,7 @@ const AdminCompleted: React.FC = () => {
       </div>
 
       <div className="relative">
-        <div className="max-h-[550px] overflow-y-auto w-full">
+        <div className="h-[550px] overflow-y-auto w-full">
           <table className="w-full border-gray-200">
             <thead className="bg-background sticky top-0 z-10">
               <tr className="text-left border-b">
