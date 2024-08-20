@@ -1,7 +1,7 @@
+import Nav from "@/components/Nav";
 import { useAuth } from "@/lib/auth";
 import AdminCompleted from "./AdminCompleted";
-import MemberOngoing from "./MemberOngoing";
-import Nav from "@/components/Nav";
+import MemberCompleted from "./MemberCompleted";
 
 const CompletedDashboard = () => {
   const { isLogged, role } = useAuth();
@@ -12,11 +12,18 @@ const CompletedDashboard = () => {
 
   return (
     <div className="flex flex-row gap-x-4 my-20 ml-8">
-      <>
-        <Nav />
-        <AdminCompleted />
-      </>
-      {role === "member" && <MemberOngoing />}
+      {role === "admin" && (
+        <>
+          <Nav />
+          <AdminCompleted />
+        </>
+      )}
+      {role === "member" && (
+        <>
+          <Nav />
+          <MemberCompleted />
+        </>
+      )}
       {!role && <p>Loading...</p>}
     </div>
   );

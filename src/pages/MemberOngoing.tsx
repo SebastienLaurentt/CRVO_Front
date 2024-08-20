@@ -6,7 +6,6 @@ import Cookies from "js-cookie";
 import {
   AudioLines,
   BadgeCheck,
-  BookText,
   Car,
   ChartArea,
   LifeBuoy,
@@ -15,14 +14,13 @@ import {
   Wrench,
 } from "lucide-react";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import * as XLSX from "xlsx";
 
 interface Vehicle {
   _id: string;
   immatriculation: string;
   modele: string;
-  dateCreation: number; 
+  dateCreation: number;
   user: {
     username: string;
   };
@@ -110,7 +108,7 @@ const MemberOngoing: React.FC = () => {
 
   return (
     <div className="p-8 border rounded-l-lg bg-primary flex-1 ">
-      <h1>Tableau de bord</h1>
+      <h1>Véhicules En Cours</h1>
       <div className="flex flex-row justify-between pb-4 pt-8  ">
         <Input
           placeholder="Recherche"
@@ -120,12 +118,6 @@ const MemberOngoing: React.FC = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
         <div className="flex gap-x-2">
-          <Button className="space-x-[5px]" asChild>
-            <Link to="https://facturation.crvo.fr/" target="_blank">
-              <BookText size={20} />
-              <span>Mes Factures</span>
-            </Link>
-          </Button>
           <Button className="space-x-[5px]" onClick={exportToExcel}>
             <ChartArea size={20} />
             <span>Exporter en Excel</span>
@@ -175,7 +167,8 @@ const MemberOngoing: React.FC = () => {
               ) : isError ? (
                 <tr>
                   <td colSpan={9} className="text-center py-8">
-                    Error: {error instanceof Error ? error.message : "Unknown error"}
+                    Error:{" "}
+                    {error instanceof Error ? error.message : "Unknown error"}
                   </td>
                 </tr>
               ) : sortedVehicles && sortedVehicles.length > 0 ? (
@@ -201,10 +194,18 @@ const MemberOngoing: React.FC = () => {
                       )}
                     </td>
                     <td className="py-4 px-6 text-center">
-                      {vehicle.ct ? <BadgeCheck className="inline-block" /> : ""}
+                      {vehicle.ct ? (
+                        <BadgeCheck className="inline-block" />
+                      ) : (
+                        ""
+                      )}
                     </td>
                     <td className="py-4 px-6 text-center">
-                      {vehicle.dsp ? <BadgeCheck className="inline-block" /> : ""}
+                      {vehicle.dsp ? (
+                        <BadgeCheck className="inline-block" />
+                      ) : (
+                        ""
+                      )}
                     </td>
                     <td className="py-4 px-6 text-center">
                       {vehicle.jantes ? (
