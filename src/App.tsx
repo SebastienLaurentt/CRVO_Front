@@ -3,12 +3,17 @@ import AdminRoute from "./components/AdminRoute";
 import DashboardLayout from "./components/DashboardLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Toaster } from "./components/ui/toaster";
+import { useAuth } from "./lib/auth";
+import AdminCompleted from "./pages/Admin/AdminCompleted";
+import AdminOngoing from "./pages/Admin/AdminOngoing";
 import Users from "./pages/Admin/Users";
-import CompletedDashboard from "./pages/CompletedDashboard";
 import Login from "./pages/Login";
-import OngoingDashboard from "./pages/OngoingDashboard";
+import MemberCompleted from "./pages/Members/MemberCompleted";
+import MemberOngoing from "./pages/Members/MemberOngoing";
 
 const App = () => {
+  const { role } = useAuth();
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Routes>
@@ -18,7 +23,8 @@ const App = () => {
           element={
             <ProtectedRoute>
               <DashboardLayout>
-                <OngoingDashboard />
+                {role === "admin" && <AdminOngoing />}
+                {role === "member" && <MemberOngoing />}
               </DashboardLayout>
             </ProtectedRoute>
           }
@@ -28,7 +34,8 @@ const App = () => {
           element={
             <ProtectedRoute>
               <DashboardLayout>
-                <CompletedDashboard />
+                {role === "admin" && <AdminCompleted />}
+                {role === "member" && <MemberCompleted />}
               </DashboardLayout>
             </ProtectedRoute>
           }
