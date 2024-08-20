@@ -154,7 +154,7 @@ const MemberCompleted: React.FC = () => {
                     <td className="py-4 px-6">{vehicle.vin}</td>
                     <td className="py-4 px-6">{vehicle.statut}</td>
                     <td className="py-4 px-6 text-center">
-                      {new Date(vehicle.dateCompletion).toLocaleDateString()}
+                      {vehicle.dateCompletion}
                     </td>
                   </tr>
                 ))
