@@ -64,7 +64,7 @@ const Nav = () => {
           )}
           {role === "member" && (
             <>
-              <span className="text-slate-700 font-semibold mb-1">Clients</span>
+              <span className="text-slate-700 font-semibold mb-1">Documents</span>
               <Button className="space-x-[5px]" asChild>
                 <Link to="https://facturation.crvo.fr/" target="_blank">
                   <BookText size={20} />
