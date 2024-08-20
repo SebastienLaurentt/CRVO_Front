@@ -11,7 +11,7 @@ type CompletedVehicleRow = {
   client: string | null;
   vin: string | null;
   statut: string | null;
-  dateCompletion: Date | null;
+  dateCompletion: string | null;  
 };
 
 interface FileInputProps {
@@ -38,52 +38,6 @@ const uploadCompletedVehicleData = async (vehicle: CompletedVehicleRow) => {
   }
 
   return response.json();
-};
-
-// Fonction pour convertir un numéro de série Excel en Date avec inversion des jours et mois
-const excelDateToJSDate = (serial: number): Date => {
-  // Excel utilise le 30 décembre 1899 comme point de départ pour les dates
-  const epoch = new Date(Date.UTC(1899, 11, 30)); // 30 décembre 1899
-  const days = Math.floor(serial);
-  const milliseconds = Math.round((serial - days) * 86400000); // Fraction du jour en millisecondes
-
-  // Calculer la date de base
-  const baseDate = new Date(epoch.getTime() + days * 86400000 + milliseconds);
-
-  // Récupérer le jour, le mois et l'année de la date de base
-  const day = baseDate.getUTCDate();
-  const month = baseDate.getUTCMonth(); // Les mois sont indexés de 0 à 11
-  const year = baseDate.getUTCFullYear();
-
-  // Créer une nouvelle date avec jour et mois inversés
-  // Les mois en JavaScript sont indexés de 0 à 11, donc on ajuste cela pour obtenir le mois correct
-  const correctedDate = new Date(Date.UTC(year, day - 1, month + 1)); // Inverser jour et mois
-
-  console.log(
-    `Converted Excel serial ${serial} to base date ${baseDate.toISOString()}`
-  );
-  console.log(
-    `Corrected Excel serial ${serial} to date ${correctedDate.toISOString()}`
-  );
-
-  return correctedDate;
-};
-
-const convertToDate = (value: string | number): Date | null => {
-  if (typeof value === "number") {
-    const date = excelDateToJSDate(value);
-    return date;
-  }
-
-  const dateString = String(value).trim();
-
-  if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) {
-    const [day, month, year] = dateString.split("/");
-    const date = new Date(`${year}-${month}-${day}`);
-    return date;
-  }
-
-  return null;
 };
 
 const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
@@ -114,12 +68,12 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
       )[][];
 
       const filteredData: CompletedVehicleRow[] = sheetData
-        .slice(1)
+        .slice(1) 
         .map((row) => ({
           client: row[0] ? String(row[0]).trim() : null,
           vin: row[2] ? String(row[2]).trim() : null,
           statut: row[4] ? String(row[4]).trim() : null,
-          dateCompletion: row[5] ? convertToDate(row[5]) : null,
+          dateCompletion: row[5] ? String(row[5]).trim() : null,
         }))
         .filter(
           (row) => row.client || row.vin || row.statut || row.dateCompletion
@@ -188,7 +142,6 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
           >
             {isPending ? (
               <span className="flex flex-row gap-x-3">
-                {" "}
                 Import en cours <Loader isButtonSize />
               </span>
             ) : (

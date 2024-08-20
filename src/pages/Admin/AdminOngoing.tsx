@@ -1,4 +1,3 @@
-import AddCompletedExcelData from "@/components/AddCompletedExcelData";
 import AddExcelData from "@/components/AddExcelData";
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
@@ -51,8 +50,6 @@ const fetchVehicles = async (): Promise<Vehicle[]> => {
 const AdminOngoing: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isFileInputVisible, setIsFileInputVisible] = useState(false);
-  const [isCompletedFileInputVisible, setIsCompletedFileInputVisible] =
-    useState(false);
 
   const {
     data: vehicles,
@@ -144,7 +141,10 @@ const AdminOngoing: React.FC = () => {
               ) : isErrorVehicles ? (
                 <tr>
                   <td colSpan={10} className="text-center py-8">
-                    Error: {errorVehicles instanceof Error ? errorVehicles.message : "Unknown error"}
+                    Error:{" "}
+                    {errorVehicles instanceof Error
+                      ? errorVehicles.message
+                      : "Unknown error"}
                   </td>
                 </tr>
               ) : sortedVehicles && sortedVehicles.length > 0 ? (
@@ -171,10 +171,18 @@ const AdminOngoing: React.FC = () => {
                       )}
                     </td>
                     <td className="py-4 px-4 text-center">
-                      {vehicle.ct ? <BadgeCheck className="inline-block" /> : ""}
+                      {vehicle.ct ? (
+                        <BadgeCheck className="inline-block" />
+                      ) : (
+                        ""
+                      )}
                     </td>
                     <td className="py-4 px-4 text-center">
-                      {vehicle.dsp ? <BadgeCheck className="inline-block" /> : ""}
+                      {vehicle.dsp ? (
+                        <BadgeCheck className="inline-block" />
+                      ) : (
+                        ""
+                      )}
                     </td>
                     <td className="py-4 px-4 text-center">
                       {vehicle.jantes ? (
@@ -206,11 +214,6 @@ const AdminOngoing: React.FC = () => {
 
       {isFileInputVisible && (
         <AddExcelData onClose={() => setIsFileInputVisible(false)} />
-      )}
-      {isCompletedFileInputVisible && (
-        <AddCompletedExcelData
-          onClose={() => setIsCompletedFileInputVisible(false)}
-        />
       )}
     </div>
   );

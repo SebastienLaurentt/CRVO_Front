@@ -1,5 +1,4 @@
 import AddCompletedExcelData from "@/components/AddCompletedExcelData";
-import AddExcelData from "@/components/AddExcelData";
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,7 +34,6 @@ const fetchCompletedVehicles = async (): Promise<CompletedVehicle[]> => {
 
 const AdminCompleted: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [isFileInputVisible, setIsFileInputVisible] = useState(false);
   const [isCompletedFileInputVisible, setIsCompletedFileInputVisible] =
     useState(false);
 
@@ -78,7 +76,7 @@ const AdminCompleted: React.FC = () => {
         <div className="flex flex-row gap-x-2 ml-8 2xl:ml-60">
           <Button
             className="space-x-[5px]"
-            onClick={() => setIsFileInputVisible(true)}
+            onClick={() => setIsCompletedFileInputVisible(true)}
           >
             <Upload size={20} /> <span>Nouveau Fichier</span>
           </Button>
@@ -93,7 +91,9 @@ const AdminCompleted: React.FC = () => {
                 <th className="py-3 px-6 w-[300px]">Client</th>
                 <th className="py-3 px-6 w-[200px]">VIN</th>
                 <th className="py-3 px-6 w-[250px]">Statut</th>
-                <th className="py-3 px-6 w-[200px] text-center">Date de Complétion</th>
+                <th className="py-3 px-6 w-[200px] text-center">
+                  Date de Complétion
+                </th>
               </tr>
             </thead>
 
@@ -109,17 +109,21 @@ const AdminCompleted: React.FC = () => {
               ) : isErrorCompletedVehicles ? (
                 <tr>
                   <td colSpan={4} className="text-center py-8">
-                    Error: {errorCompletedVehicles instanceof Error ? errorCompletedVehicles.message : "Unknown error"}
+                    Error:{" "}
+                    {errorCompletedVehicles instanceof Error
+                      ? errorCompletedVehicles.message
+                      : "Unknown error"}
                   </td>
                 </tr>
-              ) : sortedCompletedVehicles && sortedCompletedVehicles.length > 0 ? (
+              ) : sortedCompletedVehicles &&
+                sortedCompletedVehicles.length > 0 ? (
                 sortedCompletedVehicles.map((vehicle: CompletedVehicle) => (
                   <tr key={vehicle._id} className="border-b last:border-b-0">
                     <td className="py-4 px-6">{vehicle.user.username}</td>
                     <td className="py-4 px-6">{vehicle.vin}</td>
                     <td className="py-4 px-6">{vehicle.statut}</td>
                     <td className="py-4 px-6 text-center">
-                      {new Date(vehicle.dateCompletion).toLocaleDateString()}
+                      {vehicle.dateCompletion}
                     </td>
                   </tr>
                 ))
@@ -135,9 +139,6 @@ const AdminCompleted: React.FC = () => {
         </div>
       </div>
 
-      {isFileInputVisible && (
-        <AddExcelData onClose={() => setIsFileInputVisible(false)} />
-      )}
       {isCompletedFileInputVisible && (
         <AddCompletedExcelData
           onClose={() => setIsCompletedFileInputVisible(false)}

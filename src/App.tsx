@@ -7,7 +7,7 @@ import { Toaster } from "./components/ui/toaster";
 import CompletedDashboard from "./pages/CompletedDashboard";
 import Login from "./pages/Login";
 import { default as OngoingDashboard } from "./pages/OngoingDashboard";
-import Users from "./pages/Users";
+import Users from "./pages/Admin/Users";
 
 const App = () => {
   return (

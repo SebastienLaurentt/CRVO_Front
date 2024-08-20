@@ -1,7 +1,7 @@
 import Nav from "@/components/Nav";
 import { useAuth } from "@/lib/auth";
-import AdminCompleted from "./AdminCompleted";
-import MemberCompleted from "./MemberCompleted";
+import AdminCompleted from "./Admin/AdminCompleted";
+import MemberCompleted from "./Members/MemberCompleted";
 
 const CompletedDashboard = () => {
   const { isLogged, role } = useAuth();

@@ -1,6 +1,6 @@
 import { useAuth } from "@/lib/auth";
-import AdminOngoing from "./AdminOngoing";
-import MemberOngoing from "./MemberOngoing";
+import AdminOngoing from "./Admin/AdminOngoing";
+import MemberOngoing from "./Members/MemberOngoing";
 import Nav from "@/components/Nav";
 
 const OngoingDashboard = () => {
