@@ -6,8 +6,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 import AdminRoute from "./components/AdminRoute";
 import { Toaster } from "./components/ui/toaster";
-import Dashboard from "./pages/Dashboard";
+import CompletedDashboard from "./pages/CompletedDashboard";
 import Login from "./pages/Login";
+import { default as OngoingDashboard } from "./pages/OngoingDashboard";
 import Users from "./pages/Users";
 
 const App = () => {
@@ -25,7 +26,15 @@ const App = () => {
             path="/"
             element={
               <ProtectedRoute>
-                <Dashboard />
+                <OngoingDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/completed"
+            element={
+              <ProtectedRoute>
+                <CompletedDashboard />
               </ProtectedRoute>
             }
           />

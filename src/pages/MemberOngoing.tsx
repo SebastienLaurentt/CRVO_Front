@@ -60,7 +60,7 @@ const fetchVehiclesByUser = async (): Promise<Vehicle[]> => {
   return data;
 };
 
-const MemberDashboard: React.FC = () => {
+const MemberOngoing: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const {
@@ -230,4 +230,4 @@ const MemberDashboard: React.FC = () => {
   );
 };
 
-export default MemberDashboard;
+export default MemberOngoing;
