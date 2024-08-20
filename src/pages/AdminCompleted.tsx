@@ -101,38 +101,39 @@ const AdminCompleted: React.FC = () => {
         </div>
       </div>
 
-      <table className="w-full">
-        <thead>
-          <tr className="text-left bg-primary border-b sticky top-[88px] z-10">
-            <th className="py-3 px-6 w-[300px]">Client</th>
-            <th className="py-3 px-6 w-[200px]">VIN</th>
-            <th className="py-3 px-6 w-[250px]">Statut</th>
-            <th className="py-3 px-6 w-[200px] text-center">
-              Date de Complétion
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedCompletedVehicles && sortedCompletedVehicles.length > 0 ? (
-            sortedCompletedVehicles.map((vehicle: CompletedVehicle) => (
-              <tr key={vehicle._id} className="border-b last:border-b-0">
-                <td className="py-4 px-6">{vehicle.user.username}</td>
-                <td className="py-4 px-6">{vehicle.vin}</td>
-                <td className="py-4 px-6">{vehicle.statut}</td>
-                <td className="py-4 px-6 text-center">
-                  {new Date(vehicle.dateCompletion).toLocaleDateString()}
+      {/* Conteneur scrollable pour la table */}
+      <div className="max-h-[550px] overflow-y-auto">
+        <table className="w-full border-gray-200">
+          <thead className="bg-primary sticky top-0 z-10">
+            <tr className="text-left border-b">
+              <th className="py-3 px-6 w-[300px]">Client</th>
+              <th className="py-3 px-6 w-[200px]">VIN</th>
+              <th className="py-3 px-6 w-[250px]">Statut</th>
+              <th className="py-3 px-6 w-[200px] text-center">Date de Complétion</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedCompletedVehicles && sortedCompletedVehicles.length > 0 ? (
+              sortedCompletedVehicles.map((vehicle: CompletedVehicle) => (
+                <tr key={vehicle._id} className="border-b last:border-b-0">
+                  <td className="py-4 px-6">{vehicle.user.username}</td>
+                  <td className="py-4 px-6">{vehicle.vin}</td>
+                  <td className="py-4 px-6">{vehicle.statut}</td>
+                  <td className="py-4 px-6 text-center">
+                    {new Date(vehicle.dateCompletion).toLocaleDateString()}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={4} className="text-center pt-8 font-medium">
+                  Aucune donnée disponible actuellement.
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={4} className="text-center pt-8 font-medium">
-                Aucune donnée disponible actuellement.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       {isFileInputVisible && (
         <AddExcelData onClose={() => setIsFileInputVisible(false)} />
