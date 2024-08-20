@@ -79,7 +79,7 @@ const AdminCompleted: React.FC = () => {
     );
 
   return (
-    <div className="p-8 border rounded-l-lg shadow-2xl flex-1">
+    <div className="p-8 border rounded-l-lg flex-1 bg-primary">
       <h1 className="text-left">Véhicules Terminés</h1>
       <div className="flex flex-row justify-between pb-4 pt-8 sticky top-0 z-10 bg-white">
         <div className="flex flex-row gap-x-3">
@@ -104,7 +104,7 @@ const AdminCompleted: React.FC = () => {
       {/* Conteneur scrollable pour la table */}
       <div className="max-h-[550px] overflow-y-auto">
         <table className="w-full border-gray-200">
-          <thead className="bg-primary sticky top-0 z-10">
+          <thead className="bg-background sticky top-0 z-10">
             <tr className="text-left border-b">
               <th className="py-3 px-6 w-[300px]">Client</th>
               <th className="py-3 px-6 w-[200px]">VIN</th>

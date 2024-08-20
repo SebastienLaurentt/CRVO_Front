@@ -79,7 +79,7 @@ const AdminOngoing: React.FC = () => {
 
   if (isLoadingVehicles)
     return (
-      <div className="flex flex-col items-center mt-60">
+      <div className="flex flex-col items-center justify-center mt-60">
         <Loader />
       </div>
     );
@@ -94,7 +94,7 @@ const AdminOngoing: React.FC = () => {
     );
 
   return (
-    <div className="p-8 border rounded-l-lg shadow-2xl">
+    <div className="p-8 border rounded-l-lg bg-white">
       <h1 className="text-left">Véhicules En Cours</h1>
       <div className="flex flex-row justify-between pb-4 pt-8">
         <div className="flex flex-row gap-x-3">
@@ -120,7 +120,7 @@ const AdminOngoing: React.FC = () => {
       <div className="max-h-[550px] overflow-y-auto">
         <table className="w-full">
           <thead>
-            <tr className="text-left bg-primary border-b sticky top-0 z-10">
+            <tr className="text-left bg-background border-b sticky top-0 z-10">
               <th className="py-3 px-6 w-[300px]">Client</th>
               <th className="py-3 px-6 w-[200px]">Immatriculation</th>
               <th className="py-3 px-6 w-[250px]">Modèle</th>

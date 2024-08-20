@@ -11,7 +11,7 @@ import Users from "./pages/Users";
 
 const App = () => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
       <main className="w-full flex-1">
         <Routes>
           <Route path="/login" element={<Login />} />

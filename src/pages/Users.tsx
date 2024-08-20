@@ -62,13 +62,13 @@ const Users: React.FC = () => {
   return (
     <div className="flex flex-row gap-x-4 my-20 ml-8">
       <Nav />
-      <div className="p-8 border rounded-l-lg shadow-2xl flex-1">
+      <div className="p-8 border rounded-l-lg  flex-1 bg-primary">
         <h1 className="mb-6">Liste des Clients</h1>
         {/* Conteneur pour la table avec un défilement */}
         <div className="overflow-x-auto">
           <div className="max-h-[550px] overflow-y-auto">
             <table className="w-full border-gray-200">
-              <thead className="bg-primary sticky top-0 z-10">
+              <thead className="bg-background sticky top-0 z-10">
                 <tr className="text-left border-b">
                   <th className="py-3 px-6 w-[500px]">Client</th>
                   <th className="py-3 px-6 w-[500px] text-center">Mot de passe</th>
