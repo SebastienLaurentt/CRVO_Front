@@ -18,7 +18,12 @@ const OngoingDashboard = () => {
       <AdminOngoing />
     </>
   )}
-  {role === "member" && <MemberOngoing />}
+  {role === "member" && (
+    <>
+      <Nav />
+      <MemberOngoing />
+    </>
+  )}
   {!role && <p>Loading...</p>}
 </div>
 

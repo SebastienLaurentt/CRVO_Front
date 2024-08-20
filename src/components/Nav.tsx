@@ -16,8 +16,8 @@ const Nav = () => {
       <div>
         <img src={CRVOLogo} alt="Logo CRVO" className="w-full mb-8" />
         <div className="flex flex-col">
-          {role === "admin" && (
-            <>
+          
+         
               <div className="mb-4">
                 <span className="text-slate-700 font-semibold mb-1">
                   Véhicules
@@ -49,6 +49,8 @@ const Nav = () => {
                   <span>Terminé</span>
                 </NavLink>
               </div>
+              {role === "admin" && (
+                <>
               <span className="text-slate-700 font-semibold mb-1">
                 Clients
               </span>

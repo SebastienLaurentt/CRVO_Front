@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import * as XLSX from "xlsx"; 
+import * as XLSX from "xlsx";
 
 interface Vehicle {
   _id: string;
@@ -73,17 +73,6 @@ const MemberOngoing: React.FC = () => {
     queryFn: fetchVehiclesByUser,
   });
 
-  if (isLoading)
-    return (
-      <div className="flex flex-col items-center mt-60">
-        <Loader />
-      </div>
-    );
-  if (isError)
-    return (
-      <p>Error: {error instanceof Error ? error.message : "Unknown error"}</p>
-    );
-
   const filteredVehicles = vehicles?.filter((vehicle) => {
     const searchLower = searchQuery.toLowerCase();
     return (
@@ -120,9 +109,9 @@ const MemberOngoing: React.FC = () => {
   };
 
   return (
-    <div className="py-8 px-12 border rounded-lg shadow-2xl my-4">
+    <div className="p-8 border rounded-l-lg bg-primary flex-1 ">
       <h1>Tableau de bord</h1>
-      <div className="flex flex-row justify-between pb-4 pt-8 sticky top-0 z-10 bg-white">
+      <div className="flex flex-row justify-between pb-4 pt-8  ">
         <Input
           placeholder="Recherche"
           className="text-sm"
@@ -144,88 +133,106 @@ const MemberOngoing: React.FC = () => {
         </div>
       </div>
 
-      <table>
-        <thead>
-          <tr className="text-left bg-primary border-b sticky top-[88px] z-10">
-            <th className="py-3 px-6 w-[200px]">Immatriculation</th>
-            <th className="py-3 px-6 w-[250px]">Modèle</th>
-            <th className="py-3 px-6 w-[200px] text-center">
-              Jours depuis Création
-            </th>
-            <th className="py-3 px-6 w-[150px] text-center">
-              <Wrench className="inline-block mb-0.5" /> Mécanique
-            </th>
-            <th className="py-3 px-6 w-[150px] text-center">
-              <Car className="inline-block mb-0.5" /> Carrosserie
-            </th>
-            <th className="py-3 px-6 w-[80px] text-center">
-              <ShieldCheck className="inline-block mb-0.5" /> CT
-            </th>
-            <th className="py-3 px-6 w-[100px] text-center">
-              <AudioLines className="inline-block mb-0.5" /> DSP
-            </th>
-            <th className="py-3 px-6 w-[100px] text-center">
-              <LifeBuoy className="inline-block mb-0.5" /> Jantes
-            </th>
-            <th className="py-3 px-6 w-[100px] text-center">
-              <SprayCan className="inline-block mb-0.5" /> Esthétique
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedVehicles && sortedVehicles.length > 0 ? (
-            sortedVehicles.map((vehicle: Vehicle) => (
-              <tr key={vehicle._id} className="border-b last:border-b-0">
-                <td className="py-4 px-6">{vehicle.immatriculation}</td>
-                <td className="py-4 px-6">{vehicle.modele}</td>
-                <td className="py-4 px-6 text-center">
-                  {daysSince(vehicle.dateCreation)}
-                </td>
-                <td className="py-4 px-6 text-center">
-                  {vehicle.mecanique ? (
-                    <BadgeCheck className="inline-block" />
-                  ) : (
-                    ""
-                  )}
-                </td>
-                <td className="py-4 px-6 text-center">
-                  {vehicle.carrosserie ? (
-                    <BadgeCheck className="inline-block" />
-                  ) : (
-                    ""
-                  )}
-                </td>
-                <td className="py-4 px-6 text-center">
-                  {vehicle.ct ? <BadgeCheck className="inline-block" /> : ""}
-                </td>
-                <td className="py-4 px-6 text-center">
-                  {vehicle.dsp ? <BadgeCheck className="inline-block" /> : ""}
-                </td>
-                <td className="py-4 px-6 text-center">
-                  {vehicle.jantes ? (
-                    <BadgeCheck className="inline-block" />
-                  ) : (
-                    ""
-                  )}
-                </td>
-                <td className="py-4 px-6 text-center">
-                  {vehicle.esthetique ? (
-                    <BadgeCheck className="inline-block" />
-                  ) : (
-                    ""
-                  )}
-                </td>
+      <div className="relative">
+        <div className="max-h-[550px] overflow-y-auto w-full">
+          <table className="w-full border-gray-200">
+            <thead>
+              <tr className="text-left bg-background border-b sticky top-0 z-10">
+                <th className="py-3 px-6 w-[200px]">Immatriculation</th>
+                <th className="py-3 px-6 w-[250px]">Modèle</th>
+                <th className="py-3 px-6 w-[200px] text-center">
+                  Jours depuis Création
+                </th>
+                <th className="py-3 px-4 w-[100px] text-center">
+                  <Wrench className="inline-block mb-0.5" /> Mécanique
+                </th>
+                <th className="py-3 px-4 w-[100px] text-center">
+                  <Car className="inline-block mb-0.5" /> Carrosserie
+                </th>
+                <th className="py-3 px-4 w-[60px] text-center">
+                  <ShieldCheck className="inline-block mb-0.5" /> CT
+                </th>
+                <th className="py-3 px-4 w-[60px] text-center">
+                  <AudioLines className="inline-block mb-0.5" /> DSP
+                </th>
+                <th className="py-3 px-4 w-[60px] text-center">
+                  <LifeBuoy className="inline-block mb-0.5" /> Jantes
+                </th>
+                <th className="py-3 px-4 w-[100px] text-center">
+                  <SprayCan className="inline-block mb-0.5" /> Esthétique
+                </th>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={9} className="text-center pt-8 font-medium">
-                Aucune donnée disponible actuellement.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {isLoading ? (
+                <tr>
+                  <td colSpan={9} className="text-center py-20">
+                    <div className="flex items-center justify-center">
+                      <Loader />
+                    </div>
+                  </td>
+                </tr>
+              ) : isError ? (
+                <tr>
+                  <td colSpan={9} className="text-center py-8">
+                    Error: {error instanceof Error ? error.message : "Unknown error"}
+                  </td>
+                </tr>
+              ) : sortedVehicles && sortedVehicles.length > 0 ? (
+                sortedVehicles.map((vehicle: Vehicle) => (
+                  <tr key={vehicle._id} className="border-b last:border-b-0">
+                    <td className="py-4 px-6">{vehicle.immatriculation}</td>
+                    <td className="py-4 px-6">{vehicle.modele}</td>
+                    <td className="py-4 px-6 text-center">
+                      {daysSince(vehicle.dateCreation)}
+                    </td>
+                    <td className="py-4 px-6 text-center">
+                      {vehicle.mecanique ? (
+                        <BadgeCheck className="inline-block" />
+                      ) : (
+                        ""
+                      )}
+                    </td>
+                    <td className="py-4 px-6 text-center">
+                      {vehicle.carrosserie ? (
+                        <BadgeCheck className="inline-block" />
+                      ) : (
+                        ""
+                      )}
+                    </td>
+                    <td className="py-4 px-6 text-center">
+                      {vehicle.ct ? <BadgeCheck className="inline-block" /> : ""}
+                    </td>
+                    <td className="py-4 px-6 text-center">
+                      {vehicle.dsp ? <BadgeCheck className="inline-block" /> : ""}
+                    </td>
+                    <td className="py-4 px-6 text-center">
+                      {vehicle.jantes ? (
+                        <BadgeCheck className="inline-block" />
+                      ) : (
+                        ""
+                      )}
+                    </td>
+                    <td className="py-4 px-6 text-center">
+                      {vehicle.esthetique ? (
+                        <BadgeCheck className="inline-block" />
+                      ) : (
+                        ""
+                      )}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={9} className="text-center pt-8 font-medium">
+                    Aucune donnée disponible actuellement.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };

@@ -202,7 +202,6 @@ const AdminOngoing: React.FC = () => {
             </tbody>
           </table>
         </div>
-
       </div>
 
       {isFileInputVisible && (
