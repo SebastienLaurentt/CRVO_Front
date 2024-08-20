@@ -58,7 +58,7 @@ const Nav = () => {
                 }
               >
                 <User size={24} strokeWidth={2} />
-                <span>Infos</span>
+                <span>Informations</span>
               </NavLink>
             </>
           )}
