@@ -60,16 +60,16 @@ const Users: React.FC = () => {
     );
 
   return (
-    <div className="flex flex-row gap-x-4 my-20 ml-8">
+    <div className="flex flex-row gap-x-4 my-20 ml-8 ">
       <Nav />
-      <div className="p-8 border rounded-lg shadow-2xl">
+      <div className="p-8 border rounded-l-lg shadow-2xl flex-1">
         <h1 className="mb-6">Liste des Clients</h1>
         <table className="border-gray-200">
           <thead>
             <tr className="text-left bg-primary border-b">
               <th className="py-3 px-6 w-[500px]">Client</th>
-              <th className="py-3 px-6 w-[200px] text-center">Mot de passe</th>
-              <th className="py-3 px-6 w-[100px]">Paramètres</th>
+              <th className="py-3 px-6 w-[500px] text-center">Mot de passe</th>
+              <th className="py-3 px-6 w-[300px] text-center">Paramètres</th>
             </tr>
           </thead>
           <tbody>
