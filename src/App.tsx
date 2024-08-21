@@ -10,49 +10,59 @@ import Users from "./pages/Admin/Users";
 import Login from "./pages/Login";
 import MemberCompleted from "./pages/Members/MemberCompleted";
 import MemberOngoing from "./pages/Members/MemberOngoing";
+import CRVOLogo from "/public/images/CRVOLogo.png";
 
 const App = () => {
   const { role } = useAuth();
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <DashboardLayout>
-                {role === "admin" && <AdminOngoing />}
-                {role === "member" && <MemberOngoing />}
-              </DashboardLayout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/completed"
-          element={
-            <ProtectedRoute>
-              <DashboardLayout>
-                {role === "admin" && <AdminCompleted />}
-                {role === "member" && <MemberCompleted />}
-              </DashboardLayout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/clients"
-          element={
-            <AdminRoute>
-              <DashboardLayout>
-                <Users />
-              </DashboardLayout>
-            </AdminRoute>
-          }
-        />
-      </Routes>
-      <Toaster />
-    </div>
+    <>
+      <div className="min-h-screen xl:flex flex-col bg-background hidden">
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  {role === "admin" && <AdminOngoing />}
+                  {role === "member" && <MemberOngoing />}
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/completed"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  {role === "admin" && <AdminCompleted />}
+                  {role === "member" && <MemberCompleted />}
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/clients"
+            element={
+              <AdminRoute>
+                <DashboardLayout>
+                  <Users />
+                </DashboardLayout>
+              </AdminRoute>
+            }
+          />
+        </Routes>
+        <Toaster />
+      </div>
+      <div className="min-h-screen flex flex-col items-center justify-center xl:hidden">
+        <span className="text-center text-md md:text-lg">
+          Pour une expérience optimale, <br /> veuillez utiliser votre
+          ordinateur ! 
+        </span>
+        <img src={CRVOLogo} alt="Logo CRVO" className="w-64 md:w-96 mt-12" />
+      </div>
+    </>
   );
 };
 
