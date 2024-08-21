@@ -158,42 +158,42 @@ const AdminOngoing: React.FC = () => {
                     </td>
                     <td className="py-4 px-4 text-center">
                       {vehicle.mecanique ? (
-                        <BadgeCheck className="inline-block" />
-                      ) : (
                         ""
+                      ) : (
+                        <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
                     <td className="py-4 px-4 text-center">
                       {vehicle.carrosserie ? (
-                        <BadgeCheck className="inline-block" />
-                      ) : (
                         ""
+                      ) : (
+                        <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
                     <td className="py-4 px-4 text-center">
                       {vehicle.ct ? (
-                        <BadgeCheck className="inline-block" />
-                      ) : (
                         ""
+                      ) : (
+                        <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
                     <td className="py-4 px-4 text-center">
                       {vehicle.dsp ? (
-                        <BadgeCheck className="inline-block" />
-                      ) : (
                         ""
+                      ) : (
+                        <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
                     <td className="py-4 px-4 text-center">
                       {vehicle.jantes ? (
-                        <BadgeCheck className="inline-block" />
-                      ) : (
                         ""
+                      ) : (
+                        <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
                     <td className="py-4 px-4 text-center">
                       {vehicle.esthetique ? (
-                        <BadgeCheck className="inline-block" />
+                        <BadgeCheck className="inline-block text-[#16a34a]" />
                       ) : (
                         ""
                       )}
