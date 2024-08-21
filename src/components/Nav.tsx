@@ -1,5 +1,5 @@
 import { useAuth } from "@/lib/auth";
-import { ArrowRightToLine, BookText, LoaderCircle, User } from "lucide-react";
+import { ArrowRightToLine, BookText, ChartNoAxesCombined, LoaderCircle, User } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import { Button } from "./ui/button";
 import CRVOLogo from "/public/images/CRVOLogo.png";
@@ -47,6 +47,23 @@ const Nav = () => {
             </div>
           </div>
           {role === "admin" && (
+            <div className="mb-6">
+              <span className="text-slate-700 font-semibold mb-1">Data</span>
+              <NavLink
+                to="/data"
+                className={({ isActive }) =>
+                  `flex flex-row gap-x-2 items-center font-bold  p-2 rounded-md hover:bg-slate-950 hover:text-slate-50 ${
+                    isActive ? "bg-slate-900 text-slate-50" : ""
+                  }`
+                }
+              >
+                
+                <ChartNoAxesCombined size={24}  />
+                <span>Graphiques</span>
+              </NavLink>
+            </div>
+          )}
+          {role === "admin" && (
             <>
               <span className="text-slate-700 font-semibold mb-1">Clients</span>
               <NavLink
@@ -64,7 +81,9 @@ const Nav = () => {
           )}
           {role === "member" && (
             <>
-              <span className="text-slate-700 font-semibold mb-1">Documents</span>
+              <span className="text-slate-700 font-semibold mb-1">
+                Documents
+              </span>
               <Button className="space-x-[5px]" asChild>
                 <Link to="https://facturation.crvo.fr/" target="_blank">
                   <BookText size={20} />

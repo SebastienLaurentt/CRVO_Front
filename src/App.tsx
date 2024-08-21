@@ -5,6 +5,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { Toaster } from "./components/ui/toaster";
 import { useAuth } from "./lib/auth";
 import AdminCompleted from "./pages/Admin/AdminCompleted";
+import AdminData from "./pages/Admin/AdminData";
 import AdminOngoing from "./pages/Admin/AdminOngoing";
 import Users from "./pages/Admin/Users";
 import Login from "./pages/Login";
@@ -43,6 +44,16 @@ const App = () => {
             }
           />
           <Route
+            path="/data"
+            element={
+              <AdminRoute>
+                <DashboardLayout>
+                  <AdminData />
+                </DashboardLayout>
+              </AdminRoute>
+            }
+          />
+          <Route
             path="/clients"
             element={
               <AdminRoute>
@@ -58,7 +69,7 @@ const App = () => {
       <div className="min-h-screen flex flex-col items-center justify-center xl:hidden">
         <span className="text-center text-md md:text-lg">
           Pour une expérience optimale, <br /> veuillez utiliser votre
-          ordinateur ! 
+          ordinateur !
         </span>
         <img src={CRVOLogo} alt="Logo CRVO" className="w-64 md:w-96 mt-12" />
       </div>
