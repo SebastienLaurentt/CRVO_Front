@@ -70,7 +70,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex h-screen flex-col-reverse items-center text-white md:flex-col xl:mx-32 xl:flex-row">
+    <div className="flex 2xl:max-w-7xl 2xl:mx-auto xl:gap-x-4   h-screen flex-col-reverse items-center text-white md:flex-col xl:mx-32 xl:flex-row">
       <div className="mt-4 flex w-full flex-col items-center text-foreground md:mb-4 md:mt-0 xl:mb-0 xl:w-1/2 xl:items-start xl:p-8">
         <div className="w-[300px] md:w-[400px]">
           <img
