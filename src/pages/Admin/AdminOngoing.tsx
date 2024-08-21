@@ -102,10 +102,10 @@ const AdminOngoing: React.FC = () => {
           <table className="w-full">
             <thead>
               <tr className="text-left bg-background border-b sticky top-0 z-10">
-                <th className="py-3 px-6 w-[300px]">Client</th>
-                <th className="py-3 px-6 w-[200px]">Immatriculation</th>
-                <th className="py-3 px-6 w-[250px]">Modèle</th>
-                <th className="py-3 px-6 w-[200px] text-center">
+                <th className="py-3 px-2 2xl:px-6 w-[300px]">Client</th>
+                <th className="py-3 px-2 2xl:px-6 w-[200px]">Immatriculation</th>
+                <th className="py-3 px-2 2xl:px-6 w-[250px]">Modèle</th>
+                <th className="py-3 px-2 2xl:px-6 w-[200px] text-center">
                   Jours depuis Création
                 </th>
                 <th className="py-3 px-4 w-[100px] text-center">
@@ -150,10 +150,10 @@ const AdminOngoing: React.FC = () => {
               ) : sortedVehicles && sortedVehicles.length > 0 ? (
                 sortedVehicles.map((vehicle: Vehicle) => (
                   <tr key={vehicle._id} className="border-b last:border-b-0">
-                    <td className="py-4 px-4">{vehicle.user.username}</td>
-                    <td className="py-4 px-4">{vehicle.immatriculation}</td>
-                    <td className="py-4 px-4">{vehicle.modele}</td>
-                    <td className="py-4 px-4 text-center">
+                    <td className="py-4 px-2 2xl:px-4">{vehicle.user.username}</td>
+                    <td className="py-4 px-2 2xl:px-4">{vehicle.immatriculation}</td>
+                    <td className="py-4 px-2 2xl:px-4">{vehicle.modele}</td>
+                    <td className="py-4 px-2 2xl:px-4 text-center">
                       {daysSince(vehicle.dateCreation)}
                     </td>
                     <td className="py-4 px-4 text-center">
