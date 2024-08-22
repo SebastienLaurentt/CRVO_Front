@@ -124,7 +124,7 @@ const MemberCompleted: React.FC = () => {
                 <th className="py-3 px-6 w-[200px]">VIN</th>
                 <th className="py-3 px-6 w-[250px]">Statut</th>
                 <th className="py-3 px-6 w-[200px] text-center">
-                  Date de Complétion
+                  Fin de Rénovation
                 </th>
               </tr>
             </thead>
