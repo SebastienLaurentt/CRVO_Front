@@ -18,6 +18,19 @@ interface FileInputProps {
   onClose: () => void;
 }
 
+
+const excelSerialToDate = (serial: number) => {
+  const excelStartDate = new Date(1900, 0, 1); 
+  const daysOffset = serial - 2; 
+  const resultDate = new Date(excelStartDate.getTime() + daysOffset * 24 * 60 * 60 * 1000); 
+
+  const day = String(resultDate.getDate()).padStart(2, "0");
+  const month = String(resultDate.getMonth() + 1).padStart(2, "0"); 
+  const year = resultDate.getFullYear();
+
+  return `${day}/${month}/${year}`; 
+};
+
 const uploadCompletedVehicleData = async (vehicle: CompletedVehicleRow) => {
   const response = await fetch("https://crvo-back.onrender.com/api/completed", {
     method: "POST",
@@ -73,10 +86,12 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
           client: row[0] ? String(row[0]).trim() : null,
           vin: row[2] ? String(row[2]).trim() : null,
           statut: row[4] ? String(row[4]).trim() : null,
-          dateCompletion: row[5] ? String(row[5]).trim() : null,
+          dateCompletion: row[5]
+            ? excelSerialToDate(Number(row[5])) 
+            : null,
         }))
         .filter(
-          (row) => row.client || row.vin || row.statut || row.dateCompletion
+          (row) => row.statut === "Sortie Usine" && (row.client || row.vin || row.dateCompletion) // Filtrer uniquement les lignes "Sortie Usine"
         );
 
       setData(filteredData);
