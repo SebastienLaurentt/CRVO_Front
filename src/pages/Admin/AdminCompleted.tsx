@@ -9,7 +9,6 @@ import React, { useState } from "react";
 interface CompletedVehicle {
   _id: string;
   vin: string;
-  statut: string;
   dateCompletion: string;
   user: {
     username: string;
@@ -51,7 +50,6 @@ const AdminCompleted: React.FC = () => {
     const searchLower = searchQuery.toLowerCase();
     return (
       vehicle.vin.toLowerCase().includes(searchLower) ||
-      vehicle.statut.toLowerCase().includes(searchLower) ||
       vehicle.user.username.toLowerCase().includes(searchLower)
     );
   });
@@ -90,7 +88,6 @@ const AdminCompleted: React.FC = () => {
               <tr className="text-left border-b">
                 <th className="py-3 px-6 w-[300px]">Client</th>
                 <th className="py-3 px-6 w-[200px]">VIN</th>
-                <th className="py-3 px-6 w-[250px]">Statut</th>
                 <th className="py-3 px-6 w-[200px] text-center">
                   Fin de Rénovation
                 </th>
@@ -121,7 +118,6 @@ const AdminCompleted: React.FC = () => {
                   <tr key={vehicle._id} className="border-b last:border-b-0">
                     <td className="py-4 px-6">{vehicle.user.username}</td>
                     <td className="py-4 px-6">{vehicle.vin}</td>
-                    <td className="py-4 px-6">{vehicle.statut}</td>
                     <td className="py-4 px-6 text-center">
                       {vehicle.dateCompletion}
                     </td>

@@ -12,7 +12,6 @@ import * as XLSX from "xlsx";
 interface CompletedVehicle {
   _id: string;
   vin: string;
-  statut: string;
   dateCompletion: string;
   user: {
     username: string;
@@ -66,7 +65,6 @@ const MemberCompleted: React.FC = () => {
     const searchLower = searchQuery.toLowerCase();
     return (
       vehicle.vin.toLowerCase().includes(searchLower) ||
-      vehicle.statut.toLowerCase().includes(searchLower) ||
       vehicle.user.username.toLowerCase().includes(searchLower)
     );
   });
@@ -82,7 +80,6 @@ const MemberCompleted: React.FC = () => {
 
     const data = sortedCompletedVehicles.map((vehicle) => ({
       VIN: vehicle.vin,
-      Statut: vehicle.statut,
       "Date de Complétion": new Date(
         vehicle.dateCompletion
       ).toLocaleDateString(),
@@ -122,7 +119,6 @@ const MemberCompleted: React.FC = () => {
             <thead className="bg-background sticky top-0 z-10">
               <tr className="text-left border-b">
                 <th className="py-3 px-6 w-[200px]">VIN</th>
-                <th className="py-3 px-6 w-[250px]">Statut</th>
                 <th className="py-3 px-6 w-[200px] text-center">
                   Fin de Rénovation
                 </th>
@@ -152,7 +148,6 @@ const MemberCompleted: React.FC = () => {
                 sortedCompletedVehicles.map((vehicle: CompletedVehicle) => (
                   <tr key={vehicle._id} className="border-b last:border-b-0">
                     <td className="py-4 px-6">{vehicle.vin}</td>
-                    <td className="py-4 px-6">{vehicle.statut}</td>
                     <td className="py-4 px-6 text-center">
                       {vehicle.dateCompletion}
                     </td>
