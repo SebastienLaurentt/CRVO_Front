@@ -136,20 +136,20 @@ const MemberOngoing: React.FC = () => {
                 <th className="py-3 px-6 w-[200px] text-center">
                   Jours depuis Création
                 </th>
+                <th className="py-3 px-4 w-[60px] text-center">
+                  <AudioLines className="inline-block mb-0.5" /> DSP
+                </th>
                 <th className="py-3 px-4 w-[100px] text-center">
                   <Wrench className="inline-block mb-0.5" /> Mécanique
                 </th>
-                <th className="py-3 px-4 w-[100px] text-center">
-                  <Car className="inline-block mb-0.5" /> Carrosserie
+                <th className="py-3 px-4 w-[60px] text-center">
+                  <LifeBuoy className="inline-block mb-0.5" /> Jantes
                 </th>
                 <th className="py-3 px-4 w-[60px] text-center">
                   <ShieldCheck className="inline-block mb-0.5" /> CT
                 </th>
-                <th className="py-3 px-4 w-[60px] text-center">
-                  <AudioLines className="inline-block mb-0.5" /> DSP
-                </th>
-                <th className="py-3 px-4 w-[60px] text-center">
-                  <LifeBuoy className="inline-block mb-0.5" /> Jantes
+                <th className="py-3 px-4 w-[100px] text-center">
+                  <Car className="inline-block mb-0.5" /> Carrosserie
                 </th>
                 <th className="py-3 px-4 w-[100px] text-center">
                   <SprayCan className="inline-block mb-0.5" /> Esthétique
@@ -181,36 +181,36 @@ const MemberOngoing: React.FC = () => {
                       {daysSince(vehicle.dateCreation)}
                     </td>
                     <td className="py-4 px-6 text-center">
-                      {vehicle.mecanique ? (
-                        ""
-                      ) : (
-                        <BadgeCheck className="inline-block text-[#16a34a]" />
-                      )}
-                    </td>
-                    <td className="py-4 px-6 text-center">
-                      {vehicle.carrosserie ? (
-                        ""
-                      ) : (
-                        <BadgeCheck className="inline-block text-[#16a34a]" />
-                      )}
-                    </td>
-                    <td className="py-4 px-6 text-center">
-                      {vehicle.ct ? (
-                        ""
-                      ) : (
-                        <BadgeCheck className="inline-block text-[#16a34a]" />
-                      )}
-                    </td>
-                    <td className="py-4 px-6 text-center">
                       {vehicle.dsp ? (
-                        ""
+                        <BadgeCheck className="inline-block text-[#fbbf24]" />
+                      ) : (
+                        <BadgeCheck className="inline-block text-[#16a34a]" />
+                      )}
+                    </td>
+                    <td className="py-4 px-6 text-center">
+                      {vehicle.mecanique ? (
+                        <BadgeCheck className="inline-block text-[#fbbf24]" />
                       ) : (
                         <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
                     <td className="py-4 px-6 text-center">
                       {vehicle.jantes ? (
-                        ""
+                        <BadgeCheck className="inline-block text-[#fbbf24]" />
+                      ) : (
+                        <BadgeCheck className="inline-block text-[#16a34a]" />
+                      )}
+                    </td>
+                    <td className="py-4 px-6 text-center">
+                      {vehicle.ct ? (
+                        <BadgeCheck className="inline-block text-[#fbbf24]" />
+                      ) : (
+                        <BadgeCheck className="inline-block text-[#16a34a]" />
+                      )}
+                    </td>
+                    <td className="py-4 px-6 text-center">
+                      {vehicle.carrosserie ? (
+                        <BadgeCheck className="inline-block text-[#fbbf24]" />
                       ) : (
                         <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}

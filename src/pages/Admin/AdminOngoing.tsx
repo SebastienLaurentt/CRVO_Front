@@ -103,25 +103,27 @@ const AdminOngoing: React.FC = () => {
             <thead>
               <tr className="text-left bg-background border-b sticky top-0 z-10">
                 <th className="py-3 px-2 2xl:px-6 w-[300px]">Client</th>
-                <th className="py-3 px-2 2xl:px-6 w-[200px]">Immatriculation</th>
+                <th className="py-3 px-2 2xl:px-6 w-[200px]">
+                  Immatriculation
+                </th>
                 <th className="py-3 px-2 2xl:px-6 w-[250px]">Modèle</th>
                 <th className="py-3 px-2 2xl:px-6 w-[200px] text-center">
                   Jours depuis Création
                 </th>
+                <th className="py-3 px-4 w-[60px] text-center">
+                  <AudioLines className="inline-block mb-0.5" /> DSP
+                </th>
                 <th className="py-3 px-4 w-[100px] text-center">
                   <Wrench className="inline-block mb-0.5" /> Mécanique
                 </th>
-                <th className="py-3 px-4 w-[100px] text-center">
-                  <Car className="inline-block mb-0.5" /> Carrosserie
+                <th className="py-3 px-4 w-[60px] text-center">
+                  <LifeBuoy className="inline-block mb-0.5" /> Jantes
                 </th>
                 <th className="py-3 px-4 w-[60px] text-center">
                   <ShieldCheck className="inline-block mb-0.5" /> CT
                 </th>
-                <th className="py-3 px-4 w-[60px] text-center">
-                  <AudioLines className="inline-block mb-0.5" /> DSP
-                </th>
-                <th className="py-3 px-4 w-[60px] text-center">
-                  <LifeBuoy className="inline-block mb-0.5" /> Jantes
+                <th className="py-3 px-4 w-[100px] text-center">
+                  <Car className="inline-block mb-0.5" /> Carrosserie
                 </th>
                 <th className="py-3 px-4 w-[80px] text-center">
                   <SprayCan className="inline-block mb-0.5" /> Esthétique
@@ -150,43 +152,47 @@ const AdminOngoing: React.FC = () => {
               ) : sortedVehicles && sortedVehicles.length > 0 ? (
                 sortedVehicles.map((vehicle: Vehicle) => (
                   <tr key={vehicle._id} className="border-b last:border-b-0">
-                    <td className="py-4 px-2 2xl:px-6">{vehicle.user.username}</td>
-                    <td className="py-4 px-2 2xl:px-6">{vehicle.immatriculation}</td>
+                    <td className="py-4 px-2 2xl:px-6">
+                      {vehicle.user.username}
+                    </td>
+                    <td className="py-4 px-2 2xl:px-6">
+                      {vehicle.immatriculation}
+                    </td>
                     <td className="py-4 px-2 2xl:px-6">{vehicle.modele}</td>
                     <td className="py-4 px-2 2xl:px-4 text-center">
                       {daysSince(vehicle.dateCreation)}
                     </td>
                     <td className="py-4 px-4 text-center">
-                      {vehicle.mecanique ? (
-                        ""
-                      ) : (
-                        <BadgeCheck className="inline-block text-[#16a34a]" />
-                      )}
-                    </td>
-                    <td className="py-4 px-4 text-center">
-                      {vehicle.carrosserie ? (
-                        ""
-                      ) : (
-                        <BadgeCheck className="inline-block text-[#16a34a]" />
-                      )}
-                    </td>
-                    <td className="py-4 px-4 text-center">
-                      {vehicle.ct ? (
-                        ""
-                      ) : (
-                        <BadgeCheck className="inline-block text-[#16a34a]" />
-                      )}
-                    </td>
-                    <td className="py-4 px-4 text-center">
                       {vehicle.dsp ? (
-                        ""
+                        <BadgeCheck className="inline-block text-[#fbbf24]" />
+                      ) : (
+                        <BadgeCheck className="inline-block text-[#16a34a]" />
+                      )}
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      {vehicle.mecanique ? (
+                        <BadgeCheck className="inline-block text-[#fbbf24]" />
                       ) : (
                         <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
                     <td className="py-4 px-4 text-center">
                       {vehicle.jantes ? (
-                        ""
+                        <BadgeCheck className="inline-block text-[#fbbf24]" />
+                      ) : (
+                        <BadgeCheck className="inline-block text-[#16a34a]" />
+                      )}
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      {vehicle.ct ? (
+                        <BadgeCheck className="inline-block text-[#fbbf24]" />
+                      ) : (
+                        <BadgeCheck className="inline-block text-[#16a34a]" />
+                      )}
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      {vehicle.carrosserie ? (
+                        <BadgeCheck className="inline-block text-[#fbbf24]" />
                       ) : (
                         <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
