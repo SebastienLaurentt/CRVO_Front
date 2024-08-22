@@ -10,7 +10,7 @@ import { toast } from "./ui/use-toast";
 type ExcelRow = {
   client: string | null;
   immatriculation: string | null;
-  vin: string | null; // Nouvelle colonne pour le VIN
+  vin: string | null; 
   modele: string | null;
   dateCreation: Date | null;
   mecanique: boolean;
