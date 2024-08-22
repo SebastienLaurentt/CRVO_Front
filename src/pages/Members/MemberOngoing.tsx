@@ -217,9 +217,9 @@ const MemberOngoing: React.FC = () => {
                     </td>
                     <td className="py-4 px-6 text-center">
                       {vehicle.esthetique ? (
-                        <BadgeCheck className="inline-block text-[#16a34a]" />
+                        <BadgeCheck className="inline-block text-[#fbbf24]" />
                       ) : (
-                        ""
+                        <BadgeCheck className="inline-block text-[#fbbf24]" />
                       )}
                     </td>
                   </tr>
