@@ -29,14 +29,14 @@ export const VehiculePieChart: React.FC<VehiculePieChartProps> = ({
   });
 
   const chartData = [
-    { name: "Véhicules en cours", value: ongoing, fill: "#0ea5e9" },
-    { name: "Véhicules terminés", value: completed, fill: "#3b82f6" },
+    { name: "Rénovations en cours", value: ongoing, fill: "#0ea5e9" },
+    { name: "Rénovations terminées", value: completed, fill: "#3b82f6" },
   ];
 
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Répartition des véhicules</CardTitle>
+        <CardTitle>Type des rénovations</CardTitle>
         <CardDescription> {today}</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
@@ -57,7 +57,7 @@ export const VehiculePieChart: React.FC<VehiculePieChartProps> = ({
       </CardContent>
       <CardFooter className="flex-col gap-1 font-semibold">
         <div>En cours: {ongoing}</div>
-        <div>Terminés {completed}</div>
+        <div>Terminés: {completed}</div>
       </CardFooter>
     </Card>
   );

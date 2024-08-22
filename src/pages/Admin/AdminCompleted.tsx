@@ -62,8 +62,8 @@ const AdminCompleted: React.FC = () => {
 
   return (
     <div className="p-8 border rounded-l-lg flex-1 bg-primary">
-      <h1>Véhicules Terminés</h1>
-      <div className="flex flex-row justify-between pb-4 pt-8">
+      <h1>Rénovations Terminées</h1>
+      <div className="flex flex-row gap-x-4 pb-4 pt-8">
         <div className="flex flex-row gap-x-3">
           <Input
             placeholder="Recherche"
@@ -73,7 +73,7 @@ const AdminCompleted: React.FC = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <div className="flex flex-row gap-x-2 ml-8 2xl:ml-60">
+        <div className="flex flex-row gap-x-2">
           <Button
             className="space-x-[5px]"
             onClick={() => setIsCompletedFileInputVisible(true)}

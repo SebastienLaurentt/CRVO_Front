@@ -17,7 +17,7 @@ const Nav = () => {
         <img src={CRVOLogo} alt="Logo CRVO" className="w-full mb-12" />
         <div className="flex flex-col">
           <div className="mb-6">
-            <span className="text-slate-700 font-semibold mb-1">Véhicules</span>
+            <span className="text-slate-700 font-semibold mb-1">Type de Rénovations</span>
             <div className="space-y-1">
               <NavLink
                 to="/"
@@ -29,7 +29,7 @@ const Nav = () => {
                 }
               >
                 <LoaderCircle size={24} />
-                <span>Véhicules En Cours</span>
+                <span>En Cours</span>
               </NavLink>
 
               <NavLink
@@ -42,7 +42,7 @@ const Nav = () => {
                 }
               >
                 <ArrowRightToLine size={24} />
-                <span>Véhicules Terminés</span>
+                <span>Terminées</span>
               </NavLink>
             </div>
           </div>

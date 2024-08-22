@@ -76,8 +76,8 @@ const AdminOngoing: React.FC = () => {
 
   return (
     <div className="p-8 border rounded-l-lg bg-primary">
-      <h1>Véhicules En Cours</h1>
-      <div className="flex flex-row justify-between pb-4 pt-8">
+      <h1>Rénovations En Cours</h1>
+      <div className="flex flex-row gap-x-4 pb-4 pt-8">
         <div className="flex flex-row gap-x-3">
           <Input
             placeholder="Recherche"
@@ -87,7 +87,7 @@ const AdminOngoing: React.FC = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <div className="flex flex-row gap-x-2 ml-8 2xl:ml-60">
+        <div className="flex flex-row gap-x-2">
           <Button
             className="space-x-[5px]"
             onClick={() => setIsFileInputVisible(true)}
@@ -150,9 +150,9 @@ const AdminOngoing: React.FC = () => {
               ) : sortedVehicles && sortedVehicles.length > 0 ? (
                 sortedVehicles.map((vehicle: Vehicle) => (
                   <tr key={vehicle._id} className="border-b last:border-b-0">
-                    <td className="py-4 px-2 2xl:px-4">{vehicle.user.username}</td>
-                    <td className="py-4 px-2 2xl:px-4">{vehicle.immatriculation}</td>
-                    <td className="py-4 px-2 2xl:px-4">{vehicle.modele}</td>
+                    <td className="py-4 px-2 2xl:px-6">{vehicle.user.username}</td>
+                    <td className="py-4 px-2 2xl:px-6">{vehicle.immatriculation}</td>
+                    <td className="py-4 px-2 2xl:px-6">{vehicle.modele}</td>
                     <td className="py-4 px-2 2xl:px-4 text-center">
                       {daysSince(vehicle.dateCreation)}
                     </td>

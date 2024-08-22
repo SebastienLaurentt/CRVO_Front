@@ -109,8 +109,8 @@ const MemberOngoing: React.FC = () => {
 
   return (
     <div className="p-8 border rounded-l-lg bg-primary flex-1 ">
-      <h1>Véhicules En Cours</h1>
-      <div className="flex flex-row justify-between pb-4 pt-8  ">
+      <h1>Rénovations En Cours</h1>
+      <div className="flex flex-row gap-x-4 pb-4 pt-8  ">
         <Input
           placeholder="Recherche"
           className="text-sm"
