@@ -10,6 +10,7 @@ import { toast } from "./ui/use-toast";
 type ExcelRow = {
   client: string | null;
   immatriculation: string | null;
+  vin: string | null; // Nouvelle colonne pour le VIN
   modele: string | null;
   dateCreation: Date | null;
   mecanique: boolean;
@@ -45,6 +46,7 @@ const uploadVehicleData = async (vehicle: ExcelRow) => {
       username: vehicle.client,
       password: "motdepasse",
       immatriculation: vehicle.immatriculation,
+      vin: vehicle.vin, 
       modele: vehicle.modele,
       dateCreation: vehicle.dateCreation,
       mecanique: vehicle.mecanique,
@@ -62,58 +64,32 @@ const uploadVehicleData = async (vehicle: ExcelRow) => {
   return response.json();
 };
 
-// Fonction pour convertir un numéro de série Excel en Date avec inversion des jours et mois
 const excelDateToJSDate = (serial: number): Date => {
-  // Excel utilise le 30 décembre 1899 comme point de départ pour les dates
-  const epoch = new Date(Date.UTC(1899, 11, 30)); // 30 décembre 1899
+  const epoch = new Date(Date.UTC(1899, 11, 30)); 
   const days = Math.floor(serial);
-  const milliseconds = Math.round((serial - days) * 86400000); // Fraction du jour en millisecondes
+  const milliseconds = Math.round((serial - days) * 86400000);
 
-  // Calculer la date de base
   const baseDate = new Date(epoch.getTime() + days * 86400000 + milliseconds);
-
-  // Récupérer le jour, le mois et l'année de la date de base
   const day = baseDate.getUTCDate();
-  const month = baseDate.getUTCMonth(); // Les mois sont indexés de 0 à 11
+  const month = baseDate.getUTCMonth();
   const year = baseDate.getUTCFullYear();
 
-  // Créer une nouvelle date avec jour et mois inversés
-  // Les mois en JavaScript sont indexés de 0 à 11, donc on ajuste cela pour obtenir le mois correct
-  const correctedDate = new Date(Date.UTC(year, day - 1, month + 1)); // Inverser jour et mois
-
-  console.log(
-    `Converted Excel serial ${serial} to base date ${baseDate.toISOString()}`
-  );
-  console.log(
-    `Corrected Excel serial ${serial} to date ${correctedDate.toISOString()}`
-  );
-
+  const correctedDate = new Date(Date.UTC(year, day - 1, month + 1));
   return correctedDate;
 };
 
-// Fonction améliorée pour convertir une chaîne de date ou un numéro de série en objet Date
+
 const convertToDate = (value: string | number): Date | null => {
   if (typeof value === "number") {
-    // Traiter les dates sérielles avec inversion des jours et mois
-    const date = excelDateToJSDate(value);
-    console.log(
-      `Converted Excel serial ${value} to date ${date.toISOString()}`
-    );
-    return date;
+    return excelDateToJSDate(value);
   }
 
   const dateString = String(value).trim();
-  console.log(`Processing date string: ${dateString}`);
-
   if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) {
-    // Traitement des chaînes de dates en format DD/MM/YYYY
     const [day, month, year] = dateString.split("/");
-    const date = new Date(`${year}-${month}-${day}`); // Format ISO 8601
-    console.log(`Converted string ${dateString} to date ${date.toISOString()}`);
-    return date;
+    return new Date(`${year}-${month}-${day}`);
   }
 
-  console.error(`Invalid date format: ${value}`);
   return null;
 };
 
@@ -144,13 +120,12 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
         | null
       )[][];
 
-      console.log("Raw sheet data:", sheetData);
-
       const filteredData: ExcelRow[] = sheetData
         .slice(1)
         .map((row) => ({
           client: row[1] ? String(row[1]).trim() : null,
           immatriculation: row[2] ? String(row[2]).trim() : null,
+          vin: row[5] ? String(row[5]).trim() : null, 
           modele: row[3] ? String(row[3]).trim() : null,
           dateCreation: row[8] ? convertToDate(row[8]) : null,
           mecanique: String(row[15]).trim().toLowerCase() === "oui",
@@ -161,10 +136,12 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
         }))
         .filter(
           (row) =>
-            row.client || row.immatriculation || row.modele || row.dateCreation
+            row.client ||
+            row.immatriculation ||
+            row.vin || 
+            row.modele ||
+            row.dateCreation
         );
-
-      console.log("Filtered data:", filteredData);
 
       setData(filteredData);
     };
