@@ -46,8 +46,10 @@ export const UserPieChart: React.FC<UserPieChartProps> = ({ totalUsers }) => {
           <Tooltip />
         </PieChart>
       </CardContent>
-      <CardFooter className="flex-col gap-1 font-semibold">
-        <div>Clients: {totalUsers}</div>
+      <CardFooter className="flex-col gap-1">
+        <div>
+          Clients: <span className="font-bold"> {totalUsers}</span>
+        </div>
       </CardFooter>
     </Card>
   );

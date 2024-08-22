@@ -76,7 +76,7 @@ const AdminData: React.FC = () => {
     isError: isErrorCompleted,
     error: errorCompleted,
   } = useQuery({
-    queryKey: ["completedVehicles"],
+    queryKey: ["completed-vehicles"],
     queryFn: fetchCompletedVehicles,
   });
 
@@ -106,7 +106,6 @@ const AdminData: React.FC = () => {
   const totalVehicles = ongoingVehicles + completedVehiclesCount;
   const totalMembers = members?.length || 0;
 
-  // Calcul du nombre d'utilisateurs avec et sans mot de passe changé
   const usersWithPasswordChanged = members?.filter((member) => member.passwordChanged).length || 0;
   const usersWithoutPasswordChanged = totalMembers - usersWithPasswordChanged;
 
@@ -118,7 +117,7 @@ const AdminData: React.FC = () => {
           <Loader />
         </div>
       ) : (
-        <div className="mt-6 flex flex-row gap-x-4">
+        <div className="mt-8 flex flex-row justify-between">
           <VehiculePieChart
             total={totalVehicles}
             completed={completedVehiclesCount}

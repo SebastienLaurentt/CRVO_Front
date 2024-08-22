@@ -27,14 +27,22 @@ export const PasswordChangePieChart: React.FC<PasswordChangePieChartProps> = ({
   });
 
   const chartData = [
-    { name: "Mot de passe changé", value: usersWithPasswordChanged, fill: "#34d399" }, // Vert
-    { name: "Mot de passe non changé", value: usersWithoutPasswordChanged, fill: "#f87171" }, // Rouge
+    {
+      name: "Mot de passe changé",
+      value: usersWithPasswordChanged,
+      fill: "#065f46",
+    },
+    {
+      name: "Mot de passe non changé",
+      value: usersWithoutPasswordChanged,
+      fill: "#ef4444",
+    },
   ];
 
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Statut des mots de passe</CardTitle>
+        <CardTitle>Gestion des mots de passe</CardTitle>
         <CardDescription>{today}</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
@@ -51,9 +59,15 @@ export const PasswordChangePieChart: React.FC<PasswordChangePieChartProps> = ({
           <Tooltip />
         </PieChart>
       </CardContent>
-      <CardFooter className="flex-col gap-1 font-semibold">
-        <div>Mot de passe changé: {usersWithPasswordChanged}</div>
-        <div>Mot de passe non changé: {usersWithoutPasswordChanged}</div>
+      <CardFooter className="flex-col gap-1 ">
+        <div>
+          Mot de passe changé:{" "}
+          <span className="font-bold"> {usersWithPasswordChanged}</span>
+        </div>
+        <div>
+          Mot de passe non changé:{" "}
+          <span className="font-bold">{usersWithoutPasswordChanged}</span>
+        </div>
       </CardFooter>
     </Card>
   );

@@ -50,14 +50,22 @@ export const VehiculePieChart: React.FC<VehiculePieChartProps> = ({
             fill="#000"
             label
           >
-            <Label value={`${total}`} position="center" className="text-slate-600"/>
+            <Label
+              value={`${total}`}
+              position="center"
+              className="text-slate-600"
+            />
           </Pie>
           <Tooltip />
         </PieChart>
       </CardContent>
-      <CardFooter className="flex-col gap-1 font-semibold">
-        <div>En cours: {ongoing}</div>
-        <div>Terminés: {completed}</div>
+      <CardFooter className="flex-col gap-1">
+        <div>
+          En cours: <span className="font-bold"> {ongoing} </span>
+        </div>
+        <div>
+          Terminés: <span className="font-bold"> {completed} </span>
+        </div>
       </CardFooter>
     </Card>
   );
