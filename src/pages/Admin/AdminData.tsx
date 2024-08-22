@@ -1,3 +1,5 @@
+import Loader from "@/components/Loader";
+import { PasswordChangePieChart } from "@/components/PasswordChangePieChart";
 import { UserPieChart } from "@/components/UserPieChart"; // Import du nouveau composant
 import { VehiculePieChart } from "@/components/VehiculePieChart";
 import { useQuery } from "@tanstack/react-query";
@@ -24,6 +26,7 @@ interface User {
   _id: string;
   username: string;
   role: string;
+  passwordChanged: boolean;
 }
 
 const fetchVehicles = async (): Promise<Vehicle[]> => {
@@ -87,10 +90,6 @@ const AdminData: React.FC = () => {
     queryFn: fetchMembers,
   });
 
-  if (isLoadingVehicles || isLoadingCompleted || isLoadingMembers) {
-    return <div>Chargement des données...</div>;
-  }
-
   if (isErrorVehicles || isErrorCompleted || isErrorMembers) {
     return (
       <div>
@@ -107,19 +106,34 @@ const AdminData: React.FC = () => {
   const totalVehicles = ongoingVehicles + completedVehiclesCount;
   const totalMembers = members?.length || 0;
 
+  // Calcul du nombre d'utilisateurs avec et sans mot de passe changé
+  const usersWithPasswordChanged = members?.filter((member) => member.passwordChanged).length || 0;
+  const usersWithoutPasswordChanged = totalMembers - usersWithPasswordChanged;
+
   return (
     <div className="p-8 border rounded-l-lg bg-primary h-[700px]">
       <h1>Graphiques</h1>
-      <div className="mt-6 flex flex-row  gap-x-4">
-        <VehiculePieChart
-          total={totalVehicles}
-          completed={completedVehiclesCount}
-          ongoing={ongoingVehicles}
-        />
-        <UserPieChart totalUsers={totalMembers} />
-      </div>
+      {isLoadingVehicles || isLoadingCompleted || isLoadingMembers ? (
+        <div className="flex py-40 items-center justify-center">
+          <Loader />
+        </div>
+      ) : (
+        <div className="mt-6 flex flex-row gap-x-4">
+          <VehiculePieChart
+            total={totalVehicles}
+            completed={completedVehiclesCount}
+            ongoing={ongoingVehicles}
+          />
+          <UserPieChart totalUsers={totalMembers} />
+          <PasswordChangePieChart
+            usersWithPasswordChanged={usersWithPasswordChanged}
+            usersWithoutPasswordChanged={usersWithoutPasswordChanged}
+          />
+        </div>
+      )}
     </div>
   );
 };
 
 export default AdminData;
+

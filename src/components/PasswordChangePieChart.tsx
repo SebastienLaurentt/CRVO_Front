@@ -9,18 +9,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import * as React from "react";
-import { Label, Pie, PieChart, Tooltip } from "recharts";
+import { Pie, PieChart, Tooltip } from "recharts";
 
-interface VehiculePieChartProps {
-  total: number;
-  completed: number;
-  ongoing: number;
+interface PasswordChangePieChartProps {
+  usersWithPasswordChanged: number;
+  usersWithoutPasswordChanged: number;
 }
 
-export const VehiculePieChart: React.FC<VehiculePieChartProps> = ({
-  total,
-  completed,
-  ongoing,
+export const PasswordChangePieChart: React.FC<PasswordChangePieChartProps> = ({
+  usersWithPasswordChanged,
+  usersWithoutPasswordChanged,
 }) => {
   const today = new Date().toLocaleDateString("fr-FR", {
     day: "numeric",
@@ -29,15 +27,15 @@ export const VehiculePieChart: React.FC<VehiculePieChartProps> = ({
   });
 
   const chartData = [
-    { name: "Rénovations en cours", value: ongoing, fill: "#0ea5e9" },
-    { name: "Rénovations terminées", value: completed, fill: "#3b82f6" },
+    { name: "Mot de passe changé", value: usersWithPasswordChanged, fill: "#34d399" }, // Vert
+    { name: "Mot de passe non changé", value: usersWithoutPasswordChanged, fill: "#f87171" }, // Rouge
   ];
 
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Type de rénovations</CardTitle>
-        <CardDescription> {today}</CardDescription>
+        <CardTitle>Statut des mots de passe</CardTitle>
+        <CardDescription>{today}</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <PieChart width={400} height={400}>
@@ -49,15 +47,13 @@ export const VehiculePieChart: React.FC<VehiculePieChartProps> = ({
             outerRadius={100}
             fill="#000"
             label
-          >
-            <Label value={`${total}`} position="center" className="text-slate-600"/>
-          </Pie>
+          ></Pie>
           <Tooltip />
         </PieChart>
       </CardContent>
       <CardFooter className="flex-col gap-1 font-semibold">
-        <div>En cours: {ongoing}</div>
-        <div>Terminés: {completed}</div>
+        <div>Mot de passe changé: {usersWithPasswordChanged}</div>
+        <div>Mot de passe non changé: {usersWithoutPasswordChanged}</div>
       </CardFooter>
     </Card>
   );

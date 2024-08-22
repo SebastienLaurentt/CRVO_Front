@@ -143,7 +143,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
               <Textarea
                 value={message}
                 rows={14}
-                className="w-full border rounded px-6 py-3 mt-1"
+                className="w-full border rounded px-8 py-6 mt-1"
                 placeholder="Le message s'affichera ici après la sauvegarde"
                 disabled={!isTextareaEnabled}
               />
