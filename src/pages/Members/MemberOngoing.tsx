@@ -1,6 +1,7 @@
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import {
@@ -61,6 +62,7 @@ const fetchVehiclesByUser = async (): Promise<Vehicle[]> => {
 
 const MemberOngoing: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [activeFilter, setActiveFilter] = useState<string>("");
 
   const {
     data: vehicles,
@@ -72,13 +74,23 @@ const MemberOngoing: React.FC = () => {
     queryFn: fetchVehiclesByUser,
   });
 
-  const filteredVehicles = vehicles?.filter((vehicle) => {
-    const searchLower = searchQuery.toLowerCase();
-    return (
-      vehicle.immatriculation.toLowerCase().includes(searchLower) ||
-      vehicle.modele.toLowerCase().includes(searchLower)
-    );
-  });
+  const filteredVehicles = vehicles
+    ?.filter((vehicle) => {
+      const searchLower = searchQuery.toLowerCase();
+      return (
+        vehicle.immatriculation.toLowerCase().includes(searchLower) ||
+        vehicle.modele.toLowerCase().includes(searchLower)
+      );
+    })
+    .filter((vehicle) => {
+      if (activeFilter === "dsp") return vehicle.dsp;
+      if (activeFilter === "mecanique") return vehicle.mecanique;
+      if (activeFilter === "carrosserie") return vehicle.carrosserie;
+      if (activeFilter === "ct") return vehicle.ct;
+      if (activeFilter === "jantes") return vehicle.jantes;
+      if (activeFilter === "esthetique") return vehicle.esthetique;
+      return true;
+    });
 
   const sortedVehicles = filteredVehicles?.sort(
     (a, b) => daysSince(b.dateCreation) - daysSince(a.dateCreation)
@@ -108,6 +120,10 @@ const MemberOngoing: React.FC = () => {
     XLSX.writeFile(workbook, "vehicules.xlsx");
   };
 
+  const handleSwitchChange = (filter: string) => {
+    setActiveFilter(activeFilter === filter ? "" : filter); // Gestion du switch
+  };
+
   return (
     <div className="flex-1 rounded-l-lg border bg-primary p-8 ">
       <h1>Rénovations En Cours</h1>
@@ -132,28 +148,52 @@ const MemberOngoing: React.FC = () => {
           <table className="w-full border-gray-200">
             <thead>
               <tr className="sticky top-0 z-10 border-b bg-background text-left">
-                <th className="w-[300px] px-6 py-3">Immatriculation</th>
-                <th className="w-[300px] px-6 py-3">Modèle</th>
-                <th className="w-[200px] px-6 py-3 text-center">
+                <th className="w-[320px] px-6 py-3">Immatriculation</th>
+                <th className="w-[320px] px-6 py-3">Modèle</th>
+                <th className="w-[260px] px-6 py-3 text-center">
                   Jours depuis Création
                 </th>
                 <th className="w-[60px] px-4 py-3 text-center">
                   <AudioLines className="mb-0.5 inline-block" /> DSP
+                  <Switch
+                    checked={activeFilter === "dsp"}
+                    onCheckedChange={() => handleSwitchChange("dsp")}
+                  />
                 </th>
                 <th className="w-[100px] px-4 py-3 text-center">
                   <Wrench className="mb-0.5 inline-block" /> Mécanique
+                  <Switch
+                    checked={activeFilter === "mecanique"}
+                    onCheckedChange={() => handleSwitchChange("mecanique")}
+                  />
                 </th>
                 <th className="w-[60px] px-4 py-3 text-center">
                   <LifeBuoy className="mb-0.5 inline-block" /> Jantes
+                  <Switch
+                    checked={activeFilter === "jantes"}
+                    onCheckedChange={() => handleSwitchChange("jantes")}
+                  />
                 </th>
                 <th className="w-[60px] px-4 py-3 text-center">
                   <ShieldCheck className="mb-0.5 inline-block" /> CT
+                  <Switch
+                    checked={activeFilter === "ct"}
+                    onCheckedChange={() => handleSwitchChange("ct")}
+                  />
                 </th>
                 <th className="w-[100px] px-4 py-3 text-center">
                   <Car className="mb-0.5 inline-block" /> Carrosserie
+                  <Switch
+                    checked={activeFilter === "carrosserie"}
+                    onCheckedChange={() => handleSwitchChange("carrosserie")}
+                  />
                 </th>
                 <th className="w-[100px] px-4 py-3 text-center">
                   <SprayCan className="mb-0.5 inline-block" /> Esthétique
+                  <Switch
+                    checked={activeFilter === "esthetique"}
+                    onCheckedChange={() => handleSwitchChange("esthetique")}
+                  />
                 </th>
               </tr>
             </thead>
