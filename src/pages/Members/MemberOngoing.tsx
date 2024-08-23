@@ -1,3 +1,4 @@
+import DashboardHeader from "@/components/DashboardHeader";
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -121,13 +122,16 @@ const MemberOngoing: React.FC = () => {
   };
 
   const handleSwitchChange = (filter: string) => {
-    setActiveFilter(activeFilter === filter ? "" : filter); // Gestion du switch
+    setActiveFilter(activeFilter === filter ? "" : filter); 
   };
 
   return (
-    <div className="flex-1 rounded-l-lg border bg-primary p-8 ">
-      <h1>Rénovations En Cours</h1>
-      <div className="flex flex-row gap-x-4 pb-4 pt-8  ">
+    <div className="flex-1 rounded-l-lg border bg-primary pb-8 ">
+      <DashboardHeader
+        title="Rénovations en Cours"
+        count={sortedVehicles?.length || 0}
+      />
+      <div className="flex flex-row gap-x-4 px-8 pb-4 pt-8 ">
         <Input
           placeholder="Recherche"
           className="text-sm"
@@ -144,7 +148,7 @@ const MemberOngoing: React.FC = () => {
       </div>
 
       <div className="relative">
-        <div className="h-[550px] w-full overflow-y-auto">
+        <div className="h-[550px] w-full overflow-y-auto px-8">
           <table className="w-full border-gray-200">
             <thead>
               <tr className="sticky top-0 z-10 border-b bg-background text-left">

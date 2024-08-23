@@ -1,3 +1,4 @@
+import DashboardHeader from "@/components/DashboardHeader";
 import EditUserModal from "@/components/EditUserModal";
 import Loader from "@/components/Loader";
 import { Input } from "@/components/ui/input";
@@ -60,9 +61,13 @@ const Users: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 rounded-l-lg border bg-primary p-8">
-      <h1>Liste des Clients</h1>
-      <div className="sticky top-0 z-10 flex flex-row justify-between bg-white pb-4 pt-8">
+    <div className="flex-1 rounded-l-lg border bg-primary pb-8">
+      <DashboardHeader
+        title="Liste Clients"
+        count={filteredUsers?.length || 0}
+        isClient
+      />
+      <div className="sticky top-0 z-10 flex flex-row justify-between bg-white px-8 pb-4 pt-8">
         <div className="flex flex-row gap-x-3">
           <Input
             placeholder="Recherche"
@@ -75,7 +80,7 @@ const Users: React.FC = () => {
       </div>
 
       <div className="overflow-x-auto">
-        <div className="h-[550px] overflow-y-auto">
+        <div className="h-[550px] overflow-y-auto px-8">
           <table className="w-full border-gray-200">
             <thead className="sticky top-0 z-0 bg-background">
               <tr className="border-b text-left">

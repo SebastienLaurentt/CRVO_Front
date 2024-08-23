@@ -1,3 +1,4 @@
+import DashboardHeader from "@/components/DashboardHeader";
 import Loader from "@/components/Loader";
 import { PasswordChangePieChart } from "@/components/PasswordChangePieChart";
 import { UserPieChart } from "@/components/UserPieChart"; // Import du nouveau composant
@@ -111,14 +112,14 @@ const AdminData: React.FC = () => {
   const usersWithoutPasswordChanged = totalMembers - usersWithPasswordChanged;
 
   return (
-    <div className="h-[700px] rounded-l-lg border bg-primary p-8">
-      <h1>Graphiques</h1>
+    <div className="h-[800px] rounded-l-lg border bg-primary pb-8">
+      <DashboardHeader title="Graphiques" />
       {isLoadingVehicles || isLoadingCompleted || isLoadingMembers ? (
         <div className="flex items-center justify-center py-40">
           <Loader />
         </div>
       ) : (
-        <div className="mt-8 flex flex-row justify-between">
+        <div className=" mt-8 flex flex-row justify-between px-8">
           <VehiculePieChart
             total={totalVehicles}
             completed={completedVehiclesCount}

@@ -1,5 +1,6 @@
 import AddCompletedExcelData from "@/components/AddCompletedExcelData";
 import AddExcelData from "@/components/AddExcelData";
+import DashboardHeader from "@/components/DashboardHeader";
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -93,9 +94,12 @@ const MemberCompleted: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 rounded-l-lg border bg-primary p-8">
-      <h1>Rénovations Terminées</h1>
-      <div className="flex flex-row gap-x-4 pb-4 pt-8">
+    <div className="flex-1 rounded-l-lg border bg-primary pb-8 ">
+      <DashboardHeader
+        title="Rénovations Terminées"
+        count={sortedCompletedVehicles?.length || 0}
+      />
+      <div className="flex flex-row gap-x-4 px-8 pb-4 pt-8">
         <div className="flex flex-row gap-x-3">
           <Input
             placeholder="Recherche"
@@ -114,7 +118,7 @@ const MemberCompleted: React.FC = () => {
       </div>
 
       <div className="relative">
-        <div className="h-[550px] w-full overflow-y-auto">
+        <div className="h-[550px] w-full overflow-y-auto px-8">
           <table className="w-full border-gray-200">
             <thead className="sticky top-0 z-10 bg-background">
               <tr className="border-b text-left">

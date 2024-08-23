@@ -1,4 +1,5 @@
 import AddExcelData from "@/components/AddExcelData";
+import DashboardHeader from "@/components/DashboardHeader";
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -92,9 +93,12 @@ const AdminOngoing: React.FC = () => {
   };
 
   return (
-    <div className="rounded-l-lg border bg-primary p-8">
-      <h1>Rénovations En Cours</h1>
-      <div className="flex flex-row justify-between pb-4 pt-8">
+    <div className="rounded-l-lg border bg-primary pb-8">
+      <DashboardHeader
+        title="Rénovations en Cours"
+        count={sortedVehicles?.length || 0}
+      />
+      <div className="flex flex-row justify-between px-8 pb-4 pt-8">
         <div className="flex flex-row gap-x-4">
           <div className="flex flex-row gap-x-3">
             <Input
@@ -117,7 +121,7 @@ const AdminOngoing: React.FC = () => {
       </div>
 
       <div className="relative">
-        <div className="h-[550px] w-full overflow-y-auto">
+        <div className="h-[550px] w-full overflow-y-auto px-8">
           <table className="w-full">
             <thead>
               <tr className="sticky top-0 z-10 border-b bg-background text-left">
