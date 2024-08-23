@@ -112,7 +112,7 @@ const AdminData: React.FC = () => {
   const usersWithoutPasswordChanged = totalMembers - usersWithPasswordChanged;
 
   return (
-    <div className="h-[800px] rounded-l-lg border bg-primary pb-8">
+    <div className="h-[650px] rounded-l-lg border bg-primary pb-8 2xl:h-[800px]">
       <DashboardHeader title="Graphiques" />
       {isLoadingVehicles || isLoadingCompleted || isLoadingMembers ? (
         <div className="flex items-center justify-center py-40">

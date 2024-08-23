@@ -80,7 +80,7 @@ const Users: React.FC = () => {
       </div>
 
       <div className="overflow-x-auto">
-        <div className="h-[550px] overflow-y-auto px-8">
+        <div className="h-[400px] overflow-y-auto px-8 2xl:h-[550px]">
           <table className="w-full border-gray-200">
             <thead className="sticky top-0 z-0 bg-background">
               <tr className="border-b text-left">

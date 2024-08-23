@@ -33,7 +33,8 @@ export const UserPieChart: React.FC<UserPieChartProps> = ({ totalUsers }) => {
         <CardDescription>{today}</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
-        <PieChart width={400} height={400}>
+        
+        <PieChart width={400} height={400} >
           <Pie
             data={chartData}
             dataKey="value"
