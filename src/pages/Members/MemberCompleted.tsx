@@ -93,7 +93,7 @@ const MemberCompleted: React.FC = () => {
   };
 
   return (
-    <div className="p-8 border rounded-l-lg flex-1 bg-primary">
+    <div className="flex-1 rounded-l-lg border bg-primary p-8">
       <h1>Rénovations Terminées</h1>
       <div className="flex flex-row gap-x-4 pb-4 pt-8">
         <div className="flex flex-row gap-x-3">
@@ -114,12 +114,12 @@ const MemberCompleted: React.FC = () => {
       </div>
 
       <div className="relative">
-        <div className="h-[550px] overflow-y-auto w-full">
+        <div className="h-[550px] w-full overflow-y-auto">
           <table className="w-full border-gray-200">
-            <thead className="bg-background sticky top-0 z-10">
-              <tr className="text-left border-b">
-                <th className="py-3 px-6 w-[200px]">VIN</th>
-                <th className="py-3 px-6 w-[200px] text-center">
+            <thead className="sticky top-0 z-10 bg-background">
+              <tr className="border-b text-left">
+                <th className="w-[200px] px-6 py-3">VIN</th>
+                <th className="w-[200px] px-6 py-3 text-center">
                   Fin de Rénovation
                 </th>
               </tr>
@@ -128,7 +128,7 @@ const MemberCompleted: React.FC = () => {
             <tbody>
               {isLoadingCompletedVehicles ? (
                 <tr>
-                  <td colSpan={4} className="text-center py-20">
+                  <td colSpan={4} className="py-20 text-center">
                     <div className="flex items-center justify-center">
                       <Loader />
                     </div>
@@ -136,7 +136,7 @@ const MemberCompleted: React.FC = () => {
                 </tr>
               ) : isErrorCompletedVehicles ? (
                 <tr>
-                  <td colSpan={4} className="text-center py-8">
+                  <td colSpan={4} className="py-8 text-center">
                     Error:{" "}
                     {errorCompletedVehicles instanceof Error
                       ? errorCompletedVehicles.message
@@ -147,15 +147,15 @@ const MemberCompleted: React.FC = () => {
                 sortedCompletedVehicles.length > 0 ? (
                 sortedCompletedVehicles.map((vehicle: CompletedVehicle) => (
                   <tr key={vehicle._id} className="border-b last:border-b-0">
-                    <td className="py-4 px-6">{vehicle.vin}</td>
-                    <td className="py-4 px-6 text-center">
+                    <td className="px-6 py-4">{vehicle.vin}</td>
+                    <td className="px-6 py-4 text-center">
                       {vehicle.dateCompletion}
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={4} className="text-center pt-8 font-medium">
+                  <td colSpan={4} className="pt-8 text-center font-medium">
                     Aucune donnée disponible actuellement.
                   </td>
                 </tr>

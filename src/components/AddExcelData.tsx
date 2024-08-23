@@ -10,7 +10,7 @@ import { toast } from "./ui/use-toast";
 type ExcelRow = {
   client: string | null;
   immatriculation: string | null;
-  vin: string | null; 
+  vin: string | null;
   modele: string | null;
   dateCreation: Date | null;
   mecanique: boolean;
@@ -46,7 +46,7 @@ const uploadVehicleData = async (vehicle: ExcelRow) => {
       username: vehicle.client,
       password: "motdepasse",
       immatriculation: vehicle.immatriculation,
-      vin: vehicle.vin, 
+      vin: vehicle.vin,
       modele: vehicle.modele,
       dateCreation: vehicle.dateCreation,
       mecanique: vehicle.mecanique,
@@ -65,7 +65,7 @@ const uploadVehicleData = async (vehicle: ExcelRow) => {
 };
 
 const excelDateToJSDate = (serial: number): Date => {
-  const epoch = new Date(Date.UTC(1899, 11, 30)); 
+  const epoch = new Date(Date.UTC(1899, 11, 30));
   const days = Math.floor(serial);
   const milliseconds = Math.round((serial - days) * 86400000);
 
@@ -77,7 +77,6 @@ const excelDateToJSDate = (serial: number): Date => {
   const correctedDate = new Date(Date.UTC(year, day - 1, month + 1));
   return correctedDate;
 };
-
 
 const convertToDate = (value: string | number): Date | null => {
   if (typeof value === "number") {
@@ -125,7 +124,7 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
         .map((row) => ({
           client: row[1] ? String(row[1]).trim() : null,
           immatriculation: row[2] ? String(row[2]).trim() : null,
-          vin: row[5] ? String(row[5]).trim() : null, 
+          vin: row[5] ? String(row[5]).trim() : null,
           modele: row[3] ? String(row[3]).trim() : null,
           dateCreation: row[8] ? convertToDate(row[8]) : null,
           mecanique: String(row[15]).trim().toLowerCase() === "oui",
@@ -138,7 +137,7 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
           (row) =>
             row.client ||
             row.immatriculation ||
-            row.vin || 
+            row.vin ||
             row.modele ||
             row.dateCreation
         );
@@ -176,10 +175,10 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-30">
-      <div className="relative bg-white p-4 rounded-lg shadow-lg w-[90%] max-w-lg">
+    <div className="fixed inset-0 z-30 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="relative w-[90%] max-w-lg rounded-lg bg-white p-4 shadow-lg">
         <button
-          className="absolute top-2 right-2 text-gray-600 hover:text-black"
+          className="absolute right-2 top-2 text-gray-600 hover:text-black"
           onClick={onClose}
         >
           <X />
@@ -188,12 +187,12 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
           <FileUploader onChange={handleFileUpload} />
 
           {fileName ? (
-            <span className="mt-2 text-gray-700 flex flex-col items-center">
+            <span className="mt-2 flex flex-col items-center text-gray-700">
               <span className="font-bold">Fichier sélectionné :</span>{" "}
               {fileName}
             </span>
           ) : (
-            <span className="mt-2 text-destructive text-center font-bold">
+            <span className="mt-2 text-center font-bold text-destructive">
               Aucun fichier sélectionné
             </span>
           )}

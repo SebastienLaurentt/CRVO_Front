@@ -108,7 +108,7 @@ const MemberOngoing: React.FC = () => {
   };
 
   return (
-    <div className="p-8 border rounded-l-lg bg-primary flex-1 ">
+    <div className="flex-1 rounded-l-lg border bg-primary p-8 ">
       <h1>Rénovations En Cours</h1>
       <div className="flex flex-row gap-x-4 pb-4 pt-8  ">
         <Input
@@ -127,39 +127,39 @@ const MemberOngoing: React.FC = () => {
       </div>
 
       <div className="relative">
-        <div className="h-[550px] overflow-y-auto w-full">
+        <div className="h-[550px] w-full overflow-y-auto">
           <table className="w-full border-gray-200">
             <thead>
-              <tr className="text-left bg-background border-b sticky top-0 z-10">
-                <th className="py-3 px-6 w-[300px]">Immatriculation</th>
-                <th className="py-3 px-6 w-[300px]">Modèle</th>
-                <th className="py-3 px-6 w-[200px] text-center">
+              <tr className="sticky top-0 z-10 border-b bg-background text-left">
+                <th className="w-[300px] px-6 py-3">Immatriculation</th>
+                <th className="w-[300px] px-6 py-3">Modèle</th>
+                <th className="w-[200px] px-6 py-3 text-center">
                   Jours depuis Création
                 </th>
-                <th className="py-3 px-4 w-[60px] text-center">
-                  <AudioLines className="inline-block mb-0.5" /> DSP
+                <th className="w-[60px] px-4 py-3 text-center">
+                  <AudioLines className="mb-0.5 inline-block" /> DSP
                 </th>
-                <th className="py-3 px-4 w-[100px] text-center">
-                  <Wrench className="inline-block mb-0.5" /> Mécanique
+                <th className="w-[100px] px-4 py-3 text-center">
+                  <Wrench className="mb-0.5 inline-block" /> Mécanique
                 </th>
-                <th className="py-3 px-4 w-[60px] text-center">
-                  <LifeBuoy className="inline-block mb-0.5" /> Jantes
+                <th className="w-[60px] px-4 py-3 text-center">
+                  <LifeBuoy className="mb-0.5 inline-block" /> Jantes
                 </th>
-                <th className="py-3 px-4 w-[60px] text-center">
-                  <ShieldCheck className="inline-block mb-0.5" /> CT
+                <th className="w-[60px] px-4 py-3 text-center">
+                  <ShieldCheck className="mb-0.5 inline-block" /> CT
                 </th>
-                <th className="py-3 px-4 w-[100px] text-center">
-                  <Car className="inline-block mb-0.5" /> Carrosserie
+                <th className="w-[100px] px-4 py-3 text-center">
+                  <Car className="mb-0.5 inline-block" /> Carrosserie
                 </th>
-                <th className="py-3 px-4 w-[100px] text-center">
-                  <SprayCan className="inline-block mb-0.5" /> Esthétique
+                <th className="w-[100px] px-4 py-3 text-center">
+                  <SprayCan className="mb-0.5 inline-block" /> Esthétique
                 </th>
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
                 <tr>
-                  <td colSpan={9} className="text-center py-20">
+                  <td colSpan={9} className="py-20 text-center">
                     <div className="flex items-center justify-center">
                       <Loader />
                     </div>
@@ -167,7 +167,7 @@ const MemberOngoing: React.FC = () => {
                 </tr>
               ) : isError ? (
                 <tr>
-                  <td colSpan={9} className="text-center py-8">
+                  <td colSpan={9} className="py-8 text-center">
                     Error:{" "}
                     {error instanceof Error ? error.message : "Unknown error"}
                   </td>
@@ -175,47 +175,47 @@ const MemberOngoing: React.FC = () => {
               ) : sortedVehicles && sortedVehicles.length > 0 ? (
                 sortedVehicles.map((vehicle: Vehicle) => (
                   <tr key={vehicle._id} className="border-b last:border-b-0">
-                    <td className="py-4 px-6">{vehicle.immatriculation}</td>
-                    <td className="py-4 px-6">{vehicle.modele}</td>
-                    <td className="py-4 px-6 text-center">
+                    <td className="px-6 py-4">{vehicle.immatriculation}</td>
+                    <td className="px-6 py-4">{vehicle.modele}</td>
+                    <td className="px-6 py-4 text-center">
                       {daysSince(vehicle.dateCreation)}
                     </td>
-                    <td className="py-4 px-6 text-center">
+                    <td className="px-6 py-4 text-center">
                       {vehicle.dsp ? (
                         <BadgeCheck className="inline-block text-[#fbbf24]" />
                       ) : (
                         <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
-                    <td className="py-4 px-6 text-center">
+                    <td className="px-6 py-4 text-center">
                       {vehicle.mecanique ? (
                         <BadgeCheck className="inline-block text-[#fbbf24]" />
                       ) : (
                         <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
-                    <td className="py-4 px-6 text-center">
+                    <td className="px-6 py-4 text-center">
                       {vehicle.jantes ? (
                         <BadgeCheck className="inline-block text-[#fbbf24]" />
                       ) : (
                         <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
-                    <td className="py-4 px-6 text-center">
+                    <td className="px-6 py-4 text-center">
                       {vehicle.ct ? (
                         <BadgeCheck className="inline-block text-[#fbbf24]" />
                       ) : (
                         <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
-                    <td className="py-4 px-6 text-center">
+                    <td className="px-6 py-4 text-center">
                       {vehicle.carrosserie ? (
                         <BadgeCheck className="inline-block text-[#fbbf24]" />
                       ) : (
                         <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
-                    <td className="py-4 px-6 text-center">
+                    <td className="px-6 py-4 text-center">
                       {vehicle.esthetique ? (
                         <BadgeCheck className="inline-block text-[#fbbf24]" />
                       ) : (
@@ -226,7 +226,7 @@ const MemberOngoing: React.FC = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={9} className="text-center pt-8 font-medium">
+                  <td colSpan={9} className="pt-8 text-center font-medium">
                     Aucune donnée disponible actuellement.
                   </td>
                 </tr>

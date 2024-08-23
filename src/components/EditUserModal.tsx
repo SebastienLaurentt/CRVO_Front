@@ -1,13 +1,13 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import { Files, X } from "lucide-react";
 import React, { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Loader from "./Loader"; // Assuming Loader is in the same folder
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { toast } from "./ui/use-toast";
-import Loader from "./Loader"; // Assuming Loader is in the same folder
 
 type User = {
   _id: string;
@@ -93,15 +93,15 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
   };
 
   return (
-    <div className="fixed z-10 inset-0 bg-black bg-opacity-50 flex justify-center items-center ">
-      <div className="relative bg-white p-4 rounded-lg shadow-lg w-[90%] max-w-lg">
+    <div className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50 ">
+      <div className="relative w-[90%] max-w-lg rounded-lg bg-white p-4 shadow-lg">
         <button
-          className="absolute top-2 right-2 text-gray-600 hover:text-black"
+          className="absolute right-2 top-2 text-gray-600 hover:text-black"
           onClick={onClose}
         >
           <X />
         </button>
-        <h2 className="text-lg font-bold mb-4">Modifier le mot de passe</h2>
+        <h2 className="mb-4 text-lg font-bold">Modifier le mot de passe</h2>
         <div className="flex flex-col space-y-4">
           <div>
             <Label>Nom d'utilisateur</Label>
@@ -109,7 +109,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="border rounded px-4 py-2 mt-1"
+              className="mt-1 rounded border px-4 py-2"
               placeholder="Nom d'utilisateur"
               disabled
             />
@@ -120,7 +120,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="border rounded px-4 py-2 mt-1"
+              className="mt-1 rounded border px-4 py-2"
               placeholder="Nouveau mot de passe"
               disabled={isPasswordSaved}
             />
@@ -143,14 +143,14 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
               <Textarea
                 value={message}
                 rows={14}
-                className="w-full border rounded px-8 py-6 mt-1"
+                className="mt-1 w-full rounded border px-8 py-6"
                 placeholder="Le message s'affichera ici après la sauvegarde"
                 disabled={!isTextareaEnabled}
               />
               {isTextareaEnabled && (
                 <button
                   onClick={handleCopy}
-                  className="absolute top-12 right-6 text-gray-600 hover:text-black"
+                  className="absolute right-6 top-12 text-gray-600 hover:text-black"
                 >
                   <Files />
                 </button>

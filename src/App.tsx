@@ -18,7 +18,7 @@ const App = () => {
 
   return (
     <>
-      <div className="min-h-screen xl:flex flex-col bg-background hidden">
+      <div className="hidden min-h-screen flex-col bg-background xl:flex">
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route
@@ -66,12 +66,12 @@ const App = () => {
         </Routes>
         <Toaster />
       </div>
-      <div className="min-h-screen flex flex-col items-center justify-center xl:hidden">
+      <div className="flex min-h-screen flex-col items-center justify-center xl:hidden">
         <span className="text-center text-md md:text-lg">
           Pour une expérience optimale, <br /> veuillez utiliser votre
           ordinateur !
         </span>
-        <img src={CRVOLogo} alt="Logo CRVO" className="w-64 md:w-96 mt-12" />
+        <img src={CRVOLogo} alt="Logo CRVO" className="mt-12 w-64 md:w-96" />
       </div>
     </>
   );

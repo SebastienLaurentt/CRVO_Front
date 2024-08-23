@@ -5,7 +5,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   return (
-    <div className="flex flex-row py-12 items-center min-h-screen">
+    <div className="flex min-h-screen flex-row items-center py-12">
       <Nav />
       <main className="flex-1">{children}</main>
     </div>

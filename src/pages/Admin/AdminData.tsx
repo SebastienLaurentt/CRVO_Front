@@ -106,14 +106,15 @@ const AdminData: React.FC = () => {
   const totalVehicles = ongoingVehicles + completedVehiclesCount;
   const totalMembers = members?.length || 0;
 
-  const usersWithPasswordChanged = members?.filter((member) => member.passwordChanged).length || 0;
+  const usersWithPasswordChanged =
+    members?.filter((member) => member.passwordChanged).length || 0;
   const usersWithoutPasswordChanged = totalMembers - usersWithPasswordChanged;
 
   return (
-    <div className="p-8 border rounded-l-lg bg-primary h-[700px]">
+    <div className="h-[700px] rounded-l-lg border bg-primary p-8">
       <h1>Graphiques</h1>
       {isLoadingVehicles || isLoadingCompleted || isLoadingMembers ? (
-        <div className="flex py-40 items-center justify-center">
+        <div className="flex items-center justify-center py-40">
           <Loader />
         </div>
       ) : (
@@ -135,4 +136,3 @@ const AdminData: React.FC = () => {
 };
 
 export default AdminData;
-

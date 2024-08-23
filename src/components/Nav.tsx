@@ -1,5 +1,11 @@
 import { useAuth } from "@/lib/auth";
-import { ArrowRightToLine, BookText, ChartNoAxesCombined, LoaderCircle, User } from "lucide-react";
+import {
+  ArrowRightToLine,
+  BookText,
+  ChartNoAxesCombined,
+  LoaderCircle,
+  User,
+} from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import { Button } from "./ui/button";
 import CRVOLogo from "/public/images/CRVOLogo.png";
@@ -12,12 +18,14 @@ const Nav = () => {
   };
 
   return (
-    <nav className="px-4 2xl:px-12 w-[240px] 2xl:w-[360px] flex flex-col h-[600px] justify-between">
+    <nav className="flex h-[600px] w-[240px] flex-col justify-between px-4 2xl:w-[360px] 2xl:px-12">
       <div>
-        <img src={CRVOLogo} alt="Logo CRVO" className="w-full mb-12" />
+        <img src={CRVOLogo} alt="Logo CRVO" className="mb-12 w-full" />
         <div className="flex flex-col">
           <div className="mb-6">
-            <span className="text-slate-700 font-semibold mb-1">Type de Rénovations</span>
+            <span className="mb-1 font-semibold text-slate-700">
+              Type de Rénovations
+            </span>
             <div className="space-y-1">
               <NavLink
                 to="/"
@@ -48,7 +56,7 @@ const Nav = () => {
           </div>
           {role === "admin" && (
             <div className="mb-6">
-              <span className="text-slate-700 font-semibold mb-1">Data</span>
+              <span className="mb-1 font-semibold text-slate-700">Data</span>
               <NavLink
                 to="/data"
                 className={({ isActive }) =>
@@ -57,15 +65,14 @@ const Nav = () => {
                   }`
                 }
               >
-                
-                <ChartNoAxesCombined size={24}  />
+                <ChartNoAxesCombined size={24} />
                 <span>Graphiques</span>
               </NavLink>
             </div>
           )}
           {role === "admin" && (
             <>
-              <span className="text-slate-700 font-semibold mb-1">Clients</span>
+              <span className="mb-1 font-semibold text-slate-700">Clients</span>
               <NavLink
                 to="/clients"
                 className={({ isActive }) =>
@@ -81,7 +88,7 @@ const Nav = () => {
           )}
           {role === "member" && (
             <>
-              <span className="text-slate-700 font-semibold mb-1">
+              <span className="mb-1 font-semibold text-slate-700">
                 Documents
               </span>
               <Button className="space-x-[5px]" asChild>

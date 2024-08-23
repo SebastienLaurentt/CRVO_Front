@@ -79,7 +79,7 @@ const AdminOngoing: React.FC = () => {
       if (activeFilter === "ct") return vehicle.ct;
       if (activeFilter === "carrosserie") return vehicle.carrosserie;
       if (activeFilter === "esthetique") return vehicle.esthetique;
-      return true; 
+      return true;
     });
 
   const sortedVehicles = filteredVehicles?.sort(
@@ -91,7 +91,7 @@ const AdminOngoing: React.FC = () => {
   };
 
   return (
-    <div className="p-8 border rounded-l-lg bg-primary">
+    <div className="rounded-l-lg border bg-primary p-8">
       <h1>Rénovations En Cours</h1>
       <div className="flex flex-row justify-between pb-4 pt-8">
         <div className="flex flex-row gap-x-4">
@@ -116,66 +116,66 @@ const AdminOngoing: React.FC = () => {
       </div>
 
       <div className="relative">
-        <div className="h-[550px] overflow-y-auto w-full">
+        <div className="h-[550px] w-full overflow-y-auto">
           <table className="w-full">
             <thead>
-              <tr className="text-left bg-background border-b sticky top-0 z-10">
-                <th className="py-3 px-2 2xl:px-6 w-[300px]">Client</th>
-                <th className="py-3 px-2 2xl:px-6 w-[200px]">
+              <tr className="sticky top-0 z-10 border-b bg-background text-left">
+                <th className="w-[300px] px-2 py-3 2xl:px-6">Client</th>
+                <th className="w-[200px] px-2 py-3 2xl:px-6">
                   Immatriculation
                 </th>
-                <th className="py-3 px-2 2xl:px-6 w-[250px]">Modèle</th>
-                <th className="py-3 px-2 2xl:px-6 w-[200px] text-center">
+                <th className="w-[250px] px-2 py-3 2xl:px-6">Modèle</th>
+                <th className="w-[200px] px-2 py-3 text-center 2xl:px-6">
                   Jours depuis Création
                 </th>
-                <th className="py-3 px-4 w-[60px] text-center">
+                <th className="w-[60px] px-4 py-3 text-center">
                   <div className="flex flex-col items-center">
-                    <AudioLines className="inline-block mb-0.5" /> DSP
+                    <AudioLines className="mb-0.5 inline-block" /> DSP
                     <Switch
                       checked={activeFilter === "dsp"}
                       onCheckedChange={() => handleSwitchChange("dsp")}
                     />
                   </div>
                 </th>
-                <th className="py-3 px-4 w-[100px] text-center">
+                <th className="w-[100px] px-4 py-3 text-center">
                   <div className="flex flex-col items-center">
-                    <Wrench className="inline-block mb-0.5" /> Mécanique
+                    <Wrench className="mb-0.5 inline-block" /> Mécanique
                     <Switch
                       checked={activeFilter === "mecanique"}
                       onCheckedChange={() => handleSwitchChange("mecanique")}
                     />
                   </div>
                 </th>
-                <th className="py-3 px-4 w-[60px] text-center">
+                <th className="w-[60px] px-4 py-3 text-center">
                   <div className="flex flex-col items-center">
-                    <LifeBuoy className="inline-block mb-0.5" /> Jantes
+                    <LifeBuoy className="mb-0.5 inline-block" /> Jantes
                     <Switch
                       checked={activeFilter === "jantes"}
                       onCheckedChange={() => handleSwitchChange("jantes")}
                     />
                   </div>
                 </th>
-                <th className="py-3 px-4 w-[60px] text-center">
+                <th className="w-[60px] px-4 py-3 text-center">
                   <div className="flex flex-col items-center">
-                    <ShieldCheck className="inline-block mb-0.5" /> CT
+                    <ShieldCheck className="mb-0.5 inline-block" /> CT
                     <Switch
                       checked={activeFilter === "ct"}
                       onCheckedChange={() => handleSwitchChange("ct")}
                     />
                   </div>
                 </th>
-                <th className="py-3 px-4 w-[100px] text-center">
+                <th className="w-[100px] px-4 py-3 text-center">
                   <div className="flex flex-col items-center">
-                    <Car className="inline-block mb-0.5" /> Carrosserie
+                    <Car className="mb-0.5 inline-block" /> Carrosserie
                     <Switch
                       checked={activeFilter === "carrosserie"}
                       onCheckedChange={() => handleSwitchChange("carrosserie")}
                     />
                   </div>
                 </th>
-                <th className="py-3 px-4 w-[80px] text-center">
+                <th className="w-[80px] px-4 py-3 text-center">
                   <div className="flex flex-col items-center">
-                    <SprayCan className="inline-block mb-0.5" /> Esthétique
+                    <SprayCan className="mb-0.5 inline-block" /> Esthétique
                     <Switch
                       checked={activeFilter === "esthetique"}
                       onCheckedChange={() => handleSwitchChange("esthetique")}
@@ -188,7 +188,7 @@ const AdminOngoing: React.FC = () => {
             <tbody>
               {isLoadingVehicles ? (
                 <tr>
-                  <td colSpan={10} className="text-center py-20">
+                  <td colSpan={10} className="py-20 text-center">
                     <div className="flex items-center justify-center">
                       <Loader />
                     </div>
@@ -196,7 +196,7 @@ const AdminOngoing: React.FC = () => {
                 </tr>
               ) : isErrorVehicles ? (
                 <tr>
-                  <td colSpan={10} className="text-center py-8">
+                  <td colSpan={10} className="py-8 text-center">
                     Error:{" "}
                     {errorVehicles instanceof Error
                       ? errorVehicles.message
@@ -206,52 +206,52 @@ const AdminOngoing: React.FC = () => {
               ) : sortedVehicles && sortedVehicles.length > 0 ? (
                 sortedVehicles.map((vehicle: Vehicle) => (
                   <tr key={vehicle._id} className="border-b last:border-b-0">
-                    <td className="py-4 px-2 2xl:px-6">
+                    <td className="px-2 py-4 2xl:px-6">
                       {vehicle.user.username}
                     </td>
-                    <td className="py-4 px-2 2xl:px-6">
+                    <td className="px-2 py-4 2xl:px-6">
                       {vehicle.immatriculation}
                     </td>
-                    <td className="py-4 px-2 2xl:px-6">{vehicle.modele}</td>
-                    <td className="py-4 px-2 2xl:px-4 text-center">
+                    <td className="px-2 py-4 2xl:px-6">{vehicle.modele}</td>
+                    <td className="px-2 py-4 text-center 2xl:px-4">
                       {daysSince(vehicle.dateCreation)}
                     </td>
-                    <td className="py-4 px-4 text-center">
+                    <td className="p-4 text-center">
                       {vehicle.dsp ? (
                         <BadgeCheck className="inline-block text-[#fbbf24]" />
                       ) : (
                         <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
-                    <td className="py-4 px-4 text-center">
+                    <td className="p-4 text-center">
                       {vehicle.mecanique ? (
                         <BadgeCheck className="inline-block text-[#fbbf24]" />
                       ) : (
                         <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
-                    <td className="py-4 px-4 text-center">
+                    <td className="p-4 text-center">
                       {vehicle.jantes ? (
                         <BadgeCheck className="inline-block text-[#fbbf24]" />
                       ) : (
                         <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
-                    <td className="py-4 px-4 text-center">
+                    <td className="p-4 text-center">
                       {vehicle.ct ? (
                         <BadgeCheck className="inline-block text-[#fbbf24]" />
                       ) : (
                         <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
-                    <td className="py-4 px-4 text-center">
+                    <td className="p-4 text-center">
                       {vehicle.carrosserie ? (
                         <BadgeCheck className="inline-block text-[#fbbf24]" />
                       ) : (
                         <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
-                    <td className="py-4 px-4 text-center">
+                    <td className="p-4 text-center">
                       {vehicle.esthetique ? (
                         <BadgeCheck className="inline-block text-[#fbbf24]" />
                       ) : (
@@ -262,7 +262,7 @@ const AdminOngoing: React.FC = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={10} className="text-center pt-8 font-medium">
+                  <td colSpan={10} className="pt-8 text-center font-medium">
                     Aucune donnée disponible actuellement.
                   </td>
                 </tr>

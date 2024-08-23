@@ -60,85 +60,80 @@ const Users: React.FC = () => {
   };
 
   return (
-      <div className="p-8 border rounded-l-lg flex-1 bg-primary">
-        <h1>Liste des Clients</h1>
-        <div className="flex flex-row justify-between pb-4 pt-8 sticky top-0 z-10 bg-white">
-          <div className="flex flex-row gap-x-3">
-            <Input
-              placeholder="Recherche"
-              className="text-sm"
-              value={searchQuery}
-              hasSearchIcon
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
+    <div className="flex-1 rounded-l-lg border bg-primary p-8">
+      <h1>Liste des Clients</h1>
+      <div className="sticky top-0 z-10 flex flex-row justify-between bg-white pb-4 pt-8">
+        <div className="flex flex-row gap-x-3">
+          <Input
+            placeholder="Recherche"
+            className="text-sm"
+            value={searchQuery}
+            hasSearchIcon
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
+      </div>
 
-        <div className="overflow-x-auto">
-          <div className="h-[550px] overflow-y-auto">
-            <table className="w-full border-gray-200">
-              <thead className="bg-background sticky top-0 z-0">
-                <tr className="text-left border-b">
-                  <th className="py-3 px-6 w-[500px]">Client</th>
-                  <th className="py-3 px-6 w-[500px] text-center">
-                    Mot de passe
-                  </th>
-                  <th className="py-3 px-6 w-[300px] text-center">
-                    Paramètres
-                  </th>
+      <div className="overflow-x-auto">
+        <div className="h-[550px] overflow-y-auto">
+          <table className="w-full border-gray-200">
+            <thead className="sticky top-0 z-0 bg-background">
+              <tr className="border-b text-left">
+                <th className="w-[500px] px-6 py-3">Client</th>
+                <th className="w-[500px] px-6 py-3 text-center">
+                  Mot de passe
+                </th>
+                <th className="w-[300px] px-6 py-3 text-center">Paramètres</th>
+              </tr>
+            </thead>
+            <tbody>
+              {isLoading ? (
+                <tr>
+                  <td colSpan={3} className="py-20 text-center">
+                    <div className="flex items-center justify-center">
+                      <Loader />
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {isLoading ? (
-                  <tr>
-                    <td colSpan={3} className="text-center py-20">
-                      <div className="flex items-center justify-center">
-                        <Loader />
-                      </div>
+              ) : isError ? (
+                <tr>
+                  <td colSpan={3} className="py-8 text-center">
+                    Error:{" "}
+                    {error instanceof Error ? error.message : "Unknown error"}
+                  </td>
+                </tr>
+              ) : filteredUsers && filteredUsers.length > 0 ? (
+                filteredUsers.map((user) => (
+                  <tr key={user._id} className="border-b last:border-b-0">
+                    <td className="px-6 py-4">{user.username}</td>
+                    <td
+                      className={`px-6 py-4 text-center font-medium ${
+                        user.passwordChanged ? "text-green-600" : "text-red-600"
+                      }`}
+                    >
+                      {user.passwordChanged ? "Configuré" : "Non configuré"}
                     </td>
-                  </tr>
-                ) : isError ? (
-                  <tr>
-                    <td colSpan={3} className="text-center py-8">
-                      Error:{" "}
-                      {error instanceof Error ? error.message : "Unknown error"}
-                    </td>
-                  </tr>
-                ) : filteredUsers && filteredUsers.length > 0 ? (
-                  filteredUsers.map((user) => (
-                    <tr key={user._id} className="border-b last:border-b-0">
-                      <td className="py-4 px-6">{user.username}</td>
-                      <td
-                        className={`py-4 px-6 text-center font-medium ${
-                          user.passwordChanged
-                            ? "text-green-600"
-                            : "text-red-600"
-                        }`}
+                    <td className="px-6 py-4 text-center">
+                      <button
+                        onClick={() => handleEditClick(user)}
+                        className="text-gray-600 hover:text-black"
                       >
-                        {user.passwordChanged ? "Configuré" : "Non configuré"}
-                      </td>
-                      <td className="py-4 px-6 text-center">
-                        <button
-                          onClick={() => handleEditClick(user)}
-                          className="text-gray-600 hover:text-black"
-                        >
-                          <Settings size={18} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={3} className="text-center py-4">
-                      Aucune donnée disponible.
+                        <Settings size={18} />
+                      </button>
                     </td>
                   </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={3} className="py-4 text-center">
+                    Aucune donnée disponible.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
-     
+      </div>
 
       {selectedUser && (
         <EditUserModal user={selectedUser} onClose={handleCloseModal} />
