@@ -1,9 +1,9 @@
 import { useAuth } from "@/lib/auth";
 import {
-  ArrowRightToLine,
+  BookmarkCheck,
   BookText,
   ChartNoAxesCombined,
-  LoaderCircle,
+  Drill,
   User,
 } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
@@ -36,7 +36,7 @@ const Nav = () => {
                   }`
                 }
               >
-                <LoaderCircle size={24} />
+                <Drill size={24} />
                 <span>En Cours</span>
               </NavLink>
 
@@ -49,7 +49,7 @@ const Nav = () => {
                   }`
                 }
               >
-                <ArrowRightToLine size={24} />
+                <BookmarkCheck size={24} />
                 <span>Terminées</span>
               </NavLink>
             </div>

@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import {
   AudioLines,
   BadgeCheck,
+  CalendarClock,
   Car,
   ChartArea,
   LifeBuoy,
@@ -182,44 +183,44 @@ const MemberOngoing: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 text-center">
                       {vehicle.dsp ? (
-                        <BadgeCheck className="inline-block text-[#fbbf24]" />
+                        <CalendarClock className="inline-block text-[#fbbf24]" />
                       ) : (
                         <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
                     <td className="px-6 py-4 text-center">
                       {vehicle.mecanique ? (
-                        <BadgeCheck className="inline-block text-[#fbbf24]" />
+                        <CalendarClock className="inline-block text-[#fbbf24]" />
                       ) : (
                         <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
                     <td className="px-6 py-4 text-center">
                       {vehicle.jantes ? (
-                        <BadgeCheck className="inline-block text-[#fbbf24]" />
+                        <CalendarClock className="inline-block text-[#fbbf24]" />
                       ) : (
                         <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
                     <td className="px-6 py-4 text-center">
                       {vehicle.ct ? (
-                        <BadgeCheck className="inline-block text-[#fbbf24]" />
+                        <CalendarClock className="inline-block text-[#fbbf24]" />
                       ) : (
                         <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
                     <td className="px-6 py-4 text-center">
                       {vehicle.carrosserie ? (
-                        <BadgeCheck className="inline-block text-[#fbbf24]" />
+                        <CalendarClock className="inline-block text-[#fbbf24]" />
                       ) : (
                         <BadgeCheck className="inline-block text-[#16a34a]" />
                       )}
                     </td>
                     <td className="px-6 py-4 text-center">
                       {vehicle.esthetique ? (
-                        <BadgeCheck className="inline-block text-[#fbbf24]" />
+                        <CalendarClock className="inline-block text-[#fbbf24]" />
                       ) : (
-                        <BadgeCheck className="inline-block text-[#fbbf24]" />
+                        <CalendarClock className="inline-block text-[#fbbf24]" />
                       )}
                     </td>
                   </tr>
