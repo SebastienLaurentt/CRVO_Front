@@ -70,8 +70,8 @@ export default function Login() {
   };
 
   return (
-    <div className="flex h-screen flex-col-reverse items-center   text-white md:flex-col xl:mx-32 xl:flex-row xl:gap-x-4 2xl:mx-auto 2xl:max-w-7xl">
-      <div className="mt-4 flex w-full flex-col items-center text-foreground md:mb-4 md:mt-0 xl:mb-0 xl:w-1/2 xl:items-start xl:p-8">
+    <div className="flex h-screen flex-col-reverse items-center text-white md:flex-col xl:mx-16 xl:flex-row xl:gap-x-8 2xl:mx-auto 2xl:max-w-[1600px]">
+      <div className="mt-4 flex w-full flex-col items-center text-foreground md:mb-4 md:mt-0 xl:mb-0 xl:w-1/2 xl:items-start ">
         <div className="w-[300px] md:w-[400px]">
           <img
             src={CRVOLogo}
@@ -143,7 +143,7 @@ export default function Login() {
         </div>
       </div>
 
-      <div className="w-full ">
+      <div className="w-full">
         <img src={CRVOImg} alt="Image de voiture" className="lg:rounded-lg" />
       </div>
     </div>
