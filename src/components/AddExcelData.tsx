@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { X } from "lucide-react";
+import { Trash2, X } from "lucide-react"; 
 import React, { ChangeEvent, useState } from "react";
 import * as XLSX from "xlsx";
 import FileUploader from "./FileUploader";
@@ -92,9 +92,42 @@ const convertToDate = (value: string | number): Date | null => {
   return null;
 };
 
+const isValidVehicleFile = (
+  sheetData: (string | number | null)[][]
+): boolean => {
+  const headers = sheetData[0]
+    .filter((header) => header !== null && String(header).trim() !== "")
+    .map((header) => String(header).trim());
+
+  const requiredHeaders = [
+    "Client",
+    "Immatriculation",
+    "VIN",
+    "Modèle",
+    "Date création",
+    "Mécanique",
+    "Carrosserie",
+    "CT",
+    "DSP",
+    "Jantes",
+  ];
+
+  const missingHeaders = requiredHeaders.filter(
+    (header) => !headers.includes(header)
+  );
+
+  if (missingHeaders.length > 0) {
+    console.error("En-têtes manquants:", missingHeaders);
+    return false;
+  }
+
+  return true;
+};
+
 const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
   const [data, setData] = useState<ExcelRow[]>([]);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [isValidFile, setIsValidFile] = useState<boolean>(true); 
 
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -119,6 +152,20 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
         | null
       )[][];
 
+      console.log("Sheet Data:", sheetData);
+
+      if (!isValidVehicleFile(sheetData)) {
+        setIsValidFile(false); 
+        toast({
+          variant: "destructive",
+          title: "Fichier non valide",
+          description:
+            "Veuillez importer le bon fichier !",
+        });
+        return;
+      }
+
+      setIsValidFile(true); 
       const filteredData: ExcelRow[] = sheetData
         .slice(1)
         .map((row) => ({
@@ -174,6 +221,12 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
     uploadVehicles();
   };
 
+  const handleFileRemove = () => {
+    setFileName(null);
+    setData([]);
+    setIsValidFile(true); 
+  };
+
   return (
     <div className="fixed inset-0 z-30 flex items-center justify-center bg-black bg-opacity-50">
       <div className="relative w-[90%] max-w-lg rounded-lg bg-white p-4 shadow-lg">
@@ -187,10 +240,19 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
           <FileUploader onChange={handleFileUpload} />
 
           {fileName ? (
-            <span className="mt-2 flex flex-col items-center text-gray-700">
-              <span className="font-bold">Fichier sélectionné :</span>{" "}
-              {fileName}
-            </span>
+            <div className="mt-2 flex flex-col items-center text-gray-700">
+              <span className="font-bold">Fichier sélectionné :</span>
+              <div className="flex items-center">
+                <span>{fileName}</span>
+
+                <button
+                  className="ml-2 text-red-500 hover:text-red-700"
+                  onClick={handleFileRemove}
+                >
+                  <Trash2 />
+                </button>
+              </div>
+            </div>
           ) : (
             <span className="mt-2 text-center font-bold text-destructive">
               Aucun fichier sélectionné
@@ -200,7 +262,7 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
           <Button
             className="mt-3"
             onClick={handleDataSubmit}
-            disabled={!fileName || isPending}
+            disabled={!fileName || isPending || !isValidFile} 
           >
             {isPending ? (
               <span className="flex flex-row gap-x-3">

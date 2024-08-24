@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { X } from "lucide-react";
+import { Trash2, X } from "lucide-react";
 import React, { ChangeEvent, useState } from "react";
 import * as XLSX from "xlsx";
 import FileUploader from "./FileUploader";
@@ -54,9 +54,22 @@ const uploadCompletedVehicleData = async (vehicle: CompletedVehicleRow) => {
   return response.json();
 };
 
+const isValidCompletedVehicleFile = (
+  sheetData: (string | number | null)[][]
+): boolean => {
+  const expectedHeaders = ["Client", "VIN", "Statut", "Date"];
+
+  const headers = sheetData[0]
+    .filter((header) => header !== null && String(header).trim() !== "")
+    .map((header) => String(header).trim());
+
+  return expectedHeaders.every((header) => headers.includes(header));
+};
+
 const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
   const [data, setData] = useState<CompletedVehicleRow[]>([]);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [isValidFile, setIsValidFile] = useState<boolean>(true);
 
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -81,24 +94,41 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
         | null
       )[][];
 
+      if (!isValidCompletedVehicleFile(sheetData)) {
+        toast({
+          variant: "destructive",
+          title: "Fichier non valide",
+          description: "Veuillez importer le bon fichier !",
+        });
+        setIsValidFile(false);
+        return;
+      }
+
       const filteredData: CompletedVehicleRow[] = sheetData
         .slice(1)
         .map((row) => ({
           client: row[0] ? String(row[0]).trim() : null,
-          vin: row[2] ? String(row[2]).trim() : null,
-          statut: row[4] ? String(row[4]).trim() : null,
-          dateCompletion: row[5] ? excelSerialToDate(Number(row[5])) : null,
+          vin: row[1] ? String(row[1]).trim() : null,
+          statut: row[2] ? String(row[2]).trim() : null,
+          dateCompletion: row[3] ? excelSerialToDate(Number(row[3])) : null,
         }))
         .filter(
           (row) =>
             row.statut === "Sortie Usine" &&
-            (row.client || row.vin || row.dateCompletion) 
+            (row.client || row.vin || row.dateCompletion)
         );
 
       setData(filteredData);
+      setIsValidFile(true);
     };
 
     reader.readAsArrayBuffer(file);
+  };
+
+  const handleFileRemove = () => {
+    setFileName(null);
+    setData([]);
+    setIsValidFile(true);
   };
 
   const queryClient = useQueryClient();
@@ -141,10 +171,19 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
           <FileUploader onChange={handleFileUpload} />
 
           {fileName ? (
-            <span className="mt-2 flex flex-col items-center text-gray-700">
+            <div className="mt-2 flex flex-col items-center text-gray-700">
               <span className="font-bold">Fichier sélectionné :</span>{" "}
-              {fileName}
-            </span>
+              <div className="flex items-center">
+                <span>{fileName}</span>
+
+                <button
+                  className="ml-2 text-red-500 hover:text-red-700"
+                  onClick={handleFileRemove}
+                >
+                  <Trash2 />
+                </button>
+              </div>
+            </div>
           ) : (
             <span className="mt-2 text-center font-bold text-destructive">
               Aucun fichier sélectionné
@@ -154,7 +193,7 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
           <Button
             className="mt-3"
             onClick={handleDataSubmit}
-            disabled={!fileName || isPending}
+            disabled={!fileName || !isValidFile || isPending}
           >
             {isPending ? (
               <span className="flex flex-row gap-x-3">
