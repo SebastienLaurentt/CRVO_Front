@@ -57,13 +57,22 @@ const uploadCompletedVehicleData = async (vehicle: CompletedVehicleRow) => {
 const isValidCompletedVehicleFile = (
   sheetData: (string | number | null)[][]
 ): boolean => {
-  const expectedHeaders = ["Client", "VIN", "Statut", "Date"];
-
   const headers = sheetData[0]
     .filter((header) => header !== null && String(header).trim() !== "")
     .map((header) => String(header).trim());
 
-  return expectedHeaders.every((header) => headers.includes(header));
+  const requiredHeaders = ["Client", "VIN", "Statut", "Date"];
+
+  const missingHeaders = requiredHeaders.filter(
+    (header) => !headers.includes(header)
+  );
+
+  if (missingHeaders.length > 0) {
+    console.error("En-têtes manquants:", missingHeaders);
+    return false;
+  }
+
+  return true;
 };
 
 const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
@@ -95,22 +104,24 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
       )[][];
 
       if (!isValidCompletedVehicleFile(sheetData)) {
+        setIsValidFile(false);
         toast({
           variant: "destructive",
           title: "Fichier non valide",
           description: "Veuillez importer le bon fichier !",
         });
-        setIsValidFile(false);
         return;
       }
+
+      setIsValidFile(true);
 
       const filteredData: CompletedVehicleRow[] = sheetData
         .slice(1)
         .map((row) => ({
           client: row[0] ? String(row[0]).trim() : null,
-          vin: row[1] ? String(row[1]).trim() : null,
-          statut: row[2] ? String(row[2]).trim() : null,
-          dateCompletion: row[3] ? excelSerialToDate(Number(row[3])) : null,
+          vin: row[2] ? String(row[2]).trim() : null,
+          statut: row[4] ? String(row[4]).trim() : null,
+          dateCompletion: row[5] ? excelSerialToDate(Number(row[5])) : null,
         }))
         .filter(
           (row) =>
@@ -119,16 +130,9 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
         );
 
       setData(filteredData);
-      setIsValidFile(true);
     };
 
     reader.readAsArrayBuffer(file);
-  };
-
-  const handleFileRemove = () => {
-    setFileName(null);
-    setData([]);
-    setIsValidFile(true);
   };
 
   const queryClient = useQueryClient();
@@ -158,6 +162,12 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
     uploadCompletedVehicles();
   };
 
+  const handleFileRemove = () => {
+    setFileName(null);
+    setData([]);
+    setIsValidFile(true);
+  };
+
   return (
     <div className="fixed inset-0 z-30 flex items-center justify-center bg-black bg-opacity-50">
       <div className="relative w-[90%] max-w-lg rounded-lg bg-white p-4 shadow-lg">
@@ -172,7 +182,7 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
 
           {fileName ? (
             <div className="mt-2 flex flex-col items-center text-gray-700">
-              <span className="font-bold">Fichier sélectionné :</span>{" "}
+              <span className="font-bold">Fichier sélectionné :</span>
               <div className="flex items-center">
                 <span>{fileName}</span>
 
@@ -193,7 +203,7 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
           <Button
             className="mt-3"
             onClick={handleDataSubmit}
-            disabled={!fileName || !isValidFile || isPending}
+            disabled={!fileName || isPending || !isValidFile}
           >
             {isPending ? (
               <span className="flex flex-row gap-x-3">

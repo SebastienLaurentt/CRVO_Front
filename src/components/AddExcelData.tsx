@@ -152,7 +152,6 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
         | null
       )[][];
 
-      console.log("Sheet Data:", sheetData);
 
       if (!isValidVehicleFile(sheetData)) {
         setIsValidFile(false); 
