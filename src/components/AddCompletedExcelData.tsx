@@ -40,7 +40,6 @@ const uploadCompletedVehicleData = async (vehicle: CompletedVehicleRow) => {
     },
     body: JSON.stringify({
       username: vehicle.client,
-      password: "motdepasse",
       vin: vehicle.vin,
       statut: vehicle.statut,
       dateCompletion: vehicle.dateCompletion,

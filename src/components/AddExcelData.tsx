@@ -44,7 +44,6 @@ const uploadVehicleData = async (vehicle: ExcelRow) => {
     },
     body: JSON.stringify({
       username: vehicle.client,
-      password: "motdepasse",
       immatriculation: vehicle.immatriculation,
       vin: vehicle.vin,
       modele: vehicle.modele,
