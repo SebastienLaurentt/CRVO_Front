@@ -172,11 +172,11 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
           vin: row[5] ? String(row[5]).trim() : null,
           modele: row[3] ? String(row[3]).trim() : null,
           dateCreation: row[8] ? convertToDate(row[8]) : null,
-          mecanique: String(row[15]).trim().toLowerCase() === "oui",
-          carrosserie: String(row[16]).trim().toLowerCase() === "oui",
-          ct: String(row[17]).trim().toLowerCase() === "oui",
-          dsp: String(row[18]).trim().toLowerCase() === "oui",
-          jantes: String(row[19]).trim().toLowerCase() === "oui",
+          mecanique: String(row[16]).trim().toLowerCase() === "oui",
+          carrosserie: String(row[17]).trim().toLowerCase() === "oui",
+          ct: String(row[18]).trim().toLowerCase() === "oui",
+          dsp: String(row[19]).trim().toLowerCase() === "oui",
+          jantes: String(row[20]).trim().toLowerCase() === "oui",
         }))
         .filter(
           (row) =>

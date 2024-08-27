@@ -47,6 +47,7 @@ const fetchVehicles = async (): Promise<Vehicle[]> => {
     throw new Error("Erreur lors de la récupération des véhicules.");
   }
   const data = await response.json();
+  console.log(data);
   return data;
 };
 
