@@ -124,7 +124,7 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
         }))
         .filter(
           (row) =>
-            row.statut === "Sortie Usine" &&
+            row.statut !== "Sortie Usine" &&
             (row.client || row.vin || row.dateCompletion)
         );
 
