@@ -106,12 +106,12 @@ const MemberOngoing: React.FC = () => {
       Immatriculation: vehicle.immatriculation,
       Modèle: vehicle.modele,
       "Jours depuis Création": daysSince(vehicle.dateCreation),
-      Mécanique: vehicle.mecanique ? "Oui" : "",
-      Carrosserie: vehicle.carrosserie ? "Oui" : "",
-      CT: vehicle.ct ? "Oui" : "",
-      DSP: vehicle.dsp ? "Oui" : "",
-      Jantes: vehicle.jantes ? "Oui" : "",
-      Esthétique: vehicle.esthetique ? "Oui" : "",
+      DSP: vehicle.dsp ? "En cours" : "Fait",
+      Mécanique: vehicle.mecanique ? "En cours" : "Fait",
+      Jantes: vehicle.jantes ? "En cours" : "Fait",
+      CT: vehicle.ct ? "En cours" : "Fait",
+      Carrosserie: vehicle.carrosserie ? "En cours" : "Fait",
+      Esthétique: vehicle.esthetique ? "En cours" : "En cours",
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(data);
