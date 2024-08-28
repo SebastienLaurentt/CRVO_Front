@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Trash2, X } from "lucide-react"; 
+import { Trash2, X } from "lucide-react";
 import React, { ChangeEvent, useState } from "react";
 import * as XLSX from "xlsx";
 import FileUploader from "./FileUploader";
@@ -126,7 +126,7 @@ const isValidVehicleFile = (
 const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
   const [data, setData] = useState<ExcelRow[]>([]);
   const [fileName, setFileName] = useState<string | null>(null);
-  const [isValidFile, setIsValidFile] = useState<boolean>(true); 
+  const [isValidFile, setIsValidFile] = useState<boolean>(true);
 
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -151,19 +151,17 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
         | null
       )[][];
 
-
       if (!isValidVehicleFile(sheetData)) {
-        setIsValidFile(false); 
+        setIsValidFile(false);
         toast({
           variant: "destructive",
           title: "Fichier non valide",
-          description:
-            "Veuillez importer le bon fichier !",
+          description: "Veuillez importer le bon fichier !",
         });
         return;
       }
 
-      setIsValidFile(true); 
+      setIsValidFile(true);
       const filteredData: ExcelRow[] = sheetData
         .slice(1)
         .map((row) => ({
@@ -222,11 +220,11 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
   const handleFileRemove = () => {
     setFileName(null);
     setData([]);
-    setIsValidFile(true); 
+    setIsValidFile(true);
   };
 
   return (
-    <div className="fixed inset-0 z-30 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/50">
       <div className="relative w-[90%] max-w-lg rounded-lg bg-white p-4 shadow-lg">
         <button
           className="absolute right-2 top-2 text-gray-600 hover:text-black"
@@ -234,7 +232,7 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
         >
           <X />
         </button>
-        <div className="flex flex-col">
+        <div className="mt-8 flex flex-col">
           <FileUploader onChange={handleFileUpload} />
 
           {fileName ? (
@@ -260,7 +258,7 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
           <Button
             className="mt-3"
             onClick={handleDataSubmit}
-            disabled={!fileName || isPending || !isValidFile} 
+            disabled={!fileName || isPending || !isValidFile}
           >
             {isPending ? (
               <span className="flex flex-row gap-x-3">
