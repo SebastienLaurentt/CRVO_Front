@@ -12,8 +12,10 @@ import * as XLSX from "xlsx";
 
 interface CompletedVehicle {
   _id: string;
+  immatriculation: string;
   vin: string;
   dateCompletion: string;
+  price: number;
   user: {
     username: string;
   };
@@ -122,10 +124,12 @@ const MemberCompleted: React.FC = () => {
           <table className="w-full border-gray-200">
             <thead className="sticky top-0 z-10 bg-background">
               <tr className="border-b text-left">
+                <th className="w-[160px] px-6 py-3">Immatriculation</th>
                 <th className="w-[200px] px-6 py-3">VIN</th>
                 <th className="w-[200px] px-6 py-3 text-center">
                   Fin de Rénovation
                 </th>
+                <th className="w-[160px] px-6 py-3 text-center">Prix</th>
               </tr>
             </thead>
 
@@ -151,9 +155,28 @@ const MemberCompleted: React.FC = () => {
                 sortedCompletedVehicles.length > 0 ? (
                 sortedCompletedVehicles.map((vehicle: CompletedVehicle) => (
                   <tr key={vehicle._id} className="border-b last:border-b-0">
+                    <td className="px-6 py-4">
+                      {vehicle.immatriculation !== null &&
+                      vehicle.immatriculation !== undefined ? (
+                        vehicle.immatriculation
+                      ) : (
+                        <span className="font-semibold text-red-500">
+                          Non défini
+                        </span>
+                      )}
+                    </td>
                     <td className="px-6 py-4">{vehicle.vin}</td>
                     <td className="px-6 py-4 text-center">
                       {vehicle.dateCompletion}
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      {vehicle.price !== null && vehicle.price !== undefined ? (
+                        vehicle.price.toFixed(2) + " €"
+                      ) : (
+                        <span className="font-semibold text-red-500">
+                          Non défini
+                        </span>
+                      )}
                     </td>
                   </tr>
                 ))
