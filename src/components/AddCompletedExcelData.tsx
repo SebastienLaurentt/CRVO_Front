@@ -7,15 +7,17 @@ import Loader from "./Loader";
 import { Button } from "./ui/button";
 import { toast } from "./ui/use-toast";
 
-type CompletedVehicleRow = {
+// File1  and FileMerged Data
+interface CompletedVehicleRow {
   client: string | null;
   vin: string | null;
   statut: string | null;
   dateCompletion: string | null;
   immatriculation?: string | null;
   price?: number | null;
-};
+}
 
+// File2 Data
 interface SupplementaryData {
   vin: string | null;
   immatriculation: string | null;
