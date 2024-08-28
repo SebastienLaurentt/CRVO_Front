@@ -10,7 +10,9 @@ import React, { useState } from "react";
 interface CompletedVehicle {
   _id: string;
   vin: string;
+  immatriculation: string;
   dateCompletion: string;
+  price: number;
   user: {
     username: string;
   };
@@ -91,10 +93,12 @@ const AdminCompleted: React.FC = () => {
             <thead className="sticky top-0 z-10 bg-background">
               <tr className="border-b text-left">
                 <th className="w-[300px] px-6 py-3">Client</th>
+                <th className="w-[300px] px-6 py-3">Immat</th>
                 <th className="w-[200px] px-6 py-3">VIN</th>
                 <th className="w-[200px] px-6 py-3 text-center">
                   Fin de Rénovation
                 </th>
+                <th className="w-[200px] px-6 py-3 text-center">Prix</th>
               </tr>
             </thead>
 
@@ -121,9 +125,24 @@ const AdminCompleted: React.FC = () => {
                 sortedCompletedVehicles.map((vehicle: CompletedVehicle) => (
                   <tr key={vehicle._id} className="border-b last:border-b-0">
                     <td className="px-6 py-4">{vehicle.user.username}</td>
+                    <td className="px-6 py-4 text-center">
+                      {vehicle.immatriculation !== null &&
+                      vehicle.immatriculation !== undefined ? (
+                        vehicle.immatriculation
+                      ) : (
+                        <span className="text-red-400">Non défini</span>
+                      )}
+                    </td>
                     <td className="px-6 py-4">{vehicle.vin}</td>
                     <td className="px-6 py-4 text-center">
                       {vehicle.dateCompletion}
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      {vehicle.price !== null && vehicle.price !== undefined ? (
+                        vehicle.price.toFixed(2) + " €"
+                      ) : (
+                        <span className="text-red-400">Non défini</span>
+                      )}
                     </td>
                   </tr>
                 ))
