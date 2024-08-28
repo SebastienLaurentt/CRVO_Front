@@ -82,10 +82,10 @@ const MemberCompleted: React.FC = () => {
     const workbook = XLSX.utils.book_new();
 
     const data = sortedCompletedVehicles.map((vehicle) => ({
+      Immatriculation: vehicle.immatriculation || "Non défini",
       VIN: vehicle.vin,
-      "Date de Complétion": new Date(
-        vehicle.dateCompletion
-      ).toLocaleDateString(),
+      "Date de Complétion": vehicle.dateCompletion,
+      Prix: vehicle.price !== null && vehicle.price !== undefined ? vehicle.price.toFixed(2) + " €" : "Non défini",
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(data);
