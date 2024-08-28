@@ -115,7 +115,7 @@ const AdminOngoing: React.FC = () => {
               className="space-x-[5px]"
               onClick={() => setIsFileInputVisible(true)}
             >
-              <Upload size={20} /> <span>Nouveau Fichier</span>
+              <Upload size={20} /> <span>Import Excel</span>
             </Button>
           </div>
         </div>
