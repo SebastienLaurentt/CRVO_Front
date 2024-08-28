@@ -68,7 +68,9 @@ const MemberCompleted: React.FC = () => {
     const searchLower = searchQuery.toLowerCase();
     return (
       vehicle.vin.toLowerCase().includes(searchLower) ||
-      vehicle.user.username.toLowerCase().includes(searchLower)
+      vehicle.user.username.toLowerCase().includes(searchLower) || 
+      ((vehicle.immatriculation?.toLowerCase().includes(searchLower)) ?? false) ||
+      ((vehicle.price?.toString().toLowerCase().includes(searchLower)) ?? false)
     );
   });
 
