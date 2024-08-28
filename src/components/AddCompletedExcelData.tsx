@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Trash2, X } from "lucide-react";
-import React, { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import * as XLSX from "xlsx";
 import FileUploader from "./FileUploader";
 import Loader from "./Loader";
@@ -20,10 +20,6 @@ interface SupplementaryData {
   vin: string | null;
   immatriculation: string | null;
   price: number | null;
-}
-
-interface FileInputProps {
-  onClose: () => void;
 }
 
 const isValidCompletedVehicleFile = (
@@ -86,8 +82,6 @@ const excelSerialToDate = (serial: number) => {
 };
 
 const uploadCompletedVehicleData = async (vehicle: CompletedVehicleRow) => {
-  console.log("Données envoyées au backend:", vehicle);
-
   const response = await fetch("https://crvo-back.onrender.com/api/completed", {
     method: "POST",
     headers: {
@@ -110,16 +104,15 @@ const uploadCompletedVehicleData = async (vehicle: CompletedVehicleRow) => {
   return response.json();
 };
 
-const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
-  const [data, setData] = useState<CompletedVehicleRow[]>([]);
+const AddExcelData = ({ onClose }: { onClose: () => void }) => {
+  const [dataFile1, setDataFile1] = useState<CompletedVehicleRow[]>([]);
+  const [dataFile2, setDataFile2] = useState<SupplementaryData[]>([]);
   const [fileName1, setFileName1] = useState<string | null>(null);
   const [fileName2, setFileName2] = useState<string | null>(null);
   const [isValidFile1, setIsValidFile1] = useState<boolean>(true);
   const [isValidFile2, setIsValidFile2] = useState<boolean>(true);
-  const [supplementaryData, setSupplementaryData] = useState<
-    SupplementaryData[]
-  >([]);
 
+  // Handle first file, upload and remove
   const handleFirstFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -163,12 +156,19 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
           dateCompletion: row[5] ? excelSerialToDate(Number(row[5])) : null,
         }));
 
-      setData(vehicleData);
+      setDataFile1(vehicleData);
     };
 
     reader.readAsArrayBuffer(file);
   };
 
+  const handleFileRemove1 = () => {
+    setFileName1(null);
+    setDataFile1([]);
+    setIsValidFile1(true);
+  };
+
+  // Handle second file, upload and remove
   const handleSecondFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -206,28 +206,35 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
       const supplementaryData: SupplementaryData[] = sheetData
         .slice(1)
         .map((row) => ({
-          immatriculation: row[1] ? String(row[1]).trim() : null, 
-          vin: row[2] ? String(row[2]).trim() : null, 
-          price: row[4] ? Number(row[4]) : null, 
+          immatriculation: row[1] ? String(row[1]).trim() : null,
+          vin: row[2] ? String(row[2]).trim() : null,
+          price: row[4] ? Number(row[4]) : null,
         }));
 
-      setSupplementaryData(supplementaryData);
+      setDataFile2(supplementaryData);
     };
 
     reader.readAsArrayBuffer(file);
   };
 
+  const handleFileRemove2 = () => {
+    setFileName2(null);
+    setDataFile2([]);
+    setIsValidFile2(true);
+  };
+
+  // Handle data merging
   const mergeData = () => {
-    const filteredSupplementaryData = supplementaryData.filter((supplement) =>
-      data.some((vehicle) => vehicle.vin === supplement.vin)
+    const filteredFile2Data = dataFile2.filter((supplement) =>
+      dataFile1.some((vehicle) => vehicle.vin === supplement.vin)
     );
 
-    const filteredData = data.filter(
+    const filteredFile1Data = dataFile1.filter(
       (vehicle) => vehicle.statut === "Sortie Usine"
     );
 
-    const mergedData = filteredData.map((vehicle) => {
-      const matchingSupplement = filteredSupplementaryData.find(
+    const mergedData = filteredFile1Data.map((vehicle) => {
+      const matchingSupplement = filteredFile2Data.find(
         (supplement) => supplement.vin === vehicle.vin
       );
       return {
@@ -237,14 +244,19 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
       };
     });
 
-    setData(mergedData);
+    setDataFile1(mergedData);
+  };
+
+  // Handle data submit
+  const handleDataSubmit = () => {
+    mergeData();
+    uploadCompletedVehicles();
   };
 
   const queryClient = useQueryClient();
-
   const { mutate: uploadCompletedVehicles, isPending } = useMutation({
     mutationFn: async () => {
-      const promises = data.map((vehicle) =>
+      const promises = dataFile1.map((vehicle) =>
         uploadCompletedVehicleData(vehicle)
       );
       await Promise.all(promises);
@@ -262,23 +274,6 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
       });
     },
   });
-
-  const handleDataSubmit = () => {
-    mergeData();
-    uploadCompletedVehicles();
-  };
-
-  const handleFileRemove1 = () => {
-    setFileName1(null);
-    setData([]);
-    setIsValidFile1(true);
-  };
-
-  const handleFileRemove2 = () => {
-    setFileName2(null);
-    setSupplementaryData([]);
-    setIsValidFile2(true);
-  };
 
   return (
     <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/50">
