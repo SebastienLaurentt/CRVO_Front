@@ -290,7 +290,7 @@ const AddExcelData = ({ onClose }: { onClose: () => void }) => {
           <div className="my-4">
             <div className="flex flex-row justify-between">
               <span>
-                <span className="font-bold">Fichier 1: </span> Client, Vin, Date
+                <span className="font-bold">Fichier 1: </span> Client, VIN et Date
                 de Rénovation
               </span>
               {!isValidFile1 && <p className=" text-red-500">Non valide</p>}
@@ -311,7 +311,7 @@ const AddExcelData = ({ onClose }: { onClose: () => void }) => {
           </div>
 
           <div className="flex flex-col justify-between py-4">
-            <div className="flex flex-row items-center gap-x-4">
+            <div className="flex flex-row items-center justify-between gap-x-4">
               <span>
                 {" "}
                 <span className="font-bold">Fichier 1: </span>
@@ -334,7 +334,7 @@ const AddExcelData = ({ onClose }: { onClose: () => void }) => {
                 ""
               )}
             </div>
-            <div className="flex flex-row items-center">
+            <div className="mt-1 flex flex-row items-center justify-between">
               <span>
                 {" "}
                 <span className="font-bold">Fichier 2: </span>
@@ -360,7 +360,13 @@ const AddExcelData = ({ onClose }: { onClose: () => void }) => {
           </div>
           <Button
             onClick={handleDataSubmit}
-            disabled={!fileName1 || !fileName2 || isPending}
+            disabled={
+              !fileName1 ||
+              !fileName2 ||
+              !isValidFile1 ||
+              !isValidFile2 ||
+              isPending
+            }
           >
             {isPending ? (
               <span className="flex flex-row gap-x-3">
