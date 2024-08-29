@@ -1,7 +1,8 @@
+import { handleFileUpload } from "@/lib/fileUpload";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Trash2, X } from "lucide-react";
+import { X } from "lucide-react";
 import { ChangeEvent, useState } from "react";
-import * as XLSX from "xlsx";
+import FileDisplay from "./FileDisplay";
 import FileUploader from "./FileUploader";
 import Loader from "./Loader";
 import { Button } from "./ui/button";
@@ -116,52 +117,21 @@ const AddExcelData = ({ onClose }: { onClose: () => void }) => {
 
   // Handle first file, upload and remove
   const handleFirstFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setFileName1(file.name);
-
-    const reader = new FileReader();
-
-    reader.onload = (event: ProgressEvent<FileReader>) => {
-      const arrayBuffer = event.target?.result;
-      if (!arrayBuffer) return;
-
-      const data = new Uint8Array(arrayBuffer as ArrayBuffer);
-      const workbook = XLSX.read(data, { type: "array" });
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-
-      const sheetData = XLSX.utils.sheet_to_json(sheet, { header: 1 }) as (
-        | string
-        | number
-        | null
-      )[][];
-
-      if (!isValidCompletedVehicleFile(sheetData)) {
-        setIsValidFile1(false);
-        toast({
-          variant: "destructive",
-          title: "Fichier 1 non valide",
-        });
-        return;
-      }
-
-      setIsValidFile1(true);
-
-      const vehicleData: CompletedVehicleRow[] = sheetData
-        .slice(1)
-        .map((row) => ({
+    handleFileUpload<CompletedVehicleRow>(
+      e,
+      isValidCompletedVehicleFile,
+      setFileName1,
+      setDataFile1,
+      setIsValidFile1,
+      (sheetData) =>
+        sheetData.slice(1).map((row) => ({
           client: row[0] ? String(row[0]).trim() : null,
           vin: row[2] ? String(row[2]).trim() : null,
           statut: row[4] ? String(row[4]).trim() : null,
           dateCompletion: row[5] ? excelSerialToDate(Number(row[5])) : null,
-        }));
-
-      setDataFile1(vehicleData);
-    };
-
-    reader.readAsArrayBuffer(file);
+        })),
+      "Fichier 1 non valide"
+    );
   };
 
   const handleFileRemove1 = () => {
@@ -172,51 +142,20 @@ const AddExcelData = ({ onClose }: { onClose: () => void }) => {
 
   // Handle second file, upload and remove
   const handleSecondFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setFileName2(file.name);
-
-    const reader = new FileReader();
-
-    reader.onload = (event: ProgressEvent<FileReader>) => {
-      const arrayBuffer = event.target?.result;
-      if (!arrayBuffer) return;
-
-      const data = new Uint8Array(arrayBuffer as ArrayBuffer);
-      const workbook = XLSX.read(data, { type: "array" });
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-
-      const sheetData = XLSX.utils.sheet_to_json(sheet, { header: 1 }) as (
-        | string
-        | number
-        | null
-      )[][];
-
-      if (!isValidSupplementaryFile(sheetData)) {
-        setIsValidFile2(false);
-        toast({
-          variant: "destructive",
-          title: "Fichier 2 non valide",
-        });
-        return;
-      }
-
-      setIsValidFile2(true);
-
-      const supplementaryData: SupplementaryData[] = sheetData
-        .slice(1)
-        .map((row) => ({
+    handleFileUpload<SupplementaryData>(
+      e,
+      isValidSupplementaryFile,
+      setFileName2,
+      setDataFile2,
+      setIsValidFile2,
+      (sheetData) =>
+        sheetData.slice(1).map((row) => ({
           immatriculation: row[1] ? String(row[1]).trim() : null,
           vin: row[2] ? String(row[2]).trim() : null,
           price: row[4] ? Number(row[4]) : null,
-        }));
-
-      setDataFile2(supplementaryData);
-    };
-
-    reader.readAsArrayBuffer(file);
+        })),
+      "Fichier 2 non valide"
+    );
   };
 
   const handleFileRemove2 = () => {
@@ -290,8 +229,8 @@ const AddExcelData = ({ onClose }: { onClose: () => void }) => {
           <div className="my-4">
             <div className="flex flex-row justify-between">
               <span>
-                <span className="font-bold">Fichier 1: </span> Client, VIN et Date
-                de Rénovation
+                <span className="font-bold">Fichier 1: </span> Client, VIN et
+                Date de Rénovation
               </span>
               {!isValidFile1 && <p className=" text-red-500">Non valide</p>}
             </div>
@@ -310,53 +249,17 @@ const AddExcelData = ({ onClose }: { onClose: () => void }) => {
             <FileUploader onChange={handleSecondFileUpload} />
           </div>
 
-          <div className="flex flex-col justify-between py-4">
-            <div className="flex flex-row items-center justify-between gap-x-4">
-              <span>
-                {" "}
-                <span className="font-bold">Fichier 1: </span>
-                {fileName1 ? (
-                  <>{fileName1} </>
-                ) : (
-                  <span className="text-red-500">
-                    Aucun fichier sélectionné{" "}
-                  </span>
-                )}
-              </span>
-              {fileName1 ? (
-                <button
-                  onClick={handleFileRemove1}
-                  className=" text-red-500 hover:text-red-700"
-                >
-                  <Trash2 />
-                </button>
-              ) : (
-                ""
-              )}
-            </div>
-            <div className="mt-1 flex flex-row items-center justify-between">
-              <span>
-                {" "}
-                <span className="font-bold">Fichier 2: </span>
-                {fileName2 ? (
-                  <>{fileName2} </>
-                ) : (
-                  <span className="text-red-500">
-                    Aucun fichier sélectionné{" "}
-                  </span>
-                )}
-              </span>
-              {fileName2 ? (
-                <button
-                  onClick={handleFileRemove2}
-                  className="ml-2 text-red-500 hover:text-red-700"
-                >
-                  <Trash2 />
-                </button>
-              ) : (
-                ""
-              )}
-            </div>
+          <div className="flex flex-col justify-between gap-y-1 py-4">
+            <FileDisplay
+              fileName={fileName1}
+              handleRemove={handleFileRemove1}
+              label="Fichier 1: "
+            />
+            <FileDisplay
+              fileName={fileName2}
+              handleRemove={handleFileRemove2}
+              label="Fichier 2: "
+            />
           </div>
           <Button
             onClick={handleDataSubmit}
