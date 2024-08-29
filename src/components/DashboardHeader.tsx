@@ -16,11 +16,13 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   return (
     <div className="rounded-tl-lg bg-black px-8 py-6 text-white 2xl:p-8">
       <h1 className="mb-2">{title}</h1>
-      {count !== undefined && count > 0 && (
-        <span className="text-md font-semibold italic">
-          {count} {label}
-        </span>
-      )}
+      <span className="text-md font-semibold italic">
+        {count !== undefined && count > 0 ? (
+          `${count} ${label}`
+        ) : (
+          <span className="invisible">0 {label}</span>
+        )}
+      </span>
     </div>
   );
 };
