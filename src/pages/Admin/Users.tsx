@@ -12,6 +12,7 @@ interface User {
   username: string;
   role: string;
   passwordChanged: boolean;
+  downloadUrl: string;
 }
 
 const fetchUsers = async (): Promise<User[]> => {

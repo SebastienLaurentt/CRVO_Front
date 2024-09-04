@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import { Files, X } from "lucide-react";
 import React, { useState } from "react";
-import Loader from "./Loader"; // Assuming Loader is in the same folder
+import Loader from "./Loader"; 
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -13,6 +13,7 @@ type User = {
   _id: string;
   username: string;
   role: string;
+  downloadUrl: string; 
 };
 
 interface EditUserModalProps {
@@ -23,31 +24,32 @@ interface EditUserModalProps {
 const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
   const [username, setUsername] = useState(user?.username || "");
   const [password, setPassword] = useState("");
+  const [downloadUrl, setDownloadUrl] = useState(user?.downloadUrl || ""); 
   const [message, setMessage] = useState("");
   const [isTextareaEnabled, setTextareaEnabled] = useState(false);
   const [isPasswordSaved, setPasswordSaved] = useState(false);
 
   const queryClient = useQueryClient();
 
-  const { mutate: updateUserPassword, isPending } = useMutation({
+  const { mutate: updateUser, isPending } = useMutation({
     mutationFn: async () => {
       if (!user) throw new Error("User not provided");
 
       const token = Cookies.get("token");
       const response = await fetch(
-        `https://crvo-back.onrender.com/api/users/${user._id}/password`,
+        `https://crvo-back.onrender.com/api/users/${user._id}`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ newPassword: password }),
+          body: JSON.stringify({ newPassword: password, downloadUrl }), 
         }
       );
 
       if (!response.ok) {
-        throw new Error("Erreur lors de la mise à jour du mot de passe.");
+        throw new Error("Erreur lors de la mise à jour.");
       }
 
       return response.json();
@@ -59,22 +61,21 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
       setTextareaEnabled(true);
       setPasswordSaved(true);
 
-      toast({ title: "Mot de passe mis à jour avec succès" });
+      toast({ title: "Informations mises à jour avec succès" });
 
-      // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
     onError: (error: Error) => {
       toast({
         variant: "destructive",
-        title: "Erreur lors de la mise à jour du mot de passe",
+        title: "Erreur lors de la mise à jour",
         description: error.message,
       });
     },
   });
 
   const handleSave = () => {
-    updateUserPassword();
+    updateUser();
   };
 
   const handleCopy = () => {
@@ -93,7 +94,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50 ">
+    <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/50">
       <div className="relative w-[90%] max-w-lg rounded-lg bg-white p-4 shadow-lg">
         <button
           className="absolute right-2 top-2 text-gray-600 hover:text-black"
@@ -125,8 +126,19 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
               disabled={isPasswordSaved}
             />
           </div>
+          <div>
+            <Label className="mb-1">URL de téléchargement</Label>
+            <Input
+              type="text"
+              value={downloadUrl}
+              onChange={(e) => setDownloadUrl(e.target.value)}
+              className="mt-1 rounded border px-4 py-2"
+              placeholder="URL de téléchargement"
+              disabled={isPasswordSaved}
+            />
+          </div>
 
-          <Button onClick={handleSave} disabled={isPasswordSaved || isPending}>
+          <Button onClick={handleSave} disabled={isPasswordSaved || isPending || !downloadUrl || !password}>
             {isPending ? (
               <span className="flex items-center gap-3">
                 Sauvegarde en cours
