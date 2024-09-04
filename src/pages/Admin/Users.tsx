@@ -87,7 +87,7 @@ const Users: React.FC = () => {
               <tr className="border-b text-left">
                 <th className="w-[500px] px-6 py-3">Client</th>
                 <th className="w-[500px] px-6 py-3 text-center">
-                  Mot de passe
+                  Informations
                 </th>
                 <th className="w-[300px] px-6 py-3 text-center">Paramètres</th>
               </tr>
@@ -117,7 +117,7 @@ const Users: React.FC = () => {
                         user.passwordChanged ? "text-green-600" : "text-red-600"
                       }`}
                     >
-                      {user.passwordChanged ? "Configuré" : "Non configuré"}
+                      {user.passwordChanged ? "Configurées" : "Non configurées"}
                     </td>
                     <td className="px-6 py-4 text-center">
                       <button
