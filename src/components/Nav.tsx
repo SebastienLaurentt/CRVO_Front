@@ -17,7 +17,6 @@ const Nav = () => {
     logout();
   };
 
-  console.log(downloadUrl);
   return (
     <nav className="flex h-[600px] w-[240px] flex-col justify-between px-4 2xl:w-[360px] 2xl:px-12">
       <div>

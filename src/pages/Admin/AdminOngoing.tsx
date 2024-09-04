@@ -23,6 +23,7 @@ interface Vehicle {
   immatriculation: string;
   modele: string;
   dateCreation: string;
+  price: string;
   user: {
     username: string;
   };
@@ -47,7 +48,6 @@ const fetchVehicles = async (): Promise<Vehicle[]> => {
     throw new Error("Erreur lors de la récupération des véhicules.");
   }
   const data = await response.json();
-  console.log(data);
   return data;
 };
 
@@ -131,6 +131,7 @@ const AdminOngoing: React.FC = () => {
                   Immatriculation
                 </th>
                 <th className="w-[250px] px-2 py-3 2xl:px-6">Modèle</th>
+                <th className="w-[250px] px-2 py-3 2xl:px-6">Prix</th>
                 <th className="w-[200px] px-2 py-3 text-center 2xl:px-6">
                   Jours depuis Création
                 </th>
@@ -219,6 +220,7 @@ const AdminOngoing: React.FC = () => {
                       {vehicle.immatriculation}
                     </td>
                     <td className="px-2 py-4 2xl:px-6">{vehicle.modele}</td>
+                    <td className="px-2 py-4 2xl:px-6">{vehicle.price}</td>
                     <td className="px-2 py-4 text-center 2xl:px-4">
                       {daysSince(vehicle.dateCreation)}
                     </td>

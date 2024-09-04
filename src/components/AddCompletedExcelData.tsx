@@ -154,6 +154,7 @@ const AddExcelData = ({ onClose }: { onClose: () => void }) => {
           vin: row[2] ? String(row[2]).trim() : null,
           price: row[4] ? Number(row[4]) : null,
         })),
+        
       "Fichier 2 non valide"
     );
   };
