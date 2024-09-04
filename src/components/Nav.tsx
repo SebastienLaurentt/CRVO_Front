@@ -11,12 +11,13 @@ import { Button } from "./ui/button";
 import CRVOLogo from "/public/images/CRVOLogo.png";
 
 const Nav = () => {
-  const { role, logout } = useAuth();
+  const { role, logout, downloadUrl } = useAuth();
 
   const handleLogout = async () => {
     logout();
   };
 
+  console.log(downloadUrl);
   return (
     <nav className="flex h-[600px] w-[240px] flex-col justify-between px-4 2xl:w-[360px] 2xl:px-12">
       <div>
@@ -91,12 +92,24 @@ const Nav = () => {
               <span className="mb-1 font-semibold text-slate-700">
                 Documents
               </span>
-              <Button className="space-x-[5px]" asChild>
-                <Link to="https://facturation.crvo.fr/" target="_blank">
-                  <BookText size={20} />
-                  <span>Factures</span>
-                </Link>
-              </Button>
+              <div className="flex flex-col gap-y-1">
+                <Button className="space-x-[5px]" asChild>
+                  <Link to="https://facturation.crvo.fr/" target="_blank">
+                    <BookText size={20} />
+                    <span>Factures</span>
+                  </Link>
+                </Button>
+                <Button className="space-x-[5px]" asChild>
+                  <a
+                    href={downloadUrl || ""}
+                    download
+                    target="_blank"
+                  >
+                    <BookText size={20} />
+                    <span>Graphiques</span>
+                  </a>
+                </Button>
+              </div>
             </>
           )}
         </div>

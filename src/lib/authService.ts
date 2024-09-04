@@ -14,6 +14,15 @@ const getUserRole = () => {
   return null;
 };
 
+const getDownloadUrl = () => {
+  const token = getToken();
+  if (token) {
+    const payload = jwtDecode<{ downloadUrl: string }>(token);
+    return payload.downloadUrl;
+  }
+  return null;
+};
+
 const isLoggedIn = () => {
   const token = getToken();
   if (token) {
@@ -30,6 +39,7 @@ const logout = () => {
 export const authService = {
   getToken,
   getUserRole,
+  getDownloadUrl, 
   isLoggedIn,
   logout,
 };

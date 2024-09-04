@@ -102,7 +102,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose }) => {
         >
           <X />
         </button>
-        <h2 className="mb-4 text-lg font-bold">Modifier le mot de passe</h2>
+        <h2 className="mb-4 text-lg font-bold">Modifier les informations</h2>
         <div className="flex flex-col space-y-4">
           <div>
             <Label>Nom d'utilisateur</Label>
