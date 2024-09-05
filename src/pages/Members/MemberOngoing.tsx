@@ -106,6 +106,7 @@ const MemberOngoing: React.FC = () => {
     const data = sortedVehicles.map((vehicle) => ({
       Immatriculation: vehicle.immatriculation,
       Modèle: vehicle.modele,
+      "Prix Actuel": vehicle.price,
       "Jours depuis Création": daysSince(vehicle.dateCreation),
       DSP: vehicle.dsp ? "En cours" : "Fait",
       Mécanique: vehicle.mecanique ? "En cours" : "Fait",
@@ -155,7 +156,7 @@ const MemberOngoing: React.FC = () => {
               <tr className="sticky top-0 z-10 border-b bg-background text-left">
                 <th className="w-[320px] px-6 py-3">Immatriculation</th>
                 <th className="w-[320px] px-6 py-3">Modèle</th>
-                <th className="w-[250px] px-2 py-3 2xl:px-6">Prix</th>
+                <th className="w-[250px] px-2 py-3 2xl:px-6">Prix Actuel</th>
                 <th className="w-[260px] px-6 py-3 text-center">
                   Jours depuis Création
                 </th>
@@ -224,7 +225,7 @@ const MemberOngoing: React.FC = () => {
                   <tr key={vehicle._id} className="border-b last:border-b-0">
                     <td className="px-6 py-4">{vehicle.immatriculation}</td>
                     <td className="px-6 py-4">{vehicle.modele}</td>
-                    <td className="px-2 py-4">{vehicle.price}</td>
+                    <td className="px-6 py-4">{vehicle.price}</td>
                     <td className="px-6 py-4 text-center">
                       {daysSince(vehicle.dateCreation)}
                     </td>
