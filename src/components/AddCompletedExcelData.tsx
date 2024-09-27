@@ -107,6 +107,18 @@ const uploadCompletedVehicleData = async (vehicle: CompletedVehicleRow) => {
   return response.json();
 };
 
+const deleteExistingCompletedData = async () => {
+  const response = await fetch("https://crvo-back.onrender.com/api/cleanUpCompletedVehicle", {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete existing completed vehicle data");
+  }
+
+  return response.json();
+};
+
 const AddExcelData = ({ onClose }: { onClose: () => void }) => {
   const [dataFile1, setDataFile1] = useState<CompletedVehicleRow[]>([]);
   const [dataFile2, setDataFile2] = useState<SupplementaryData[]>([]);
@@ -198,6 +210,7 @@ const AddExcelData = ({ onClose }: { onClose: () => void }) => {
   const queryClient = useQueryClient();
   const { mutate: uploadCompletedVehicles, isPending } = useMutation({
     mutationFn: async () => {
+      await deleteExistingCompletedData();
       const promises = dataFile1.map((vehicle) =>
         uploadCompletedVehicleData(vehicle)
       );
