@@ -101,8 +101,13 @@ const uploadCompletedVehicleData = async (vehicle: CompletedVehicleRow) => {
   });
 
   if (!response.ok) {
-    throw new Error("Failed to upload completed vehicle data");
+    console.error('Réponse non-OK:', response.status, response.statusText);
+    const text = await response.text();
+    console.error('Corps de la réponse:', text);
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
+
+  
 
   return response.json();
 };
