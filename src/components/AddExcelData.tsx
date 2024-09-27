@@ -123,7 +123,7 @@ const convertToDate = (value: string | number): Date | null => {
 };
 
 const deleteExistingData = async () => {
-  const response = await fetch("https://crvo-back.onrender.com/api/cleanup", {
+  const response = await fetch("https://crvo-back.onrender.com/api/cleanUpVehicle", {
     method: "DELETE",
   });
 
