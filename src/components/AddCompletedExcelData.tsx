@@ -85,26 +85,35 @@ const excelSerialToDate = (serial: number) => {
 };
 
 const uploadCompletedVehicleData = async (vehicle: CompletedVehicleRow) => {
-  const response = await fetch("https://crvo-back.onrender.com/api/completed", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      username: vehicle.client,
-      immatriculation: vehicle.immatriculation,
-      vin: vehicle.vin,
-      statut: vehicle.statut,
-      dateCompletion: vehicle.dateCompletion,
-      price: vehicle.price,
-    }),
-  });
+  try {
+    const response = await fetch("https://crvo-back.onrender.com/api/completed", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: vehicle.client,
+        immatriculation: vehicle.immatriculation,
+        vin: vehicle.vin,
+        statut: vehicle.statut,
+        dateCompletion: vehicle.dateCompletion,
+        price: vehicle.price,
+      }),
+    });
 
-  if (!response.ok) {
-    throw new Error("Failed to upload completed vehicle data");
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Erreur lors de l'upload des données du véhicule:");
+      console.error("Données envoyées:", vehicle);
+      console.error("Réponse d'erreur:", errorData);
+      throw new Error(`Échec de l'upload des données du véhicule complété: ${errorData.message}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Erreur dans uploadCompletedVehicleData:", error);
+    throw error;
   }
-
-  return response.json();
 };
 
 const deleteExistingCompletedData = async () => {
@@ -222,6 +231,8 @@ const AddExcelData = ({ onClose }: { onClose: () => void }) => {
       onClose();
     },
     onError: (error) => {
+      console.error("Erreur lors de l'upload:");
+      console.error("Détails de l'erreur:", error);
       toast({
         variant: "destructive",
         title: "Erreur lors de la mise à jour des données",
