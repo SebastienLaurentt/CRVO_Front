@@ -45,7 +45,7 @@ const Users: React.FC = () => {
   const filteredUsers = users?.filter((user) => {
     const searchLower = searchQuery.toLowerCase();
     return (
-      user.username.toLowerCase().includes(searchLower) ||
+      user.username?.toLowerCase().includes(searchLower) ||
       user.role.toLowerCase().includes(searchLower) ||
       (user.passwordChanged ? "Configuré" : "Non configuré")
         .toLowerCase()
