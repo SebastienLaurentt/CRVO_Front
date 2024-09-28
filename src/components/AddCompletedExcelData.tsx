@@ -84,30 +84,18 @@ const excelSerialToDate = (serial: number) => {
   return `${day}/${month}/${year}`;
 };
 
-const uploadCompletedVehicleData = async (vehicle: CompletedVehicleRow) => {
-  const response = await fetch("https://crvo-back.onrender.com/api/completed", {
+const uploadCompletedVehiclesBatch = async (vehicles: CompletedVehicleRow[]) => {
+  const response = await fetch("https://crvo-back.onrender.com/api/completed/batch", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      username: vehicle.client,
-      immatriculation: vehicle.immatriculation,
-      vin: vehicle.vin,
-      statut: vehicle.statut,
-      dateCompletion: vehicle.dateCompletion,
-      price: vehicle.price,
-    }),
+    body: JSON.stringify(vehicles),
   });
 
   if (!response.ok) {
-    console.error('Réponse non-OK:', response.status, response.statusText);
-    const text = await response.text();
-    console.error('Corps de la réponse:', text);
     throw new Error(`HTTP error! status: ${response.status}`);
   }
-
-  
 
   return response.json();
 };
@@ -171,7 +159,6 @@ const AddExcelData = ({ onClose }: { onClose: () => void }) => {
           vin: row[2] ? String(row[2]).trim() : null,
           price: row[4] ? Number(row[4]) : null,
         })),
-        
       "Fichier 2 non valide"
     );
   };
@@ -216,10 +203,7 @@ const AddExcelData = ({ onClose }: { onClose: () => void }) => {
   const { mutate: uploadCompletedVehicles, isPending } = useMutation({
     mutationFn: async () => {
       await deleteExistingCompletedData();
-      const promises = dataFile1.map((vehicle) =>
-        uploadCompletedVehicleData(vehicle)
-      );
-      await Promise.all(promises);
+      await uploadCompletedVehiclesBatch(dataFile1);
     },
     onSuccess: () => {
       toast({ title: "Données mises à jour avec succès !" });
