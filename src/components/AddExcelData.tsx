@@ -123,9 +123,12 @@ const convertToDate = (value: string | number): Date | null => {
 };
 
 const deleteExistingData = async () => {
-  const response = await fetch("https://crvo-back.onrender.com/api/cleanUpVehicle", {
-    method: "DELETE",
-  });
+  const response = await fetch(
+    "https://crvo-back.onrender.com/api/cleanUpVehicle",
+    {
+      method: "DELETE",
+    }
+  );
 
   if (!response.ok) {
     throw new Error("Failed to delete existing data");
@@ -134,29 +137,34 @@ const deleteExistingData = async () => {
   return response.json();
 };
 
-const uploadVehicleData = async (vehicle: VehicleRow) => {
-  const response = await fetch("https://crvo-back.onrender.com/api/vehicles", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      username: vehicle.client,
-      immatriculation: vehicle.immatriculation,
-      vin: vehicle.vin,
-      modele: vehicle.modele,
-      price: vehicle.price,
-      dateCreation: vehicle.dateCreation,
-      mecanique: vehicle.mecanique,
-      carrosserie: vehicle.carrosserie,
-      ct: vehicle.ct,
-      dsp: vehicle.dsp,
-      jantes: vehicle.jantes,
-    }),
-  });
+const uploadVehiclesBatch = async (vehicles: VehicleRow[]) => {
+  const formattedVehicles = vehicles.map((vehicle) => ({
+    username: vehicle.client,
+    immatriculation: vehicle.immatriculation,
+    vin: vehicle.vin,
+    modele: vehicle.modele,
+    price: vehicle.price,
+    dateCreation: vehicle.dateCreation,
+    mecanique: vehicle.mecanique,
+    carrosserie: vehicle.carrosserie,
+    ct: vehicle.ct,
+    dsp: vehicle.dsp,
+    jantes: vehicle.jantes,
+  }));
+
+  const response = await fetch(
+    "https://crvo-back.onrender.com/api/vehicles/batch",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formattedVehicles),
+    }
+  );
 
   if (!response.ok) {
-    throw new Error("Failed to upload vehicle data");
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
 
   return response.json();
@@ -251,8 +259,7 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
   const { mutate: uploadVehicles, isPending } = useMutation({
     mutationFn: async () => {
       await deleteExistingData();
-      const promises = dataFile1.map((vehicle) => uploadVehicleData(vehicle));
-      await Promise.all(promises);
+      await uploadVehiclesBatch(dataFile1);
     },
     onSuccess: () => {
       toast({ title: "Données mises à jour avec succès !" });

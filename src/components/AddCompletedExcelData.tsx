@@ -85,12 +85,21 @@ const excelSerialToDate = (serial: number) => {
 };
 
 const uploadCompletedVehiclesBatch = async (vehicles: CompletedVehicleRow[]) => {
+  const formattedVehicles = vehicles.map(vehicle => ({
+    username: vehicle.client,
+    immatriculation: vehicle.immatriculation,
+    vin: vehicle.vin,
+    statut: vehicle.statut,
+    dateCompletion: vehicle.dateCompletion,
+    price: vehicle.price,
+  }));
+
   const response = await fetch("https://crvo-back.onrender.com/api/completed/batch", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(vehicles),
+    body: JSON.stringify(formattedVehicles),
   });
 
   if (!response.ok) {
