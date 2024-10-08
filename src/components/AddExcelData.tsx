@@ -1,7 +1,7 @@
 import { handleFileUpload } from "@/lib/fileUpload";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
-import React, { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import FileDisplay from "./FileDisplay";
 import FileUploader from "./FileUploader";
 import Loader from "./Loader";
@@ -22,12 +22,6 @@ type VehicleRow = {
   jantes: boolean;
   price?: string | null;
 };
-
-// File2 Data
-interface SupplementaryData {
-  immatriculation: string | null;
-  price: string | null;
-}
 
 interface FileInputProps {
   onClose: () => void;
@@ -59,35 +53,6 @@ const isValidVehicleFile = (
 
   if (missingHeaders.length > 0) {
     console.error("En-têtes manquants:", missingHeaders);
-    return false;
-  }
-
-  return true;
-};
-
-const isValidSupplementaryFile = (
-  sheetData: (string | number | null)[][]
-): boolean => {
-  const headers = sheetData[0]
-    .filter((header) => header !== null && String(header).trim() !== "")
-    .map((header) => String(header).trim());
-
-  const requiredHeaders = [
-    "Client Facturé",
-    "IMMAT",
-    "No OR",
-    "FRE Moyens EN COURS",
-  ];
-
-  const missingHeaders = requiredHeaders.filter(
-    (header) => !headers.includes(header)
-  );
-
-  if (missingHeaders.length > 0) {
-    console.error(
-      "En-têtes manquants du fichier complémentaire:",
-      missingHeaders
-    );
     return false;
   }
 
@@ -170,13 +135,10 @@ const uploadVehiclesBatch = async (vehicles: VehicleRow[]) => {
   return response.json();
 };
 
-const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
+const AddExcelData = ({ onClose }: FileInputProps) => {
   const [dataFile1, setDataFile1] = useState<VehicleRow[]>([]);
-  const [dataFile2, setDataFile2] = useState<SupplementaryData[]>([]);
   const [fileName1, setFileName1] = useState<string | null>(null);
-  const [fileName2, setFileName2] = useState<string | null>(null);
   const [isValidFile1, setIsValidFile1] = useState<boolean>(true);
-  const [isValidFile2, setIsValidFile2] = useState<boolean>(true);
 
   const handleFirstFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     handleFileUpload<VehicleRow>(
@@ -210,49 +172,7 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
     setIsValidFile1(true);
   };
 
-  const handleSecondFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    handleFileUpload<SupplementaryData>(
-      e,
-      isValidSupplementaryFile,
-      setFileName2,
-      setDataFile2,
-      setIsValidFile2,
-      (sheetData) =>
-        sheetData.slice(1).map((row) => ({
-          immatriculation: row[1] ? String(row[1]).trim() : null,
-          price: row[3] ? String(row[3]) : null,
-        })),
-      "Fichier 2 non valide"
-    );
-  };
-
-  const handleFileRemove2 = () => {
-    setFileName2(null);
-    setDataFile2([]);
-    setIsValidFile2(true);
-  };
-
-  // Handle data merging
-  const mergeData = () => {
-    const mergedData = dataFile1.map((vehicle) => {
-      const matchingSupplement = dataFile2.find(
-        (supplement) =>
-          supplement.immatriculation &&
-          vehicle.immatriculation &&
-          supplement.immatriculation.trim() === vehicle.immatriculation.trim()
-      );
-
-      return {
-        ...vehicle,
-        price: matchingSupplement?.price || null,
-      };
-    });
-
-    setDataFile1(mergedData);
-  };
-
   const handleDataSubmit = () => {
-    mergeData();
     uploadVehicles();
   };
 
@@ -296,41 +216,17 @@ const AddExcelData: React.FC<FileInputProps> = ({ onClose }) => {
             <FileUploader onChange={handleFirstFileUpload} />
           </div>
 
-          <div>
-            <div className="flex flex-row justify-between">
-              <span>
-                <span className="font-bold">Fichier 2: </span>
-                Prix
-              </span>
-              {!isValidFile2 && (
-                <span className="text-red-500">Non valide</span>
-              )}
-            </div>
-            <FileUploader onChange={handleSecondFileUpload} />
-          </div>
-
           <div className="flex flex-col justify-between gap-y-1 py-4">
             <FileDisplay
               fileName={fileName1}
               handleRemove={handleFileRemove1}
               label="Fichier 1: "
             />
-            <FileDisplay
-              fileName={fileName2}
-              handleRemove={handleFileRemove2}
-              label="Fichier 2: "
-            />
           </div>
 
           <Button
             onClick={handleDataSubmit}
-            disabled={
-              !fileName1 ||
-              !fileName2 ||
-              !isValidFile1 ||
-              !isValidFile2 ||
-              isPending
-            }
+            disabled={!fileName1 || !isValidFile1 || isPending}
           >
             {isPending ? (
               <span className="flex flex-row gap-x-3">
