@@ -52,6 +52,19 @@ const fetchVehicles = async (): Promise<Vehicle[]> => {
   return data;
 };
 
+const fetchLatestSynchronizationDate = async (): Promise<Date | null> => {
+  const response = await fetch(
+    "https://crvo-back.onrender.com/api/synchronization"
+  );
+  if (!response.ok) {
+    throw new Error(
+      "Erreur lors de la récupération de la date de synchronisation."
+    );
+  }
+  const data = await response.json();
+  return data.date ? new Date(data.date) : null;
+};
+
 const mainStatusCategories = [
   "Livraison",
   "Transport aller",
@@ -61,7 +74,6 @@ const mainStatusCategories = [
   "Production",
   "Stockage",
   "Transport retour",
-
 ];
 
 const AdminOngoing: React.FC = () => {
@@ -79,6 +91,13 @@ const AdminOngoing: React.FC = () => {
     queryKey: ["vehicles"],
     queryFn: fetchVehicles,
   });
+
+  const { data: syncDate } = useQuery({
+    queryKey: ["syncDate"],
+    queryFn: fetchLatestSynchronizationDate,
+  });
+
+  console.log(syncDate);
 
   const filteredVehicles = vehicles
     ?.filter((vehicle) => {
@@ -116,7 +135,13 @@ const AdminOngoing: React.FC = () => {
         title="Rénovations en Cours"
         count={filteredVehicles?.length || 0}
       />
-      <div className="flex flex-col gap-y-4 px-8 pb-4 pt-8">
+      <div className="flex flex-col space-y-3 px-8 py-4">
+        <p>
+          Dernière synchronisation:{" "}
+          {syncDate
+            ? `${syncDate.toLocaleDateString()} - ${syncDate.toLocaleTimeString()}`
+            : "Non disponible"}
+        </p>
         <div className="flex flex-row justify-between">
           <div className="flex flex-row gap-x-4">
             <Input
@@ -133,7 +158,7 @@ const AdminOngoing: React.FC = () => {
               <Upload size={20} /> <span>Import Excel</span>
             </Button>
           </div>
-          <div className="flex flex-row flex-wrap gap-x-2">
+          <div className="space-x-2">
             {mainStatusCategories.map((status) => (
               <Button
                 key={status}
