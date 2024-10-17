@@ -33,6 +33,7 @@ interface Vehicle {
   dsp: boolean;
   jantes: boolean;
   esthetique: boolean;
+  statusCategory: string;
 }
 
 const daysSince = (dateString: string): number => {
@@ -51,10 +52,23 @@ const fetchVehicles = async (): Promise<Vehicle[]> => {
   return data;
 };
 
+const mainStatusCategories = [
+  "Livraison",
+  "Transport aller",
+  "Expertise",
+  "Client",
+  "Magasin",
+  "Production",
+  "Stockage",
+  "Transport retour",
+
+];
+
 const AdminOngoing: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isFileInputVisible, setIsFileInputVisible] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<string>("Production");
 
   const {
     data: vehicles,
@@ -69,39 +83,42 @@ const AdminOngoing: React.FC = () => {
   const filteredVehicles = vehicles
     ?.filter((vehicle) => {
       const searchLower = searchQuery.toLowerCase();
-      return (
+      const matchesSearch =
         vehicle.immatriculation.toLowerCase().includes(searchLower) ||
         vehicle.modele.toLowerCase().includes(searchLower) ||
-        vehicle.user.username.toLowerCase().includes(searchLower)
-      );
-    })
-    .filter((vehicle) => {
-      if (activeFilter === "dsp") return vehicle.dsp;
-      if (activeFilter === "mecanique") return vehicle.mecanique;
-      if (activeFilter === "jantes") return vehicle.jantes;
-      if (activeFilter === "ct") return vehicle.ct;
-      if (activeFilter === "carrosserie") return vehicle.carrosserie;
-      if (activeFilter === "esthetique") return vehicle.esthetique;
-      return true;
-    });
+        vehicle.user.username.toLowerCase().includes(searchLower);
 
-  const sortedVehicles = filteredVehicles?.sort(
-    (a, b) => daysSince(b.dateCreation) - daysSince(a.dateCreation)
-  );
+      const matchesStatus = statusFilter
+        ? vehicle.statusCategory === statusFilter
+        : true;
+      const matchesActiveFilter =
+        (activeFilter === "dsp" && vehicle.dsp) ||
+        (activeFilter === "mecanique" && vehicle.mecanique) ||
+        (activeFilter === "jantes" && vehicle.jantes) ||
+        (activeFilter === "ct" && vehicle.ct) ||
+        (activeFilter === "carrosserie" && vehicle.carrosserie) ||
+        (activeFilter === "esthetique" && vehicle.esthetique) ||
+        !activeFilter;
+
+      return matchesSearch && matchesStatus && matchesActiveFilter;
+    })
+    .sort((a, b) => daysSince(b.dateCreation) - daysSince(a.dateCreation));
 
   const handleSwitchChange = (filter: string) => {
     setActiveFilter(activeFilter === filter ? "" : filter);
   };
 
+  const isProductionSelected = statusFilter === "Production";
+
   return (
     <div className="rounded-l-lg border bg-primary pb-8">
       <DashboardHeader
         title="Rénovations en Cours"
-        count={sortedVehicles?.length || 0}
+        count={filteredVehicles?.length || 0}
       />
-      <div className="flex flex-row justify-between px-8 pb-4 pt-8">
-        <div className="flex flex-row gap-x-4">
-          <div className="flex flex-row gap-x-3">
+      <div className="flex flex-col gap-y-4 px-8 pb-4 pt-8">
+        <div className="flex flex-row justify-between">
+          <div className="flex flex-row gap-x-4">
             <Input
               placeholder="Recherche"
               className="text-sm"
@@ -109,8 +126,6 @@ const AdminOngoing: React.FC = () => {
               hasSearchIcon
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-          </div>
-          <div className="flex flex-row gap-x-2">
             <Button
               className="space-x-[5px]"
               onClick={() => setIsFileInputVisible(true)}
@@ -118,77 +133,96 @@ const AdminOngoing: React.FC = () => {
               <Upload size={20} /> <span>Import Excel</span>
             </Button>
           </div>
+          <div className="flex flex-row flex-wrap gap-x-2">
+            {mainStatusCategories.map((status) => (
+              <Button
+                key={status}
+                variant={statusFilter === status ? "default" : "outline"}
+                onClick={() => setStatusFilter(status)}
+              >
+                {status}
+              </Button>
+            ))}
+          </div>
         </div>
       </div>
 
       <div className="relative">
         <div className="h-[400px] w-full overflow-y-auto px-8 2xl:h-[550px]">
-          <table className="w-full">
+          <table className="w-full table-fixed">
             <thead>
               <tr className="sticky top-0 z-10 border-b bg-background text-left">
-                <th className="w-[300px] px-2 py-3 2xl:px-6">Client</th>
-                <th className="w-[200px] px-2 py-3 2xl:px-6">
-                  Immatriculation
+                <th className="w-1/6 px-2 py-3 2xl:px-6">Client</th>
+                <th className="w-1/6 px-2 py-3 2xl:px-6">Immatriculation</th>
+                <th className="w-1/6 px-2 py-3 2xl:px-6">Modèle</th>
+                <th className="w-1/6 px-2 py-3 text-center 2xl:px-6">
+                  Jours de rénovation
                 </th>
-                <th className="w-[250px] px-2 py-3 2xl:px-6">Modèle</th>
-                <th className="w-[250px] px-2 py-3 2xl:px-6">Prix</th>
-                <th className="w-[200px] px-2 py-3 text-center 2xl:px-6">
-                  Jours depuis Création
-                </th>
-                <th className="w-[60px] px-4 py-3 text-center">
-                  <div className="flex flex-col items-center">
-                    <AudioLines className="mb-0.5 inline-block" /> DSP
-                    <Switch
-                      checked={activeFilter === "dsp"}
-                      onCheckedChange={() => handleSwitchChange("dsp")}
-                    />
-                  </div>
-                </th>
-                <th className="w-[100px] px-4 py-3 text-center">
-                  <div className="flex flex-col items-center">
-                    <Wrench className="mb-0.5 inline-block" /> Mécanique
-                    <Switch
-                      checked={activeFilter === "mecanique"}
-                      onCheckedChange={() => handleSwitchChange("mecanique")}
-                    />
-                  </div>
-                </th>
-                <th className="w-[60px] px-4 py-3 text-center">
-                  <div className="flex flex-col items-center">
-                    <LifeBuoy className="mb-0.5 inline-block" /> Jantes
-                    <Switch
-                      checked={activeFilter === "jantes"}
-                      onCheckedChange={() => handleSwitchChange("jantes")}
-                    />
-                  </div>
-                </th>
-                <th className="w-[60px] px-4 py-3 text-center">
-                  <div className="flex flex-col items-center">
-                    <ShieldCheck className="mb-0.5 inline-block" /> CT
-                    <Switch
-                      checked={activeFilter === "ct"}
-                      onCheckedChange={() => handleSwitchChange("ct")}
-                    />
-                  </div>
-                </th>
-                <th className="w-[100px] px-4 py-3 text-center">
-                  <div className="flex flex-col items-center">
-                    <Car className="mb-0.5 inline-block" /> Carrosserie
-                    <Switch
-                      checked={activeFilter === "carrosserie"}
-                      onCheckedChange={() => handleSwitchChange("carrosserie")}
-                    />
-                  </div>
-                </th>
-                <th className="w-[80px] px-4 py-3 text-center">
-                  <div className="flex flex-col items-center">
-                    <SprayCan className="mb-0.5 inline-block" /> Esthétique
-                    <Switch
-                      checked={activeFilter === "esthetique"}
-                      onCheckedChange={() => handleSwitchChange("esthetique")}
-                    />
-                  </div>
-                </th>
+                {isProductionSelected && (
+                  <>
+                    <th className="w-1/12 px-4 py-3 text-center">
+                      <div className="flex flex-col items-center">
+                        <AudioLines className="mb-0.5 inline-block" /> DSP
+                        <Switch
+                          checked={activeFilter === "dsp"}
+                          onCheckedChange={() => handleSwitchChange("dsp")}
+                        />
+                      </div>
+                    </th>
+                    <th className="w-1/12 px-4 py-3 text-center">
+                      <div className="flex flex-col items-center">
+                        <Wrench className="mb-0.5 inline-block" /> Mécanique
+                        <Switch
+                          checked={activeFilter === "mecanique"}
+                          onCheckedChange={() =>
+                            handleSwitchChange("mecanique")
+                          }
+                        />
+                      </div>
+                    </th>
+                    <th className="w-1/12 px-4 py-3 text-center">
+                      <div className="flex flex-col items-center">
+                        <LifeBuoy className="mb-0.5 inline-block" /> Jantes
+                        <Switch
+                          checked={activeFilter === "jantes"}
+                          onCheckedChange={() => handleSwitchChange("jantes")}
+                        />
+                      </div>
+                    </th>
+                    <th className="w-1/12 px-4 py-3 text-center">
+                      <div className="flex flex-col items-center">
+                        <ShieldCheck className="mb-0.5 inline-block" /> CT
+                        <Switch
+                          checked={activeFilter === "ct"}
+                          onCheckedChange={() => handleSwitchChange("ct")}
+                        />
+                      </div>
+                    </th>
+                    <th className="w-1/12 px-4 py-3 text-center">
+                      <div className="flex flex-col items-center">
+                        <Car className="mb-0.5 inline-block" /> Carrosserie
+                        <Switch
+                          checked={activeFilter === "carrosserie"}
+                          onCheckedChange={() =>
+                            handleSwitchChange("carrosserie")
+                          }
+                        />
+                      </div>
+                    </th>
+                    <th className="w-1/12 px-4 py-3 text-center">
+                      <div className="flex flex-col items-center">
+                        <SprayCan className="mb-0.5 inline-block" /> Esthétique
+                        <Switch
+                          checked={activeFilter === "esthetique"}
+                          onCheckedChange={() =>
+                            handleSwitchChange("esthetique")
+                          }
+                        />
+                      </div>
+                    </th>
+                  </>
+                )}
+                <th className="w-1/6 px-2 py-3 text-right 2xl:px-6">Prix</th>
               </tr>
             </thead>
 
@@ -210,8 +244,8 @@ const AdminOngoing: React.FC = () => {
                       : "Unknown error"}
                   </td>
                 </tr>
-              ) : sortedVehicles && sortedVehicles.length > 0 ? (
-                sortedVehicles.map((vehicle: Vehicle) => (
+              ) : filteredVehicles && filteredVehicles.length > 0 ? (
+                filteredVehicles.map((vehicle: Vehicle) => (
                   <tr key={vehicle._id} className="border-b last:border-b-0">
                     <td className="px-2 py-4 2xl:px-6">
                       {vehicle.user.username}
@@ -220,57 +254,66 @@ const AdminOngoing: React.FC = () => {
                       {vehicle.immatriculation}
                     </td>
                     <td className="px-2 py-4 2xl:px-6">{vehicle.modele}</td>
-                    <td className="px-2 py-4 2xl:px-6">{vehicle.price}</td>
                     <td className="px-2 py-4 text-center 2xl:px-4">
                       {daysSince(vehicle.dateCreation)}
                     </td>
-                    <td className="p-4 text-center">
-                      {vehicle.dsp ? (
-                        <CalendarClock className="inline-block text-[#fbbf24]" />
-                      ) : (
-                        <BadgeCheck className="inline-block text-[#16a34a]" />
-                      )}
-                    </td>
-                    <td className="p-4 text-center">
-                      {vehicle.mecanique ? (
-                        <CalendarClock className="inline-block text-[#fbbf24]" />
-                      ) : (
-                        <BadgeCheck className="inline-block text-[#16a34a]" />
-                      )}
-                    </td>
-                    <td className="p-4 text-center">
-                      {vehicle.jantes ? (
-                        <CalendarClock className="inline-block text-[#fbbf24]" />
-                      ) : (
-                        <BadgeCheck className="inline-block text-[#16a34a]" />
-                      )}
-                    </td>
-                    <td className="p-4 text-center">
-                      {vehicle.ct ? (
-                        <CalendarClock className="inline-block text-[#fbbf24]" />
-                      ) : (
-                        <BadgeCheck className="inline-block text-[#16a34a]" />
-                      )}
-                    </td>
-                    <td className="p-4 text-center">
-                      {vehicle.carrosserie ? (
-                        <CalendarClock className="inline-block text-[#fbbf24]" />
-                      ) : (
-                        <BadgeCheck className="inline-block text-[#16a34a]" />
-                      )}
-                    </td>
-                    <td className="p-4 text-center">
-                      {vehicle.esthetique ? (
-                        <CalendarClock className="inline-block text-[#fbbf24]" />
-                      ) : (
-                        <CalendarClock className="inline-block text-[#fbbf24]" />
-                      )}
+                    {isProductionSelected && (
+                      <>
+                        <td className="p-4 text-center">
+                          {vehicle.dsp ? (
+                            <CalendarClock className="inline-block text-[#fbbf24]" />
+                          ) : (
+                            <BadgeCheck className="inline-block text-[#16a34a]" />
+                          )}
+                        </td>
+                        <td className="p-4 text-center">
+                          {vehicle.mecanique ? (
+                            <CalendarClock className="inline-block text-[#fbbf24]" />
+                          ) : (
+                            <BadgeCheck className="inline-block text-[#16a34a]" />
+                          )}
+                        </td>
+                        <td className="p-4 text-center">
+                          {vehicle.jantes ? (
+                            <CalendarClock className="inline-block text-[#fbbf24]" />
+                          ) : (
+                            <BadgeCheck className="inline-block text-[#16a34a]" />
+                          )}
+                        </td>
+                        <td className="p-4 text-center">
+                          {vehicle.ct ? (
+                            <CalendarClock className="inline-block text-[#fbbf24]" />
+                          ) : (
+                            <BadgeCheck className="inline-block text-[#16a34a]" />
+                          )}
+                        </td>
+                        <td className="p-4 text-center">
+                          {vehicle.carrosserie ? (
+                            <CalendarClock className="inline-block text-[#fbbf24]" />
+                          ) : (
+                            <BadgeCheck className="inline-block text-[#16a34a]" />
+                          )}
+                        </td>
+                        <td className="p-4 text-center">
+                          {vehicle.esthetique ? (
+                            <CalendarClock className="inline-block text-[#fbbf24]" />
+                          ) : (
+                            <BadgeCheck className="inline-block text-[#16a34a]" />
+                          )}
+                        </td>
+                      </>
+                    )}
+                    <td className="px-2 py-4 text-right 2xl:px-6">
+                      {vehicle.price ? vehicle.price : "Non défini"}
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={10} className="pt-8 text-center font-medium">
+                  <td
+                    colSpan={isProductionSelected ? 11 : 5}
+                    className="pt-8 text-center font-medium"
+                  >
                     Aucune donnée disponible actuellement.
                   </td>
                 </tr>
