@@ -13,6 +13,7 @@ import MemberCompleted from "./pages/Members/MemberCompleted";
 import MemberOngoing from "./pages/Members/MemberOngoing";
 import CRVOLogo from "/public/images/CRVOLogo.png";
 import { useQuery } from "@tanstack/react-query";
+import Cookies from "js-cookie";
 
 export interface Vehicle {
   _id: string;
@@ -41,6 +42,20 @@ const fetchVehicles = async (): Promise<Vehicle[]> => {
   return data;
 };
 
+const fetchMemberVehicles = async (): Promise<Vehicle[]> => {
+  const token = Cookies.get("token");
+  const response = await fetch("https://crvo-back.onrender.com/api/user/vehicles", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Erreur lors de la récupération des véhicules du membre.");
+  }
+  const data = await response.json();
+  return data;
+};
+
 const fetchLatestSynchronizationDate = async (): Promise<Date | null> => {
   const response = await fetch(
     "https://crvo-back.onrender.com/api/synchronization"
@@ -57,30 +72,53 @@ const fetchLatestSynchronizationDate = async (): Promise<Date | null> => {
 const App = () => {
   const { role } = useAuth();
 
+  const shouldFetchAdminData = role === 'admin';
+  const shouldFetchMemberData = role === 'member';
+
   const {
-    data: vehicles,
-    isLoading: isLoadingVehicles,
-    isError: isErrorVehicles,
-    error: errorVehicles,
+    data: adminVehicles,
+    isLoading: isLoadingAdminVehicles,
+    isError: isErrorAdminVehicles,
+    error: errorAdminVehicles,
   } = useQuery({
-    queryKey: ["vehicles"],
+    queryKey: ["adminVehicles"],
     queryFn: fetchVehicles,
+    enabled: shouldFetchAdminData,
+  });
+
+  const {
+    data: memberVehicles,
+    isLoading: isLoadingMemberVehicles,
+    isError: isErrorMemberVehicles,
+    error: errorMemberVehicles,
+  } = useQuery({
+    queryKey: ["memberVehicles"],
+    queryFn: fetchMemberVehicles,
+    enabled: shouldFetchMemberData,
   });
 
   const { data: syncDate } = useQuery({
     queryKey: ["syncDate"],
     queryFn: fetchLatestSynchronizationDate,
+    enabled: shouldFetchAdminData || shouldFetchMemberData,
   });
 
-  // Filter vehicles for AdminOngoing (excluding "Stockage" and "Transport retour")
-  const ongoingVehicles = vehicles?.filter(
-    (vehicle) => vehicle.statusCategory !== "Stockage" && vehicle.statusCategory !== "Transport retour"
-  );
+  const filterOngoingVehicles = (vehicles: Vehicle[] | undefined) => {
+    return vehicles?.filter(
+      (vehicle) => vehicle.statusCategory !== "Stockage" && vehicle.statusCategory !== "Transport retour"
+    ) || [];
+  };
 
-  // Filter vehicles for AdminCompleted (only "Stockage" and "Transport retour")
-  const completedVehicles = vehicles?.filter(
+  const ongoingAdminVehicles = filterOngoingVehicles(adminVehicles);
+  const ongoingMemberVehicles = filterOngoingVehicles(memberVehicles);
+
+  const completedAdminVehicles = adminVehicles?.filter(
     (vehicle) => vehicle.statusCategory === "Stockage" || vehicle.statusCategory === "Transport retour"
-  );
+  ) || [];
+
+  const completedMemberVehicles = memberVehicles?.filter(
+    (vehicle) => vehicle.statusCategory === "Stockage" || vehicle.statusCategory === "Transport retour"
+  ) || [];
 
   return (
     <>
@@ -94,14 +132,22 @@ const App = () => {
                 <DashboardLayout>
                   {role === "admin" && (
                     <AdminOngoing
-                      vehicles={ongoingVehicles}
-                      isLoadingVehicles={isLoadingVehicles}
-                      isErrorVehicles={isErrorVehicles}
-                      errorVehicles={errorVehicles}
+                      vehicles={ongoingAdminVehicles}
+                      isLoadingVehicles={isLoadingAdminVehicles}
+                      isErrorVehicles={isErrorAdminVehicles}
+                      errorVehicles={errorAdminVehicles}
                       syncDate={syncDate}
                     />
                   )}
-                  {role === "member" && <MemberOngoing />}
+                  {role === "member" && (
+                    <MemberOngoing
+                      vehicles={ongoingMemberVehicles}
+                      isLoadingVehicles={isLoadingMemberVehicles}
+                      isErrorVehicles={isErrorMemberVehicles}
+                      errorVehicles={errorMemberVehicles}
+                      syncDate={syncDate}
+                    />
+                  )}
                 </DashboardLayout>
               </ProtectedRoute>
             }
@@ -113,14 +159,22 @@ const App = () => {
                 <DashboardLayout>
                   {role === "admin" && (
                     <AdminCompleted
-                      vehicles={completedVehicles}
-                      isLoadingVehicles={isLoadingVehicles}
-                      isErrorVehicles={isErrorVehicles}
-                      errorVehicles={errorVehicles}
+                      vehicles={completedAdminVehicles}
+                      isLoadingVehicles={isLoadingAdminVehicles}
+                      isErrorVehicles={isErrorAdminVehicles}
+                      errorVehicles={errorAdminVehicles}
                       syncDate={syncDate}
                     />
                   )}
-                  {role === "member" && <MemberCompleted />}
+                  {role === "member" && (
+                    <MemberCompleted
+                      vehicles={completedMemberVehicles}
+                      isLoadingVehicles={isLoadingMemberVehicles}
+                      isErrorVehicles={isErrorMemberVehicles}
+                      errorVehicles={errorMemberVehicles}
+                      syncDate={syncDate}
+                    />
+                  )}
                 </DashboardLayout>
               </ProtectedRoute>
             }

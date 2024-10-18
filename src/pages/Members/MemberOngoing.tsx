@@ -3,8 +3,6 @@ import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { useQuery } from "@tanstack/react-query";
-import Cookies from "js-cookie";
 import {
   AudioLines,
   BadgeCheck,
@@ -16,94 +14,75 @@ import {
   SprayCan,
   Wrench,
 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import * as XLSX from "xlsx";
+import { Vehicle } from "../../App";
 
-interface Vehicle {
-  _id: string;
-  immatriculation: string;
-  modele: string;
-  dateCreation: number;
-  price: string;
-  user: {
-    username: string;
-  };
-  mecanique: boolean;
-  carrosserie: boolean;
-  ct: boolean;
-  dsp: boolean;
-  jantes: boolean;
-  esthetique: boolean;
+interface MemberOngoingProps {
+  vehicles: Vehicle[] | undefined;
+  isLoadingVehicles: boolean;
+  isErrorVehicles: boolean;
+  errorVehicles: Error | null;
+  syncDate: Date | null | undefined;
 }
 
-const daysSince = (timestamp: number): number => {
-  const creationDate = new Date(timestamp);
+const daysSince = (dateString: string): number => {
+  const creationDate = new Date(dateString);
   const today = new Date();
   const timeDiff = today.getTime() - creationDate.getTime();
   return Math.floor(timeDiff / (1000 * 3600 * 24));
 };
 
-const fetchVehiclesByUser = async (): Promise<Vehicle[]> => {
-  const token = Cookies.get("token");
-
-  const response = await fetch(
-    "https://crvo-back.onrender.com/api/user/vehicles",
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error("Erreur lors de la récupération des véhicules.");
-  }
-  const data = await response.json();
-  return data;
-};
-
-const MemberOngoing: React.FC = () => {
+const MemberOngoing: React.FC<MemberOngoingProps> = ({
+  vehicles,
+  isLoadingVehicles,
+  isErrorVehicles,
+  errorVehicles,
+  syncDate,
+}) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [activeFilter, setActiveFilter] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<string>("Production");
 
-  const {
-    data: vehicles,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ["userVehicles"],
-    queryFn: fetchVehiclesByUser,
-  });
+  const statusCategories = useMemo(() => {
+    if (!vehicles) return [];
+    return Array.from(
+      new Set(vehicles.map((vehicle) => vehicle.statusCategory))
+    );
+  }, [vehicles]);
 
-  const filteredVehicles = vehicles
-    ?.filter((vehicle) => {
-      const searchLower = searchQuery.toLowerCase();
-      return (
-        vehicle.immatriculation.toLowerCase().includes(searchLower) ||
-        vehicle.modele.toLowerCase().includes(searchLower)
-      );
-    })
-    .filter((vehicle) => {
-      if (activeFilter === "dsp") return vehicle.dsp;
-      if (activeFilter === "mecanique") return vehicle.mecanique;
-      if (activeFilter === "carrosserie") return vehicle.carrosserie;
-      if (activeFilter === "ct") return vehicle.ct;
-      if (activeFilter === "jantes") return vehicle.jantes;
-      if (activeFilter === "esthetique") return vehicle.esthetique;
-      return true;
-    });
+  const filteredVehicles = useMemo(() => {
+    if (!vehicles) return [];
+    return vehicles
+      .filter((vehicle) => {
+        const searchLower = searchQuery.toLowerCase();
+        const matchesSearch =
+          vehicle.immatriculation.toLowerCase().includes(searchLower) ||
+          vehicle.modele.toLowerCase().includes(searchLower);
 
-  const sortedVehicles = filteredVehicles?.sort(
-    (a, b) => daysSince(b.dateCreation) - daysSince(a.dateCreation)
-  );
+        const matchesStatus = statusFilter
+          ? vehicle.statusCategory === statusFilter
+          : true;
+        const matchesActiveFilter =
+          (activeFilter === "dsp" && vehicle.dsp) ||
+          (activeFilter === "mecanique" && vehicle.mecanique) ||
+          (activeFilter === "jantes" && vehicle.jantes) ||
+          (activeFilter === "ct" && vehicle.ct) ||
+          (activeFilter === "carrosserie" && vehicle.carrosserie) ||
+          (activeFilter === "esthetique" && vehicle.esthetique) ||
+          !activeFilter;
+
+        return matchesSearch && matchesStatus && matchesActiveFilter;
+      })
+      .sort((a, b) => daysSince(b.dateCreation) - daysSince(a.dateCreation));
+  }, [vehicles, searchQuery, statusFilter, activeFilter]);
 
   const exportToExcel = () => {
-    if (!sortedVehicles) return;
+    if (!filteredVehicles) return;
 
     const workbook = XLSX.utils.book_new();
 
-    const data = sortedVehicles.map((vehicle) => ({
+    const data = filteredVehicles.map((vehicle) => ({
       Immatriculation: vehicle.immatriculation,
       Modèle: vehicle.modele,
       "Prix Actuel": vehicle.price,
@@ -127,155 +106,200 @@ const MemberOngoing: React.FC = () => {
     setActiveFilter(activeFilter === filter ? "" : filter);
   };
 
+  const isProductionSelected = statusFilter === "Production";
+
   return (
-    <div className="flex-1 rounded-l-lg border bg-primary pb-8 ">
+    <div className="flex-1 rounded-l-lg border bg-primary pb-8">
       <DashboardHeader
         title="Rénovations en Cours"
-        count={sortedVehicles?.length || 0}
+        count={filteredVehicles?.length || 0}
       />
-      <div className="flex flex-row gap-x-4 px-8 pb-4 pt-8 ">
-        <Input
-          placeholder="Recherche"
-          className="text-sm"
-          value={searchQuery}
-          hasSearchIcon
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <div className="flex gap-x-2">
-          <Button className="space-x-[5px]" onClick={exportToExcel}>
-            <ChartArea size={20} />
-            <span>Exporter en Excel</span>
-          </Button>
+      <div className="flex flex-col space-y-3 px-8 py-4">
+        <p>
+          Dernière synchronisation:{" "}
+          {syncDate
+            ? `${syncDate.toLocaleDateString()} - ${syncDate.toLocaleTimeString()}`
+            : "Non disponible"}
+        </p>
+        <div className="flex flex-row justify-between">
+          <div className="flex flex-row gap-x-4">
+            <Input
+              placeholder="Recherche"
+              className="text-sm"
+              value={searchQuery}
+              hasSearchIcon
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <Button className="space-x-[5px]" onClick={exportToExcel}>
+              <ChartArea size={20} />
+              <span>Exporter en Excel</span>
+            </Button>
+          </div>
+          <div className="space-x-2">
+            {statusCategories.map((status) => (
+              <Button
+                key={status}
+                variant={statusFilter === status ? "default" : "outline"}
+                onClick={() => setStatusFilter(status)}
+              >
+                {status}
+              </Button>
+            ))}
+          </div>
         </div>
       </div>
 
       <div className="relative">
         <div className="h-[400px] w-full overflow-y-auto px-8 2xl:h-[550px]">
-          <table className="w-full border-gray-200">
-            <thead>
-              <tr className="sticky top-0 z-10 border-b bg-background text-left">
-                <th className="w-[320px] px-6 py-3">Immatriculation</th>
-                <th className="w-[320px] px-6 py-3">Modèle</th>
-                <th className="w-[250px] px-2 py-3 2xl:px-6">Prix Actuel</th>
-                <th className="w-[260px] px-6 py-3 text-center">
-                  Jours depuis Création
+          <table className="w-full table-fixed">
+            <thead className="sticky top-0 z-10 bg-background">
+              <tr className="border-b text-left">
+                <th className="w-1/6 px-2 py-3 2xl:px-6">Immatriculation</th>
+                <th className="w-1/6 px-2 py-3 2xl:px-6">Modèle</th>
+                <th className="w-1/6 px-2 py-3 text-center 2xl:px-6">
+                  Jours de rénovation
                 </th>
-                <th className="w-[60px] px-4 py-3 text-center">
-                  <AudioLines className="mb-0.5 inline-block" /> DSP
-                  <Switch
-                    checked={activeFilter === "dsp"}
-                    onCheckedChange={() => handleSwitchChange("dsp")}
-                  />
-                </th>
-                <th className="w-[100px] px-4 py-3 text-center">
-                  <Wrench className="mb-0.5 inline-block" /> Mécanique
-                  <Switch
-                    checked={activeFilter === "mecanique"}
-                    onCheckedChange={() => handleSwitchChange("mecanique")}
-                  />
-                </th>
-                <th className="w-[60px] px-4 py-3 text-center">
-                  <LifeBuoy className="mb-0.5 inline-block" /> Jantes
-                  <Switch
-                    checked={activeFilter === "jantes"}
-                    onCheckedChange={() => handleSwitchChange("jantes")}
-                  />
-                </th>
-                <th className="w-[60px] px-4 py-3 text-center">
-                  <ShieldCheck className="mb-0.5 inline-block" /> CT
-                  <Switch
-                    checked={activeFilter === "ct"}
-                    onCheckedChange={() => handleSwitchChange("ct")}
-                  />
-                </th>
-                <th className="w-[100px] px-4 py-3 text-center">
-                  <Car className="mb-0.5 inline-block" /> Carrosserie
-                  <Switch
-                    checked={activeFilter === "carrosserie"}
-                    onCheckedChange={() => handleSwitchChange("carrosserie")}
-                  />
-                </th>
-                <th className="w-[100px] px-4 py-3 text-center">
-                  <SprayCan className="mb-0.5 inline-block" /> Esthétique
-                  <Switch
-                    checked={activeFilter === "esthetique"}
-                    onCheckedChange={() => handleSwitchChange("esthetique")}
-                  />
-                </th>
+                {isProductionSelected && (
+                  <>
+                    <th className="w-1/12 px-4 py-3 text-center">
+                      <div className="flex flex-col items-center">
+                        <AudioLines className="mb-0.5 inline-block" /> DSP
+                        <Switch
+                          checked={activeFilter === "dsp"}
+                          onCheckedChange={() => handleSwitchChange("dsp")}
+                        />
+                      </div>
+                    </th>
+                    <th className="w-1/12 px-4 py-3 text-center">
+                      <div className="flex flex-col items-center">
+                        <Wrench className="mb-0.5 inline-block" /> Mécanique
+                        <Switch
+                          checked={activeFilter === "mecanique"}
+                          onCheckedChange={() => handleSwitchChange("mecanique")}
+                        />
+                      </div>
+                    </th>
+                    <th className="w-1/12 px-4 py-3 text-center">
+                      <div className="flex flex-col items-center">
+                        <LifeBuoy className="mb-0.5 inline-block" /> Jantes
+                        <Switch
+                          checked={activeFilter === "jantes"}
+                          onCheckedChange={() => handleSwitchChange("jantes")}
+                        />
+                      </div>
+                    </th>
+                    <th className="w-1/12 px-4 py-3 text-center">
+                      <div className="flex flex-col items-center">
+                        <ShieldCheck className="mb-0.5 inline-block" /> CT
+                        <Switch
+                          checked={activeFilter === "ct"}
+                          onCheckedChange={() => handleSwitchChange("ct")}
+                        />
+                      </div>
+                    </th>
+                    <th className="w-1/12 px-4 py-3 text-center">
+                      <div className="flex flex-col items-center">
+                        <Car className="mb-0.5 inline-block" /> Carrosserie
+                        <Switch
+                          checked={activeFilter === "carrosserie"}
+                          onCheckedChange={() => handleSwitchChange("carrosserie")}
+                        />
+                      </div>
+                    </th>
+                    <th className="w-1/12 px-4 py-3 text-center">
+                      <div className="flex flex-col items-center">
+                        <SprayCan className="mb-0.5 inline-block" /> Esthétique
+                        <Switch
+                          checked={activeFilter === "esthetique"}
+                          onCheckedChange={() => handleSwitchChange("esthetique")}
+                        />
+                      </div>
+                    </th>
+                  </>
+                )}
+                <th className="w-1/6 px-2 py-3 text-right 2xl:px-6">Prix Actuel</th>
               </tr>
             </thead>
             <tbody>
-              {isLoading ? (
+              {isLoadingVehicles ? (
                 <tr>
-                  <td colSpan={9} className="py-20 text-center">
+                  <td colSpan={isProductionSelected ? 10 : 4} className="py-20 text-center">
                     <div className="flex items-center justify-center">
                       <Loader />
                     </div>
                   </td>
                 </tr>
-              ) : isError ? (
+              ) : isErrorVehicles ? (
                 <tr>
-                  <td colSpan={9} className="py-8 text-center">
+                  <td colSpan={isProductionSelected ? 10 : 4} className="py-8 text-center">
                     Error:{" "}
-                    {error instanceof Error ? error.message : "Unknown error"}
+                    {errorVehicles instanceof Error
+                      ? errorVehicles.message
+                      : "Unknown error"}
                   </td>
                 </tr>
-              ) : sortedVehicles && sortedVehicles.length > 0 ? (
-                sortedVehicles.map((vehicle: Vehicle) => (
+              ) : filteredVehicles && filteredVehicles.length > 0 ? (
+                filteredVehicles.map((vehicle: Vehicle) => (
                   <tr key={vehicle._id} className="border-b last:border-b-0">
-                    <td className="px-6 py-4">{vehicle.immatriculation}</td>
-                    <td className="px-6 py-4">{vehicle.modele}</td>
-                    <td className="px-6 py-4">{vehicle.price}</td>
-                    <td className="px-6 py-4 text-center">
+                    <td className="px-2 py-4 2xl:px-6">{vehicle.immatriculation}</td>
+                    <td className="px-2 py-4 2xl:px-6">{vehicle.modele}</td>
+                    <td className="px-2 py-4 text-center 2xl:px-4">
                       {daysSince(vehicle.dateCreation)}
                     </td>
-                    <td className="px-6 py-4 text-center">
-                      {vehicle.dsp ? (
-                        <CalendarClock className="inline-block text-[#fbbf24]" />
-                      ) : (
-                        <BadgeCheck className="inline-block text-[#16a34a]" />
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      {vehicle.mecanique ? (
-                        <CalendarClock className="inline-block text-[#fbbf24]" />
-                      ) : (
-                        <BadgeCheck className="inline-block text-[#16a34a]" />
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      {vehicle.jantes ? (
-                        <CalendarClock className="inline-block text-[#fbbf24]" />
-                      ) : (
-                        <BadgeCheck className="inline-block text-[#16a34a]" />
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      {vehicle.ct ? (
-                        <CalendarClock className="inline-block text-[#fbbf24]" />
-                      ) : (
-                        <BadgeCheck className="inline-block text-[#16a34a]" />
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      {vehicle.carrosserie ? (
-                        <CalendarClock className="inline-block text-[#fbbf24]" />
-                      ) : (
-                        <BadgeCheck className="inline-block text-[#16a34a]" />
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      {vehicle.esthetique ? (
-                        <CalendarClock className="inline-block text-[#fbbf24]" />
-                      ) : (
-                        <CalendarClock className="inline-block text-[#fbbf24]" />
-                      )}
+                    {isProductionSelected && (
+                      <>
+                        <td className="p-4 text-center">
+                          {vehicle.dsp ? (
+                            <CalendarClock className="inline-block text-[#fbbf24]" />
+                          ) : (
+                            <BadgeCheck className="inline-block text-[#16a34a]" />
+                          )}
+                        </td>
+                        <td className="p-4 text-center">
+                          {vehicle.mecanique ? (
+                            <CalendarClock className="inline-block text-[#fbbf24]" />
+                          ) : (
+                            <BadgeCheck className="inline-block text-[#16a34a]" />
+                          )}
+                        </td>
+                        <td className="p-4 text-center">
+                          {vehicle.jantes ? (
+                            <CalendarClock className="inline-block text-[#fbbf24]" />
+                          ) : (
+                            <BadgeCheck className="inline-block text-[#16a34a]" />
+                          )}
+                        </td>
+                        <td className="p-4 text-center">
+                          {vehicle.ct ? (
+                            <CalendarClock className="inline-block text-[#fbbf24]" />
+                          ) : (
+                            <BadgeCheck className="inline-block text-[#16a34a]" />
+                          )}
+                        </td>
+                        <td className="p-4 text-center">
+                          {vehicle.carrosserie ? (
+                            <CalendarClock className="inline-block text-[#fbbf24]" />
+                          ) : (
+                            <BadgeCheck className="inline-block text-[#16a34a]" />
+                          )}
+                        </td>
+                        <td className="p-4 text-center">
+                          {vehicle.esthetique ? (
+                            <CalendarClock className="inline-block text-[#fbbf24]" />
+                          ) : (
+                            <BadgeCheck className="inline-block text-[#16a34a]" />
+                          )}
+                        </td>
+                      </>
+                    )}
+                    <td className="px-2 py-4 text-right 2xl:px-6">
+                      {vehicle.price ? `${vehicle.price} €` : "Non défini"}
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={9} className="pt-8 text-center font-medium">
+                  <td colSpan={isProductionSelected ? 10 : 4} className="pt-8 text-center font-medium">
                     Aucune donnée disponible actuellement.
                   </td>
                 </tr>
