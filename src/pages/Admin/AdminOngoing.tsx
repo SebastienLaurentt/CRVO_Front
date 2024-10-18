@@ -72,6 +72,14 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
       .sort((a, b) => daysSince(b.dateCreation) - daysSince(a.dateCreation));
   }, [vehicles, searchQuery, statusFilter, activeFilter]);
 
+  const vehicleCountByStatus = useMemo(() => {
+    if (!vehicles) return {};
+    return vehicles.reduce((acc, vehicle) => {
+      acc[vehicle.statusCategory] = (acc[vehicle.statusCategory] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+  }, [vehicles]);
+
   const handleSwitchChange = (filter: string) => {
     setActiveFilter(activeFilter === filter ? "" : filter);
   };
@@ -80,6 +88,7 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
 
   const statusOrder = [
     "Livraison",
+    "Transport aller",
     "Expertise",
     "Client",
     "Magasin",
@@ -90,7 +99,7 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
     <div className="rounded-l-lg border bg-primary pb-8">
       <DashboardHeader
         title="Rénovations en Cours"
-        count={filteredVehicles?.length || 0}
+        count={vehicles?.length || 0}
       />
       <div className="flex flex-col space-y-3 px-8 py-4">
         <p>
@@ -100,23 +109,25 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
             : "Non disponible"}
         </p>
         <div className="relative flex flex-row justify-between">
-          <Input
-            placeholder="Recherche"
-            className="text-sm"
-            value={searchQuery}
-            hasSearchIcon
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <div className="absolute flex w-full justify-center space-x-2">
-            {statusOrder.map((status) => (
-              <Button
-                key={status}
-                variant={statusFilter === status ? "secondary" : "outline"}
-                onClick={() => setStatusFilter(status)}
-              >
-                {status}
-              </Button>
-            ))}
+          <div className="flex flex-row space-x-4">
+            <Input
+              placeholder="Recherche"
+              className="text-sm"
+              value={searchQuery}
+              hasSearchIcon
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <div className="flex flex-row space-x-1">
+              {statusOrder.map((status) => (
+                <Button
+                  key={status}
+                  variant={statusFilter === status ? "secondary" : "outline"}
+                  onClick={() => setStatusFilter(status)}
+                >
+                  {status} ({vehicleCountByStatus[status] || 0})
+                </Button>
+              ))}
+            </div>
           </div>
           <Button
             className="space-x-[5px]"
