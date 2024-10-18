@@ -107,7 +107,6 @@ const AdminCompleted: React.FC<AdminCompletedProps> = ({
                 <th className="w-[160px] px-6 py-3">Immatriculation</th>
                 <th className="w-[160px] px-6 py-3">Modèle</th>
                 <th className="w-[160px] px-6 py-3 text-center">Jours depuis création</th>
-                <th className="w-[160px] px-6 py-3 text-center">Statut</th>
                 <th className="w-[160px] px-6 py-3 text-right">Prix</th>
               </tr>
             </thead>
@@ -137,7 +136,7 @@ const AdminCompleted: React.FC<AdminCompletedProps> = ({
                     <td className="px-6 py-4">{vehicle.immatriculation}</td>
                     <td className="px-6 py-4">{vehicle.modele}</td>
                     <td className="px-6 py-4 text-center">{daysSince(vehicle.dateCreation)}</td>
-                    <td className="px-6 py-4 text-center">{vehicle.statusCategory}</td>
+
                     <td className="px-6 py-4 text-right">
                       {vehicle.price ? `${vehicle.price} €` : "Non défini"}
                     </td>
