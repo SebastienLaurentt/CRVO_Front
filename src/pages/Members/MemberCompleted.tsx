@@ -99,9 +99,11 @@ const MemberCompleted: React.FC<MemberCompletedProps> = ({
       <div className="flex flex-col space-y-3 px-8 py-4">
         <p>
           Dernière synchronisation:{" "}
-          {syncDate
-            ? `${syncDate.toLocaleDateString()} - ${syncDate.toLocaleTimeString()}`
-            : "Non disponible"}
+          <span className="font-medium">
+            {syncDate
+              ? `${syncDate.toLocaleDateString()} - ${syncDate.toLocaleTimeString()}`
+              : "Non disponible"}
+          </span>
         </p>
         <div className="relative flex flex-row justify-between">
           <div className="flex flex-row space-x-4">
