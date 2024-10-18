@@ -14,7 +14,7 @@ import {
   SprayCan,
   Wrench,
 } from "lucide-react";
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import * as XLSX from "xlsx";
 import { Vehicle } from "../../App";
 
@@ -43,13 +43,6 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [activeFilter, setActiveFilter] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("Production");
-
-  const statusCategories = useMemo(() => {
-    if (!vehicles) return [];
-    return Array.from(
-      new Set(vehicles.map((vehicle) => vehicle.statusCategory))
-    );
-  }, [vehicles]);
 
   const filteredVehicles = useMemo(() => {
     if (!vehicles) return [];
@@ -100,11 +93,14 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
 
     XLSX.utils.book_append_sheet(workbook, worksheet, "Rénovations en Cours");
 
-    const formattedDate = syncDate.toLocaleDateString('fr-FR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    }).split('/').join('');
+    const formattedDate = syncDate
+      .toLocaleDateString("fr-FR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
+      .split("/")
+      .join("");
 
     XLSX.writeFile(workbook, `renovationsEnCours_${formattedDate}.xlsx`);
   };
@@ -114,6 +110,14 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
   };
 
   const isProductionSelected = statusFilter === "Production";
+
+  const statusOrder = [
+    "Livraison",
+    "Expertise",
+    "Client",
+    "Magasin",
+    "Production",
+  ];
 
   return (
     <div className="flex-1 rounded-l-lg border bg-primary pb-8">
@@ -128,31 +132,29 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
             ? `${syncDate.toLocaleDateString()} - ${syncDate.toLocaleTimeString()}`
             : "Non disponible"}
         </p>
-        <div className="flex flex-row justify-between">
-          <div className="flex flex-row gap-x-4">
-            <Input
-              placeholder="Recherche"
-              className="text-sm"
-              value={searchQuery}
-              hasSearchIcon
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <Button className="space-x-[5px]" onClick={exportToExcel}>
-              <ChartArea size={20} />
-              <span>Exporter en Excel</span>
-            </Button>
-          </div>
-          <div className="space-x-2">
-            {statusCategories.map((status) => (
+        <div className="relative flex flex-row justify-between">
+          <Input
+            placeholder="Recherche"
+            className="text-sm"
+            value={searchQuery}
+            hasSearchIcon
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <div className="absolute flex w-full justify-center space-x-2">
+            {statusOrder.map((status) => (
               <Button
                 key={status}
-                variant={statusFilter === status ? "default" : "outline"}
+                variant={statusFilter === status ? "secondary" : "outline"}
                 onClick={() => setStatusFilter(status)}
               >
                 {status}
               </Button>
             ))}
           </div>
+          <Button className="space-x-[5px]" onClick={exportToExcel}>
+            <ChartArea size={20} />
+            <span>Exporter en Excel</span>
+          </Button>
         </div>
       </div>
 
@@ -182,7 +184,9 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
                         <Wrench className="mb-0.5 inline-block" /> Mécanique
                         <Switch
                           checked={activeFilter === "mecanique"}
-                          onCheckedChange={() => handleSwitchChange("mecanique")}
+                          onCheckedChange={() =>
+                            handleSwitchChange("mecanique")
+                          }
                         />
                       </div>
                     </th>
@@ -209,7 +213,9 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
                         <Car className="mb-0.5 inline-block" /> Carrosserie
                         <Switch
                           checked={activeFilter === "carrosserie"}
-                          onCheckedChange={() => handleSwitchChange("carrosserie")}
+                          onCheckedChange={() =>
+                            handleSwitchChange("carrosserie")
+                          }
                         />
                       </div>
                     </th>
@@ -218,19 +224,26 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
                         <SprayCan className="mb-0.5 inline-block" /> Esthétique
                         <Switch
                           checked={activeFilter === "esthetique"}
-                          onCheckedChange={() => handleSwitchChange("esthetique")}
+                          onCheckedChange={() =>
+                            handleSwitchChange("esthetique")
+                          }
                         />
                       </div>
                     </th>
                   </>
                 )}
-                <th className="w-1/6 px-2 py-3 text-right 2xl:px-6">Prix Actuel</th>
+                <th className="w-1/6 px-2 py-3 text-right 2xl:px-6">
+                  Prix Actuel
+                </th>
               </tr>
             </thead>
             <tbody>
               {isLoadingVehicles ? (
                 <tr>
-                  <td colSpan={isProductionSelected ? 10 : 4} className="py-20 text-center">
+                  <td
+                    colSpan={isProductionSelected ? 10 : 4}
+                    className="py-20 text-center"
+                  >
                     <div className="flex items-center justify-center">
                       <Loader />
                     </div>
@@ -238,7 +251,10 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
                 </tr>
               ) : isErrorVehicles ? (
                 <tr>
-                  <td colSpan={isProductionSelected ? 10 : 4} className="py-8 text-center">
+                  <td
+                    colSpan={isProductionSelected ? 10 : 4}
+                    className="py-8 text-center"
+                  >
                     Error:{" "}
                     {errorVehicles instanceof Error
                       ? errorVehicles.message
@@ -248,7 +264,9 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
               ) : filteredVehicles && filteredVehicles.length > 0 ? (
                 filteredVehicles.map((vehicle: Vehicle) => (
                   <tr key={vehicle._id} className="border-b last:border-b-0">
-                    <td className="px-2 py-4 2xl:px-6">{vehicle.immatriculation}</td>
+                    <td className="px-2 py-4 2xl:px-6">
+                      {vehicle.immatriculation}
+                    </td>
                     <td className="px-2 py-4 2xl:px-6">{vehicle.modele}</td>
                     <td className="px-2 py-4 text-center 2xl:px-4">
                       {daysSince(vehicle.dateCreation)}
@@ -306,8 +324,11 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
                 ))
               ) : (
                 <tr>
-                  <td colSpan={isProductionSelected ? 10 : 4} className="pt-8 text-center font-medium">
-                    Aucune donnée disponible actuellement.
+                  <td
+                    colSpan={isProductionSelected ? 10 : 4}
+                    className="pt-8 text-center font-medium"
+                  >
+                    Aucun véhicule pour ce statut actuellement.
                   </td>
                 </tr>
               )}

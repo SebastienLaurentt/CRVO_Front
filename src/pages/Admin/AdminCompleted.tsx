@@ -4,7 +4,7 @@ import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Upload } from "lucide-react";
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { Vehicle } from "../../App";
 
 interface AdminCompletedProps {
@@ -30,13 +30,9 @@ const AdminCompleted: React.FC<AdminCompletedProps> = ({
   syncDate,
 }) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [isCompletedFileInputVisible, setIsCompletedFileInputVisible] = useState(false);
+  const [isCompletedFileInputVisible, setIsCompletedFileInputVisible] =
+    useState(false);
   const [statusFilter, setStatusFilter] = useState<string>("Transport retour");
-
-  const statusCategories = useMemo(() => {
-    if (!vehicles) return [];
-    return Array.from(new Set(vehicles.map((vehicle) => vehicle.statusCategory)));
-  }, [vehicles]);
 
   const filteredVehicles = useMemo(() => {
     if (!vehicles) return [];
@@ -48,12 +44,16 @@ const AdminCompleted: React.FC<AdminCompletedProps> = ({
           vehicle.modele.toLowerCase().includes(searchLower) ||
           vehicle.user.username.toLowerCase().includes(searchLower);
 
-        const matchesStatus = statusFilter ? vehicle.statusCategory === statusFilter : true;
+        const matchesStatus = statusFilter
+          ? vehicle.statusCategory === statusFilter
+          : true;
 
         return matchesSearch && matchesStatus;
       })
       .sort((a, b) => daysSince(b.dateCreation) - daysSince(a.dateCreation));
   }, [vehicles, searchQuery, statusFilter]);
+
+  const statusOrder = ["Stockage", "Transport retour"];
 
   return (
     <div className="flex-1 rounded-l-lg border bg-primary pb-8">
@@ -68,33 +68,31 @@ const AdminCompleted: React.FC<AdminCompletedProps> = ({
             ? `${syncDate.toLocaleDateString()} - ${syncDate.toLocaleTimeString()}`
             : "Non disponible"}
         </p>
-        <div className="flex flex-row justify-between">
-          <div className="flex flex-row gap-x-4">
-            <Input
-              placeholder="Recherche"
-              className="text-sm"
-              value={searchQuery}
-              hasSearchIcon
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <Button
-              className="space-x-[5px]"
-              onClick={() => setIsCompletedFileInputVisible(true)}
-            >
-              <Upload size={20} /> <span>Import Excel</span>
-            </Button>
-          </div>
-          <div className="space-x-2">
-            {statusCategories.map((status) => (
+        <div className="relative flex flex-row justify-between">
+          <Input
+            placeholder="Recherche"
+            className="text-sm"
+            value={searchQuery}
+            hasSearchIcon
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <div className="absolute flex w-full justify-center space-x-2">
+            {statusOrder.map((status) => (
               <Button
                 key={status}
-                variant={statusFilter === status ? "default" : "outline"}
+                variant={statusFilter === status ? "secondary" : "outline"}
                 onClick={() => setStatusFilter(status)}
               >
                 {status}
               </Button>
             ))}
           </div>
+          <Button
+            className="space-x-[5px]"
+            onClick={() => setIsCompletedFileInputVisible(true)}
+          >
+            <Upload size={20} /> <span>Import Excel</span>
+          </Button>
         </div>
       </div>
 
@@ -106,7 +104,9 @@ const AdminCompleted: React.FC<AdminCompletedProps> = ({
                 <th className="w-[360px] px-6 py-3">Client</th>
                 <th className="w-[160px] px-6 py-3">Immatriculation</th>
                 <th className="w-[160px] px-6 py-3">Modèle</th>
-                <th className="w-[160px] px-6 py-3 text-center">Jours depuis création</th>
+                <th className="w-[160px] px-6 py-3 text-center">
+                  Jours depuis création
+                </th>
                 <th className="w-[160px] px-6 py-3 text-right">Prix</th>
               </tr>
             </thead>
@@ -135,7 +135,9 @@ const AdminCompleted: React.FC<AdminCompletedProps> = ({
                     <td className="px-6 py-4">{vehicle.user.username}</td>
                     <td className="px-6 py-4">{vehicle.immatriculation}</td>
                     <td className="px-6 py-4">{vehicle.modele}</td>
-                    <td className="px-6 py-4 text-center">{daysSince(vehicle.dateCreation)}</td>
+                    <td className="px-6 py-4 text-center">
+                      {daysSince(vehicle.dateCreation)}
+                    </td>
 
                     <td className="px-6 py-4 text-right">
                       {vehicle.price ? `${vehicle.price} €` : "Non défini"}
@@ -145,7 +147,7 @@ const AdminCompleted: React.FC<AdminCompletedProps> = ({
               ) : (
                 <tr>
                   <td colSpan={6} className="pt-8 text-center font-medium">
-                    Aucune donnée disponible actuellement.
+                    Aucun véhicule pour ce statut actuellement.
                   </td>
                 </tr>
               )}

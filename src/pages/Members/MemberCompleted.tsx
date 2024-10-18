@@ -32,13 +32,6 @@ const MemberCompleted: React.FC<MemberCompletedProps> = ({
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("Transport retour");
 
-  const statusCategories = useMemo(() => {
-    if (!vehicles) return [];
-    return Array.from(
-      new Set(vehicles.map((vehicle) => vehicle.statusCategory))
-    );
-  }, [vehicles]);
-
   const filteredVehicles = useMemo(() => {
     if (!vehicles) return [];
     return vehicles
@@ -75,14 +68,19 @@ const MemberCompleted: React.FC<MemberCompletedProps> = ({
 
     XLSX.utils.book_append_sheet(workbook, worksheet, "Véhicules Terminés");
 
-    const formattedDate = syncDate.toLocaleDateString('fr-FR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    }).split('/').join('');
+    const formattedDate = syncDate
+      .toLocaleDateString("fr-FR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
+      .split("/")
+      .join("");
 
     XLSX.writeFile(workbook, `renovationsTerminees_${formattedDate}.xlsx`);
   };
+
+  const statusOrder = ["Stockage", "Transport retour"];
 
   return (
     <div className="flex-1 rounded-l-lg border bg-primary pb-8">
@@ -97,31 +95,29 @@ const MemberCompleted: React.FC<MemberCompletedProps> = ({
             ? `${syncDate.toLocaleDateString()} - ${syncDate.toLocaleTimeString()}`
             : "Non disponible"}
         </p>
-        <div className="flex flex-row justify-between">
-          <div className="flex flex-row gap-x-4">
-            <Input
-              placeholder="Recherche"
-              className="text-sm"
-              value={searchQuery}
-              hasSearchIcon
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <Button className="space-x-[5px]" onClick={exportToExcel}>
-              <ChartArea size={20} />
-              <span>Exporter en Excel</span>
-            </Button>
-          </div>
-          <div className="space-x-2">
-            {statusCategories.map((status) => (
+        <div className="relative flex flex-row justify-between">
+          <Input
+            placeholder="Recherche"
+            className="text-sm"
+            value={searchQuery}
+            hasSearchIcon
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <div className="absolute flex w-full justify-center space-x-2">
+            {statusOrder.map((status) => (
               <Button
                 key={status}
-                variant={statusFilter === status ? "default" : "outline"}
+                variant={statusFilter === status ? "secondary" : "outline"}
                 onClick={() => setStatusFilter(status)}
               >
                 {status}
               </Button>
             ))}
           </div>
+          <Button className="space-x-[5px]" onClick={exportToExcel}>
+            <ChartArea size={20} />
+            <span>Exporter en Excel</span>
+          </Button>
         </div>
       </div>
 
@@ -173,7 +169,7 @@ const MemberCompleted: React.FC<MemberCompletedProps> = ({
               ) : (
                 <tr>
                   <td colSpan={4} className="pt-8 text-center font-medium">
-                    Aucune donnée disponible actuellement.
+                    Aucun véhicule pour ce statut actuellement.
                   </td>
                 </tr>
               )}

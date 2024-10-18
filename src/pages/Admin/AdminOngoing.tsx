@@ -15,7 +15,7 @@ import {
   Upload,
   Wrench,
 } from "lucide-react";
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { Vehicle } from "../../App";
 
 interface AdminOngoingProps {
@@ -44,13 +44,6 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
   const [isFileInputVisible, setIsFileInputVisible] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("Production");
-
-  const statusCategories = useMemo(() => {
-    if (!vehicles) return [];
-    return Array.from(
-      new Set(vehicles.map((vehicle) => vehicle.statusCategory))
-    );
-  }, [vehicles]);
 
   const filteredVehicles = useMemo(() => {
     if (!vehicles) return [];
@@ -85,6 +78,14 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
 
   const isProductionSelected = statusFilter === "Production";
 
+  const statusOrder = [
+    "Livraison",
+    "Expertise",
+    "Client",
+    "Magasin",
+    "Production",
+  ];
+
   return (
     <div className="rounded-l-lg border bg-primary pb-8">
       <DashboardHeader
@@ -98,33 +99,31 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
             ? `${syncDate.toLocaleDateString()} - ${syncDate.toLocaleTimeString()}`
             : "Non disponible"}
         </p>
-        <div className="flex flex-row justify-between">
-          <div className="flex flex-row gap-x-4">
-            <Input
-              placeholder="Recherche"
-              className="text-sm"
-              value={searchQuery}
-              hasSearchIcon
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <Button
-              className="space-x-[5px]"
-              onClick={() => setIsFileInputVisible(true)}
-            >
-              <Upload size={20} /> <span>Import Excel</span>
-            </Button>
-          </div>
-          <div className="space-x-2">
-            {statusCategories.map((status) => (
+        <div className="relative flex flex-row justify-between">
+          <Input
+            placeholder="Recherche"
+            className="text-sm"
+            value={searchQuery}
+            hasSearchIcon
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <div className="absolute flex w-full justify-center space-x-2">
+            {statusOrder.map((status) => (
               <Button
                 key={status}
-                variant={statusFilter === status ? "default" : "outline"}
+                variant={statusFilter === status ? "secondary" : "outline"}
                 onClick={() => setStatusFilter(status)}
               >
                 {status}
               </Button>
             ))}
           </div>
+          <Button
+            className="space-x-[5px]"
+            onClick={() => setIsFileInputVisible(true)}
+          >
+            <Upload size={20} /> <span>Import Excel</span>
+          </Button>
         </div>
       </div>
 
@@ -155,7 +154,9 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                         <Wrench className="mb-0.5 inline-block" /> Mécanique
                         <Switch
                           checked={activeFilter === "mecanique"}
-                          onCheckedChange={() => handleSwitchChange("mecanique")}
+                          onCheckedChange={() =>
+                            handleSwitchChange("mecanique")
+                          }
                         />
                       </div>
                     </th>
@@ -182,7 +183,9 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                         <Car className="mb-0.5 inline-block" /> Carrosserie
                         <Switch
                           checked={activeFilter === "carrosserie"}
-                          onCheckedChange={() => handleSwitchChange("carrosserie")}
+                          onCheckedChange={() =>
+                            handleSwitchChange("carrosserie")
+                          }
                         />
                       </div>
                     </th>
@@ -191,7 +194,9 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                         <SprayCan className="mb-0.5 inline-block" /> Esthétique
                         <Switch
                           checked={activeFilter === "esthetique"}
-                          onCheckedChange={() => handleSwitchChange("esthetique")}
+                          onCheckedChange={() =>
+                            handleSwitchChange("esthetique")
+                          }
                         />
                       </div>
                     </th>
@@ -204,7 +209,10 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
             <tbody>
               {isLoadingVehicles ? (
                 <tr>
-                  <td colSpan={isProductionSelected ? 11 : 5} className="py-20 text-center">
+                  <td
+                    colSpan={isProductionSelected ? 11 : 5}
+                    className="py-20 text-center"
+                  >
                     <div className="flex items-center justify-center">
                       <Loader />
                     </div>
@@ -212,7 +220,10 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                 </tr>
               ) : isErrorVehicles ? (
                 <tr>
-                  <td colSpan={isProductionSelected ? 11 : 5} className="py-8 text-center">
+                  <td
+                    colSpan={isProductionSelected ? 11 : 5}
+                    className="py-8 text-center"
+                  >
                     Error:{" "}
                     {errorVehicles instanceof Error
                       ? errorVehicles.message
@@ -285,8 +296,11 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                 ))
               ) : (
                 <tr>
-                  <td colSpan={isProductionSelected ? 11 : 5} className="pt-8 text-center font-medium">
-                    Aucune donnée disponible actuellement.
+                  <td
+                    colSpan={isProductionSelected ? 11 : 5}
+                    className="pt-8 text-center font-medium"
+                  >
+                    Aucun véhicule pour ce statut actuellement.
                   </td>
                 </tr>
               )}
