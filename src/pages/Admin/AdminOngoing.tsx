@@ -4,7 +4,6 @@ import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { useQuery } from "@tanstack/react-query";
 import {
   AudioLines,
   BadgeCheck,
@@ -16,24 +15,15 @@ import {
   Upload,
   Wrench,
 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
+import { Vehicle } from "../../App";
 
-interface Vehicle {
-  _id: string;
-  immatriculation: string;
-  modele: string;
-  dateCreation: string;
-  price: string;
-  user: {
-    username: string;
-  };
-  mecanique: boolean;
-  carrosserie: boolean;
-  ct: boolean;
-  dsp: boolean;
-  jantes: boolean;
-  esthetique: boolean;
-  statusCategory: string;
+interface AdminOngoingProps {
+  vehicles: Vehicle[] | undefined;
+  isLoadingVehicles: boolean;
+  isErrorVehicles: boolean;
+  errorVehicles: Error | null;
+  syncDate: Date | null | undefined;
 }
 
 const daysSince = (dateString: string): number => {
@@ -43,85 +33,51 @@ const daysSince = (dateString: string): number => {
   return Math.floor(timeDiff / (1000 * 3600 * 24));
 };
 
-const fetchVehicles = async (): Promise<Vehicle[]> => {
-  const response = await fetch("https://crvo-back.onrender.com/api/vehicles");
-  if (!response.ok) {
-    throw new Error("Erreur lors de la récupération des véhicules.");
-  }
-  const data = await response.json();
-  return data;
-};
-
-const fetchLatestSynchronizationDate = async (): Promise<Date | null> => {
-  const response = await fetch(
-    "https://crvo-back.onrender.com/api/synchronization"
-  );
-  if (!response.ok) {
-    throw new Error(
-      "Erreur lors de la récupération de la date de synchronisation."
-    );
-  }
-  const data = await response.json();
-  return data.date ? new Date(data.date) : null;
-};
-
-const mainStatusCategories = [
-  "Livraison",
-  "Transport aller",
-  "Expertise",
-  "Client",
-  "Magasin",
-  "Production",
-  "Stockage",
-  "Transport retour",
-];
-
-const AdminOngoing: React.FC = () => {
+const AdminOngoing: React.FC<AdminOngoingProps> = ({
+  vehicles,
+  isLoadingVehicles,
+  isErrorVehicles,
+  errorVehicles,
+  syncDate,
+}) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isFileInputVisible, setIsFileInputVisible] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("Production");
 
-  const {
-    data: vehicles,
-    isLoading: isLoadingVehicles,
-    isError: isErrorVehicles,
-    error: errorVehicles,
-  } = useQuery({
-    queryKey: ["vehicles"],
-    queryFn: fetchVehicles,
-  });
+  const statusCategories = useMemo(() => {
+    if (!vehicles) return [];
+    return Array.from(
+      new Set(vehicles.map((vehicle) => vehicle.statusCategory))
+    );
+  }, [vehicles]);
 
-  const { data: syncDate } = useQuery({
-    queryKey: ["syncDate"],
-    queryFn: fetchLatestSynchronizationDate,
-  });
+  const filteredVehicles = useMemo(() => {
+    if (!vehicles) return [];
+    return vehicles
+      .filter((vehicle) => {
+        const searchLower = searchQuery.toLowerCase();
+        const matchesSearch =
+          vehicle.immatriculation.toLowerCase().includes(searchLower) ||
+          vehicle.modele.toLowerCase().includes(searchLower) ||
+          vehicle.user.username.toLowerCase().includes(searchLower);
 
-  console.log(syncDate);
+        const matchesStatus = statusFilter
+          ? vehicle.statusCategory === statusFilter
+          : true;
+        const matchesActiveFilter =
+          (activeFilter === "dsp" && vehicle.dsp) ||
+          (activeFilter === "mecanique" && vehicle.mecanique) ||
+          (activeFilter === "jantes" && vehicle.jantes) ||
+          (activeFilter === "ct" && vehicle.ct) ||
+          (activeFilter === "carrosserie" && vehicle.carrosserie) ||
+          (activeFilter === "esthetique" && vehicle.esthetique) ||
+          !activeFilter;
 
-  const filteredVehicles = vehicles
-    ?.filter((vehicle) => {
-      const searchLower = searchQuery.toLowerCase();
-      const matchesSearch =
-        vehicle.immatriculation.toLowerCase().includes(searchLower) ||
-        vehicle.modele.toLowerCase().includes(searchLower) ||
-        vehicle.user.username.toLowerCase().includes(searchLower);
-
-      const matchesStatus = statusFilter
-        ? vehicle.statusCategory === statusFilter
-        : true;
-      const matchesActiveFilter =
-        (activeFilter === "dsp" && vehicle.dsp) ||
-        (activeFilter === "mecanique" && vehicle.mecanique) ||
-        (activeFilter === "jantes" && vehicle.jantes) ||
-        (activeFilter === "ct" && vehicle.ct) ||
-        (activeFilter === "carrosserie" && vehicle.carrosserie) ||
-        (activeFilter === "esthetique" && vehicle.esthetique) ||
-        !activeFilter;
-
-      return matchesSearch && matchesStatus && matchesActiveFilter;
-    })
-    .sort((a, b) => daysSince(b.dateCreation) - daysSince(a.dateCreation));
+        return matchesSearch && matchesStatus && matchesActiveFilter;
+      })
+      .sort((a, b) => daysSince(b.dateCreation) - daysSince(a.dateCreation));
+  }, [vehicles, searchQuery, statusFilter, activeFilter]);
 
   const handleSwitchChange = (filter: string) => {
     setActiveFilter(activeFilter === filter ? "" : filter);
@@ -159,7 +115,7 @@ const AdminOngoing: React.FC = () => {
             </Button>
           </div>
           <div className="space-x-2">
-            {mainStatusCategories.map((status) => (
+            {statusCategories.map((status) => (
               <Button
                 key={status}
                 variant={statusFilter === status ? "default" : "outline"}
@@ -199,9 +155,7 @@ const AdminOngoing: React.FC = () => {
                         <Wrench className="mb-0.5 inline-block" /> Mécanique
                         <Switch
                           checked={activeFilter === "mecanique"}
-                          onCheckedChange={() =>
-                            handleSwitchChange("mecanique")
-                          }
+                          onCheckedChange={() => handleSwitchChange("mecanique")}
                         />
                       </div>
                     </th>
@@ -228,9 +182,7 @@ const AdminOngoing: React.FC = () => {
                         <Car className="mb-0.5 inline-block" /> Carrosserie
                         <Switch
                           checked={activeFilter === "carrosserie"}
-                          onCheckedChange={() =>
-                            handleSwitchChange("carrosserie")
-                          }
+                          onCheckedChange={() => handleSwitchChange("carrosserie")}
                         />
                       </div>
                     </th>
@@ -239,9 +191,7 @@ const AdminOngoing: React.FC = () => {
                         <SprayCan className="mb-0.5 inline-block" /> Esthétique
                         <Switch
                           checked={activeFilter === "esthetique"}
-                          onCheckedChange={() =>
-                            handleSwitchChange("esthetique")
-                          }
+                          onCheckedChange={() => handleSwitchChange("esthetique")}
                         />
                       </div>
                     </th>
@@ -254,7 +204,7 @@ const AdminOngoing: React.FC = () => {
             <tbody>
               {isLoadingVehicles ? (
                 <tr>
-                  <td colSpan={10} className="py-20 text-center">
+                  <td colSpan={isProductionSelected ? 11 : 5} className="py-20 text-center">
                     <div className="flex items-center justify-center">
                       <Loader />
                     </div>
@@ -262,7 +212,7 @@ const AdminOngoing: React.FC = () => {
                 </tr>
               ) : isErrorVehicles ? (
                 <tr>
-                  <td colSpan={10} className="py-8 text-center">
+                  <td colSpan={isProductionSelected ? 11 : 5} className="py-8 text-center">
                     Error:{" "}
                     {errorVehicles instanceof Error
                       ? errorVehicles.message
@@ -335,10 +285,7 @@ const AdminOngoing: React.FC = () => {
                 ))
               ) : (
                 <tr>
-                  <td
-                    colSpan={isProductionSelected ? 11 : 5}
-                    className="pt-8 text-center font-medium"
-                  >
+                  <td colSpan={isProductionSelected ? 11 : 5} className="pt-8 text-center font-medium">
                     Aucune donnée disponible actuellement.
                   </td>
                 </tr>

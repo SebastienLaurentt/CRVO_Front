@@ -12,9 +12,69 @@ import Login from "./pages/Login";
 import MemberCompleted from "./pages/Members/MemberCompleted";
 import MemberOngoing from "./pages/Members/MemberOngoing";
 import CRVOLogo from "/public/images/CRVOLogo.png";
+import { useQuery } from "@tanstack/react-query";
+
+export interface Vehicle {
+  _id: string;
+  immatriculation: string;
+  modele: string;
+  dateCreation: string;
+  price: string;
+  user: {
+    username: string;
+  };
+  mecanique: boolean;
+  carrosserie: boolean;
+  ct: boolean;
+  dsp: boolean;
+  jantes: boolean;
+  esthetique: boolean;
+  statusCategory: string;
+}
+
+const fetchVehicles = async (): Promise<Vehicle[]> => {
+  const response = await fetch("https://crvo-back.onrender.com/api/vehicles");
+  if (!response.ok) {
+    throw new Error("Erreur lors de la récupération des véhicules.");
+  }
+  const data = await response.json();
+  return data;
+};
+
+const fetchLatestSynchronizationDate = async (): Promise<Date | null> => {
+  const response = await fetch(
+    "https://crvo-back.onrender.com/api/synchronization"
+  );
+  if (!response.ok) {
+    throw new Error(
+      "Erreur lors de la récupération de la date de synchronisation."
+    );
+  }
+  const data = await response.json();
+  return data.date ? new Date(data.date) : null;
+};
 
 const App = () => {
   const { role } = useAuth();
+
+  const {
+    data: vehicles,
+    isLoading: isLoadingVehicles,
+    isError: isErrorVehicles,
+    error: errorVehicles,
+  } = useQuery({
+    queryKey: ["vehicles"],
+    queryFn: fetchVehicles,
+  });
+
+  const { data: syncDate } = useQuery({
+    queryKey: ["syncDate"],
+    queryFn: fetchLatestSynchronizationDate,
+  });
+
+  const filteredVehicles = vehicles?.filter(
+    (vehicle) => vehicle.statusCategory !== "Stockage" && vehicle.statusCategory !== "Transport retour"
+  );
 
   return (
     <>
@@ -26,7 +86,15 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <DashboardLayout>
-                  {role === "admin" && <AdminOngoing />}
+                  {role === "admin" && (
+                    <AdminOngoing
+                      vehicles={filteredVehicles}
+                      isLoadingVehicles={isLoadingVehicles}
+                      isErrorVehicles={isErrorVehicles}
+                      errorVehicles={errorVehicles}
+                      syncDate={syncDate}
+                    />
+                  )}
                   {role === "member" && <MemberOngoing />}
                 </DashboardLayout>
               </ProtectedRoute>
