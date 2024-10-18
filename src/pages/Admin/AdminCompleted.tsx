@@ -58,7 +58,7 @@ const AdminCompleted: React.FC<AdminCompletedProps> = ({
   return (
     <div className="flex-1 rounded-l-lg border bg-primary pb-8">
       <DashboardHeader
-        title="Véhicules Terminés"
+        title="Rénovations Terminées"
         count={filteredVehicles?.length || 0}
       />
       <div className="flex flex-col space-y-3 px-8 py-4">

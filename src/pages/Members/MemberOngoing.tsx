@@ -78,13 +78,14 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
   }, [vehicles, searchQuery, statusFilter, activeFilter]);
 
   const exportToExcel = () => {
-    if (!filteredVehicles) return;
+    if (!vehicles || !syncDate) return;
 
     const workbook = XLSX.utils.book_new();
 
-    const data = filteredVehicles.map((vehicle) => ({
+    const data = vehicles.map((vehicle) => ({
       Immatriculation: vehicle.immatriculation,
       Modèle: vehicle.modele,
+      Statut: vehicle.statusCategory,
       "Prix Actuel": vehicle.price,
       "Jours depuis Création": daysSince(vehicle.dateCreation),
       DSP: vehicle.dsp ? "En cours" : "Fait",
@@ -92,14 +93,20 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
       Jantes: vehicle.jantes ? "En cours" : "Fait",
       CT: vehicle.ct ? "En cours" : "Fait",
       Carrosserie: vehicle.carrosserie ? "En cours" : "Fait",
-      Esthétique: vehicle.esthetique ? "En cours" : "En cours",
+      Esthétique: vehicle.esthetique ? "En cours" : "Fait",
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(data);
 
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Véhicules");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Rénovations en Cours");
 
-    XLSX.writeFile(workbook, "vehicules.xlsx");
+    const formattedDate = syncDate.toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }).split('/').join('');
+
+    XLSX.writeFile(workbook, `renovationsEnCours_${formattedDate}.xlsx`);
   };
 
   const handleSwitchChange = (filter: string) => {

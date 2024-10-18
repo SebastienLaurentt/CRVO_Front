@@ -3,7 +3,7 @@ import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ChartArea } from "lucide-react";
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import * as XLSX from "xlsx";
 import { Vehicle } from "../../App";
 
@@ -34,7 +34,9 @@ const MemberCompleted: React.FC<MemberCompletedProps> = ({
 
   const statusCategories = useMemo(() => {
     if (!vehicles) return [];
-    return Array.from(new Set(vehicles.map((vehicle) => vehicle.statusCategory)));
+    return Array.from(
+      new Set(vehicles.map((vehicle) => vehicle.statusCategory))
+    );
   }, [vehicles]);
 
   const filteredVehicles = useMemo(() => {
@@ -47,7 +49,9 @@ const MemberCompleted: React.FC<MemberCompletedProps> = ({
           vehicle.modele.toLowerCase().includes(searchLower) ||
           vehicle.user.username.toLowerCase().includes(searchLower);
 
-        const matchesStatus = statusFilter ? vehicle.statusCategory === statusFilter : true;
+        const matchesStatus = statusFilter
+          ? vehicle.statusCategory === statusFilter
+          : true;
 
         return matchesSearch && matchesStatus;
       })
@@ -55,13 +59,14 @@ const MemberCompleted: React.FC<MemberCompletedProps> = ({
   }, [vehicles, searchQuery, statusFilter]);
 
   const exportToExcel = () => {
-    if (!filteredVehicles) return;
+    if (!vehicles || !syncDate) return;
 
     const workbook = XLSX.utils.book_new();
 
-    const data = filteredVehicles.map((vehicle) => ({
+    const data = vehicles.map((vehicle) => ({
       Immatriculation: vehicle.immatriculation,
       Modèle: vehicle.modele,
+      Statut: vehicle.statusCategory,
       "Prix Actuel": vehicle.price,
       "Jours depuis Création": daysSince(vehicle.dateCreation),
     }));
@@ -70,13 +75,19 @@ const MemberCompleted: React.FC<MemberCompletedProps> = ({
 
     XLSX.utils.book_append_sheet(workbook, worksheet, "Véhicules Terminés");
 
-    XLSX.writeFile(workbook, "vehicules_termines.xlsx");
+    const formattedDate = syncDate.toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }).split('/').join('');
+
+    XLSX.writeFile(workbook, `renovationsTerminees_${formattedDate}.xlsx`);
   };
 
   return (
     <div className="flex-1 rounded-l-lg border bg-primary pb-8">
       <DashboardHeader
-        title="Véhicules Terminés"
+        title="Rénovations Terminées"
         count={filteredVehicles?.length || 0}
       />
       <div className="flex flex-col space-y-3 px-8 py-4">
@@ -121,7 +132,9 @@ const MemberCompleted: React.FC<MemberCompletedProps> = ({
               <tr className="border-b text-left">
                 <th className="w-[160px] px-6 py-3">Immatriculation</th>
                 <th className="w-[160px] px-6 py-3">Modèle</th>
-                <th className="w-[160px] px-6 py-3 text-center">Jours depuis création</th>
+                <th className="w-[160px] px-6 py-3 text-center">
+                  Jours depuis création
+                </th>
                 <th className="w-[160px] px-6 py-3 text-right">Prix</th>
               </tr>
             </thead>
@@ -149,7 +162,9 @@ const MemberCompleted: React.FC<MemberCompletedProps> = ({
                   <tr key={vehicle._id} className="border-b last:border-b-0">
                     <td className="px-6 py-4">{vehicle.immatriculation}</td>
                     <td className="px-6 py-4">{vehicle.modele}</td>
-                    <td className="px-6 py-4 text-center">{daysSince(vehicle.dateCreation)}</td>
+                    <td className="px-6 py-4 text-center">
+                      {daysSince(vehicle.dateCreation)}
+                    </td>
                     <td className="px-6 py-4 text-right">
                       {vehicle.price ? `${vehicle.price} €` : "Non défini"}
                     </td>
