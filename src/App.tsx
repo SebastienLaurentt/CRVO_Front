@@ -72,8 +72,14 @@ const App = () => {
     queryFn: fetchLatestSynchronizationDate,
   });
 
-  const filteredVehicles = vehicles?.filter(
+  // Filter vehicles for AdminOngoing (excluding "Stockage" and "Transport retour")
+  const ongoingVehicles = vehicles?.filter(
     (vehicle) => vehicle.statusCategory !== "Stockage" && vehicle.statusCategory !== "Transport retour"
+  );
+
+  // Filter vehicles for AdminCompleted (only "Stockage" and "Transport retour")
+  const completedVehicles = vehicles?.filter(
+    (vehicle) => vehicle.statusCategory === "Stockage" || vehicle.statusCategory === "Transport retour"
   );
 
   return (
@@ -88,7 +94,7 @@ const App = () => {
                 <DashboardLayout>
                   {role === "admin" && (
                     <AdminOngoing
-                      vehicles={filteredVehicles}
+                      vehicles={ongoingVehicles}
                       isLoadingVehicles={isLoadingVehicles}
                       isErrorVehicles={isErrorVehicles}
                       errorVehicles={errorVehicles}
@@ -105,7 +111,15 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <DashboardLayout>
-                  {role === "admin" && <AdminCompleted />}
+                  {role === "admin" && (
+                    <AdminCompleted
+                      vehicles={completedVehicles}
+                      isLoadingVehicles={isLoadingVehicles}
+                      isErrorVehicles={isErrorVehicles}
+                      errorVehicles={errorVehicles}
+                      syncDate={syncDate}
+                    />
+                  )}
                   {role === "member" && <MemberCompleted />}
                 </DashboardLayout>
               </ProtectedRoute>
