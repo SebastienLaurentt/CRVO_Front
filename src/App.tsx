@@ -1,3 +1,5 @@
+import { useQuery } from "@tanstack/react-query";
+import Cookies from "js-cookie";
 import { Route, Routes } from "react-router-dom";
 import AdminRoute from "./components/AdminRoute";
 import DashboardLayout from "./components/DashboardLayout";
@@ -12,8 +14,6 @@ import Login from "./pages/Login";
 import MemberCompleted from "./pages/Members/MemberCompleted";
 import MemberOngoing from "./pages/Members/MemberOngoing";
 import CRVOLogo from "/public/images/CRVOLogo.png";
-import { useQuery } from "@tanstack/react-query";
-import Cookies from "js-cookie";
 
 export interface Vehicle {
   _id: string;
@@ -44,11 +44,14 @@ const fetchVehicles = async (): Promise<Vehicle[]> => {
 
 const fetchMemberVehicles = async (): Promise<Vehicle[]> => {
   const token = Cookies.get("token");
-  const response = await fetch("https://crvo-back.onrender.com/api/user/vehicles", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await fetch(
+    "https://crvo-back.onrender.com/api/user/vehicles",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   if (!response.ok) {
     throw new Error("Erreur lors de la récupération des véhicules du membre.");
   }
@@ -57,9 +60,16 @@ const fetchMemberVehicles = async (): Promise<Vehicle[]> => {
 };
 
 const fetchLatestSynchronizationDate = async (): Promise<Date | null> => {
+  const token = Cookies.get("token");
   const response = await fetch(
-    "https://crvo-back.onrender.com/api/synchronization"
+    "https://crvo-back.onrender.com/api/synchronization",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
   );
+
   if (!response.ok) {
     throw new Error(
       "Erreur lors de la récupération de la date de synchronisation."
@@ -72,8 +82,8 @@ const fetchLatestSynchronizationDate = async (): Promise<Date | null> => {
 const App = () => {
   const { role } = useAuth();
 
-  const shouldFetchAdminData = role === 'admin';
-  const shouldFetchMemberData = role === 'member';
+  const shouldFetchAdminData = role === "admin";
+  const shouldFetchMemberData = role === "member";
 
   const {
     data: adminVehicles,
@@ -104,21 +114,31 @@ const App = () => {
   });
 
   const filterOngoingVehicles = (vehicles: Vehicle[] | undefined) => {
-    return vehicles?.filter(
-      (vehicle) => vehicle.statusCategory !== "Stockage" && vehicle.statusCategory !== "Transport retour"
-    ) || [];
+    return (
+      vehicles?.filter(
+        (vehicle) =>
+          vehicle.statusCategory !== "Stockage" &&
+          vehicle.statusCategory !== "Transport retour"
+      ) || []
+    );
   };
 
   const ongoingAdminVehicles = filterOngoingVehicles(adminVehicles);
   const ongoingMemberVehicles = filterOngoingVehicles(memberVehicles);
 
-  const completedAdminVehicles = adminVehicles?.filter(
-    (vehicle) => vehicle.statusCategory === "Stockage" || vehicle.statusCategory === "Transport retour"
-  ) || [];
+  const completedAdminVehicles =
+    adminVehicles?.filter(
+      (vehicle) =>
+        vehicle.statusCategory === "Stockage" ||
+        vehicle.statusCategory === "Transport retour"
+    ) || [];
 
-  const completedMemberVehicles = memberVehicles?.filter(
-    (vehicle) => vehicle.statusCategory === "Stockage" || vehicle.statusCategory === "Transport retour"
-  ) || [];
+  const completedMemberVehicles =
+    memberVehicles?.filter(
+      (vehicle) =>
+        vehicle.statusCategory === "Stockage" ||
+        vehicle.statusCategory === "Transport retour"
+    ) || [];
 
   return (
     <>
