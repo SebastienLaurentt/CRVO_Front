@@ -34,7 +34,13 @@ export interface Vehicle {
 }
 
 const fetchVehicles = async (): Promise<Vehicle[]> => {
-  const response = await fetch("https://crvo-back.onrender.com/api/vehicles");
+  const token = Cookies.get("token");
+  const response = await fetch("https://crvo-back.onrender.com/api/vehicles",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   if (!response.ok) {
     throw new Error("Erreur lors de la récupération des véhicules.");
   }
