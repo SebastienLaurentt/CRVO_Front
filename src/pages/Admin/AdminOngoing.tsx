@@ -215,7 +215,6 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                     </th>
                   </>
                 )}
-                <th className="w-1/6 px-2 py-3 text-right 2xl:px-6">Prix</th>
               </tr>
             </thead>
 
@@ -302,9 +301,6 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                         </td>
                       </>
                     )}
-                    <td className="px-2 py-4 text-right 2xl:px-6">
-                      {vehicle.price ? vehicle.price : "Non défini"}
-                    </td>
                   </tr>
                 ))
               ) : (
