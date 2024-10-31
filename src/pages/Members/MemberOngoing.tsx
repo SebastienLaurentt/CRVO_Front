@@ -140,7 +140,7 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
           <span className="font-medium">
             {syncDate
               ? `${syncDate.toLocaleDateString()} - ${syncDate.toLocaleTimeString()}`
-              : "Non disponible"}
+              : "Chargement..."}
           </span>
         </p>
         <div className="relative flex flex-row justify-between">
