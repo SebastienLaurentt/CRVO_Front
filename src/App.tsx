@@ -18,7 +18,7 @@ export interface Vehicle {
   immatriculation: string;
   modele: string;
   dateCreation: string;
-  daySinceStatut: string;
+  daySinceStatut: number;
   price: string;
   user: {
     username: string;

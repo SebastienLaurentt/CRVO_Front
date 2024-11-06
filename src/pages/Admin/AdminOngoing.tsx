@@ -52,9 +52,12 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
           vehicle.modele.toLowerCase().includes(searchLower) ||
           vehicle.user.username.toLowerCase().includes(searchLower);
 
-        const matchesStatus = statusFilter
-          ? vehicle.statusCategory === statusFilter
-          : true;
+        const matchesStatus = statusFilter === "Tous" 
+          ? true 
+          : statusFilter 
+            ? vehicle.statusCategory === statusFilter 
+            : true;
+
         const matchesActiveFilter =
           (activeFilter === "dsp" && vehicle.dsp) ||
           (activeFilter === "mecanique" && vehicle.mecanique) ||
@@ -66,19 +69,23 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
 
         return matchesSearch && matchesStatus && matchesActiveFilter;
       })
-      .map((vehicle) => ({
+      .map(vehicle => ({
         ...vehicle,
-        daySinceStatut: vehicle.daySinceStatut
+        daySinceStatut: Math.floor(vehicle.daySinceStatut)
       }))
       .sort((a, b) => daysSince(b.dateCreation) - daysSince(a.dateCreation));
   }, [vehicles, searchQuery, statusFilter, activeFilter]);
 
   const vehicleCountByStatus = useMemo(() => {
     if (!vehicles) return {};
-    return vehicles.reduce((acc, vehicle) => {
+    const counts = vehicles.reduce((acc, vehicle) => {
       acc[vehicle.statusCategory] = (acc[vehicle.statusCategory] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
+    
+    counts["Tous"] = vehicles.length;
+    
+    return counts;
   }, [vehicles]);
 
   const getStatusCounts = useMemo(() => {
@@ -114,6 +121,7 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
   const isProductionSelected = statusFilter === "Production";
 
   const statusOrder = [
+    "Tous",
     "Livraison",
     "Transport aller",
     "Expertise",
