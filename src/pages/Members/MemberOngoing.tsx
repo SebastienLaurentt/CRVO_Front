@@ -222,7 +222,7 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
                   Jours de rénovation
                 </th>
                 <th className="w-[10%] px-2 py-3 text-center 2xl:px-6">
-                  Jours depuis status
+                  Jours depuis dernier statut
                 </th>
                 {isProductionSelected && (
                   <>

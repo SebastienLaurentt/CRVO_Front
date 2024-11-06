@@ -52,10 +52,11 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
           vehicle.modele.toLowerCase().includes(searchLower) ||
           vehicle.user.username.toLowerCase().includes(searchLower);
 
-        const matchesStatus = statusFilter === "Tous" 
-          ? true 
-          : statusFilter 
-            ? vehicle.statusCategory === statusFilter 
+        const matchesStatus =
+          statusFilter === "Tous"
+            ? true
+            : statusFilter
+            ? vehicle.statusCategory === statusFilter
             : true;
 
         const matchesActiveFilter =
@@ -69,9 +70,9 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
 
         return matchesSearch && matchesStatus && matchesActiveFilter;
       })
-      .map(vehicle => ({
+      .map((vehicle) => ({
         ...vehicle,
-        daySinceStatut: Math.floor(vehicle.daySinceStatut)
+        daySinceStatut: Math.floor(vehicle.daySinceStatut),
       }))
       .sort((a, b) => daysSince(b.dateCreation) - daysSince(a.dateCreation));
   }, [vehicles, searchQuery, statusFilter, activeFilter]);
@@ -82,9 +83,9 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
       acc[vehicle.statusCategory] = (acc[vehicle.statusCategory] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
-    
+
     counts["Tous"] = vehicles.length;
-    
+
     return counts;
   }, [vehicles]);
 
@@ -183,7 +184,7 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                   Jours de rénovation
                 </th>
                 <th className="w-[10%] px-2 py-3 text-center 2xl:px-6">
-                  Jours depuis status
+                  Jours depuis dernier statut
                 </th>
                 {isProductionSelected && (
                   <>
