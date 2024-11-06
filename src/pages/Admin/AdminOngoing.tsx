@@ -12,7 +12,6 @@ import {
   LifeBuoy,
   ShieldCheck,
   SprayCan,
-  Upload,
   Wrench,
 } from "lucide-react";
 import React, { useMemo, useState } from "react";
@@ -93,6 +92,8 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
     "Client",
     "Magasin",
     "Production",
+    "Stockage",
+    "Transport retour",
   ];
 
   return (
@@ -131,12 +132,6 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
               ))}
             </div>
           </div>
-          <Button
-            className="space-x-[5px]"
-            onClick={() => setIsFileInputVisible(true)}
-          >
-            <Upload size={20} /> <span>Import Excel</span>
-          </Button>
         </div>
       </div>
 

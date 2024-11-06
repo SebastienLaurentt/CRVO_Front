@@ -6,12 +6,10 @@ import DashboardLayout from "./components/DashboardLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Toaster } from "./components/ui/toaster";
 import { useAuth } from "./lib/auth";
-import AdminCompleted from "./pages/Admin/AdminCompleted";
 import AdminData from "./pages/Admin/AdminData";
 import AdminOngoing from "./pages/Admin/AdminOngoing";
 import Users from "./pages/Admin/Users";
 import Login from "./pages/Login";
-import MemberCompleted from "./pages/Members/MemberCompleted";
 import MemberOngoing from "./pages/Members/MemberOngoing";
 import CRVOLogo from "/public/images/CRVOLogo.png";
 
@@ -35,12 +33,11 @@ export interface Vehicle {
 
 const fetchVehicles = async (): Promise<Vehicle[]> => {
   const token = Cookies.get("token");
-  const response = await fetch("https://crvo-back.onrender.com/api/vehicles",
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  const response = await fetch("https://crvo-back.onrender.com/api/vehicles", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   if (!response.ok) {
     throw new Error("Erreur lors de la récupération des véhicules.");
   }
@@ -119,33 +116,6 @@ const App = () => {
     enabled: shouldFetchAdminData || shouldFetchMemberData,
   });
 
-  const filterOngoingVehicles = (vehicles: Vehicle[] | undefined) => {
-    return (
-      vehicles?.filter(
-        (vehicle) =>
-          vehicle.statusCategory !== "Stockage" &&
-          vehicle.statusCategory !== "Transport retour"
-      ) || []
-    );
-  };
-
-  const ongoingAdminVehicles = filterOngoingVehicles(adminVehicles);
-  const ongoingMemberVehicles = filterOngoingVehicles(memberVehicles);
-
-  const completedAdminVehicles =
-    adminVehicles?.filter(
-      (vehicle) =>
-        vehicle.statusCategory === "Stockage" ||
-        vehicle.statusCategory === "Transport retour"
-    ) || [];
-
-  const completedMemberVehicles =
-    memberVehicles?.filter(
-      (vehicle) =>
-        vehicle.statusCategory === "Stockage" ||
-        vehicle.statusCategory === "Transport retour"
-    ) || [];
-
   return (
     <>
       <div className="hidden min-h-screen flex-col bg-background xl:flex">
@@ -158,7 +128,7 @@ const App = () => {
                 <DashboardLayout>
                   {role === "admin" && (
                     <AdminOngoing
-                      vehicles={ongoingAdminVehicles}
+                      vehicles={adminVehicles || []}
                       isLoadingVehicles={isLoadingAdminVehicles}
                       isErrorVehicles={isErrorAdminVehicles}
                       errorVehicles={errorAdminVehicles}
@@ -167,34 +137,7 @@ const App = () => {
                   )}
                   {role === "member" && (
                     <MemberOngoing
-                      vehicles={ongoingMemberVehicles}
-                      isLoadingVehicles={isLoadingMemberVehicles}
-                      isErrorVehicles={isErrorMemberVehicles}
-                      errorVehicles={errorMemberVehicles}
-                      syncDate={syncDate}
-                    />
-                  )}
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/completed"
-            element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  {role === "admin" && (
-                    <AdminCompleted
-                      vehicles={completedAdminVehicles}
-                      isLoadingVehicles={isLoadingAdminVehicles}
-                      isErrorVehicles={isErrorAdminVehicles}
-                      errorVehicles={errorAdminVehicles}
-                      syncDate={syncDate}
-                    />
-                  )}
-                  {role === "member" && (
-                    <MemberCompleted
-                      vehicles={completedMemberVehicles}
+                      vehicles={memberVehicles || []}
                       isLoadingVehicles={isLoadingMemberVehicles}
                       isErrorVehicles={isErrorMemberVehicles}
                       errorVehicles={errorMemberVehicles}

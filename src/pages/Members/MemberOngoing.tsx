@@ -126,6 +126,8 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
     "Client",
     "Magasin",
     "Production",
+    "Stockage",
+    "Transport retour",
   ];
 
   return (
@@ -166,7 +168,7 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
           </div>
           <Button className="space-x-[5px]" onClick={exportToExcel}>
             <ChartArea size={20} />
-            <span>Exporter en Excel</span>
+            <span>Export </span>
           </Button>
         </div>
       </div>
