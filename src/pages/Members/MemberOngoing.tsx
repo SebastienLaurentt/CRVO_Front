@@ -99,7 +99,7 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
 
     const worksheet = XLSX.utils.json_to_sheet(data);
 
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Rénovations en Cours");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Rénovations");
 
     const formattedDate = syncDate
       .toLocaleDateString("fr-FR", {
@@ -110,7 +110,7 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
       .split("/")
       .join("");
 
-    XLSX.writeFile(workbook, `renovationsEnCours_${formattedDate}.xlsx`);
+    XLSX.writeFile(workbook, `RenovationsCRVO_${formattedDate}.xlsx`);
   };
 
   const handleSwitchChange = (filter: string) => {
