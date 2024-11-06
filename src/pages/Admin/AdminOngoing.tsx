@@ -3,16 +3,7 @@ import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import {
-  AudioLines,
-  BadgeCheck,
-  CalendarClock,
-  Car,
-  LifeBuoy,
-  ShieldCheck,
-  SprayCan,
-  Wrench,
-} from "lucide-react";
+import { BadgeCheck, CalendarClock } from "lucide-react";
 import React, { useMemo, useState } from "react";
 import { Vehicle } from "../../App";
 
@@ -190,92 +181,76 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                   <>
                     <th className="w-[7%] px-4 py-3 text-center">
                       <div className="flex flex-col items-center">
-                        <AudioLines className="mb-0.5 inline-block" /> DSP
-                        <div className="flex items-center gap-2">
-                          <Switch
-                            checked={activeFilter === "dsp"}
-                            onCheckedChange={() => handleSwitchChange("dsp")}
-                          />
-                          <span className="text-sm">
-                            ({getStatusCounts.dsp})
-                          </span>
-                        </div>
+                        <span className="text-sm">({getStatusCounts.dsp})</span>
+                        <span>DSP</span>
+                        <Switch
+                          checked={activeFilter === "dsp"}
+                          onCheckedChange={() => handleSwitchChange("dsp")}
+                        />
                       </div>
                     </th>
                     <th className="w-[7%] px-4 py-3 text-center">
                       <div className="flex flex-col items-center">
-                        <Wrench className="mb-0.5 inline-block" /> Mécanique
-                        <div className="flex items-center gap-2">
-                          <Switch
-                            checked={activeFilter === "mecanique"}
-                            onCheckedChange={() =>
-                              handleSwitchChange("mecanique")
-                            }
-                          />
-                          <span className="text-sm">
-                            ({getStatusCounts.mecanique})
-                          </span>
-                        </div>
+                        <span className="text-sm">
+                          ({getStatusCounts.mecanique})
+                        </span>
+                        <span>Mécanique</span>
+                        <Switch
+                          checked={activeFilter === "mecanique"}
+                          onCheckedChange={() =>
+                            handleSwitchChange("mecanique")
+                          }
+                        />
                       </div>
                     </th>
                     <th className="w-[7%] px-4 py-3 text-center">
                       <div className="flex flex-col items-center">
-                        <LifeBuoy className="mb-0.5 inline-block" /> Jantes
-                        <div className="flex items-center gap-2">
-                          <Switch
-                            checked={activeFilter === "jantes"}
-                            onCheckedChange={() => handleSwitchChange("jantes")}
-                          />
-                          <span className="text-sm">
-                            ({getStatusCounts.jantes})
-                          </span>
-                        </div>
+                        <span className="text-sm">
+                          ({getStatusCounts.jantes})
+                        </span>
+                        <span>Jantes</span>
+                        <Switch
+                          checked={activeFilter === "jantes"}
+                          onCheckedChange={() => handleSwitchChange("jantes")}
+                        />
                       </div>
                     </th>
                     <th className="w-[7%] px-4 py-3 text-center">
                       <div className="flex flex-col items-center">
-                        <ShieldCheck className="mb-0.5 inline-block" /> CT
-                        <div className="flex items-center gap-2">
-                          <Switch
-                            checked={activeFilter === "ct"}
-                            onCheckedChange={() => handleSwitchChange("ct")}
-                          />
-                          <span className="text-sm">
-                            ({getStatusCounts.ct})
-                          </span>
-                        </div>
+                        <span className="text-sm">({getStatusCounts.ct})</span>
+                        <span>CT</span>
+                        <Switch
+                          checked={activeFilter === "ct"}
+                          onCheckedChange={() => handleSwitchChange("ct")}
+                        />
                       </div>
                     </th>
                     <th className="w-[7%] px-4 py-3 text-center">
                       <div className="flex flex-col items-center">
-                        <Car className="mb-0.5 inline-block" /> Carrosserie
-                        <div className="flex items-center gap-2">
-                          <Switch
-                            checked={activeFilter === "carrosserie"}
-                            onCheckedChange={() =>
-                              handleSwitchChange("carrosserie")
-                            }
-                          />
-                          <span className="text-sm">
-                            ({getStatusCounts.carrosserie})
-                          </span>
-                        </div>
+                        <span className="text-sm">
+                          ({getStatusCounts.carrosserie})
+                        </span>
+                        <span>Carrosserie</span>
+                        <Switch
+                          checked={activeFilter === "carrosserie"}
+                          onCheckedChange={() =>
+                            handleSwitchChange("carrosserie")
+                          }
+                        />
                       </div>
                     </th>
                     <th className="w-[7%] px-4 py-3 text-center">
                       <div className="flex flex-col items-center">
-                        <SprayCan className="mb-0.5 inline-block" /> Esthétique
-                        <div className="flex items-center gap-2">
-                          <Switch
-                            checked={activeFilter === "esthetique"}
-                            onCheckedChange={() =>
-                              handleSwitchChange("esthetique")
-                            }
-                          />
-                          <span className="text-sm">
-                            ({getStatusCounts.esthetique})
-                          </span>
-                        </div>
+                        <span className="text-sm">
+                          ({getStatusCounts.esthetique})
+                        </span>
+                        <span>Esthétique</span>
+                        <Switch
+                          checked={activeFilter === "esthetique"}
+                          onCheckedChange={() =>
+                            handleSwitchChange("esthetique")
+                          }
+                        />
                       </div>
                     </th>
                   </>
