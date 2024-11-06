@@ -1,11 +1,5 @@
 import { useAuth } from "@/lib/auth";
-import {
-  BookmarkCheck,
-  BookText,
-  ChartNoAxesCombined,
-  Drill,
-  User,
-} from "lucide-react";
+import { BookText, ChartNoAxesCombined, Drill, User } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import { Button } from "./ui/button";
 import CRVOLogo from "/public/images/CRVOLogo.png";
@@ -24,7 +18,7 @@ const Nav = () => {
         <div className="flex flex-col">
           <div className="mb-6">
             <span className="mb-1 font-semibold text-slate-700">
-              Type de Rénovations
+              Rénovations
             </span>
             <div className="space-y-1">
               <NavLink
@@ -37,20 +31,7 @@ const Nav = () => {
                 }
               >
                 <Drill size={24} />
-                <span>En Cours</span>
-              </NavLink>
-
-              <NavLink
-                to="/completed"
-                aria-label="Terminé"
-                className={({ isActive }) =>
-                  `flex flex-row gap-x-2 items-center font-bold p-2  rounded-md hover:bg-slate-950 hover:text-slate-50 ${
-                    isActive ? "bg-slate-900 text-slate-50" : ""
-                  }`
-                }
-              >
-                <BookmarkCheck size={24} />
-                <span>Terminées</span>
+                <span>Liste Rénovations</span>
               </NavLink>
             </div>
           </div>
@@ -99,11 +80,7 @@ const Nav = () => {
                   </Link>
                 </Button>
                 <Button className="space-x-[5px]" asChild>
-                  <a
-                    href={downloadUrl || ""}
-                    download
-                    target="_blank"
-                  >
+                  <a href={downloadUrl || ""} download target="_blank">
                     <BookText size={20} />
                     <span>Graphiques</span>
                   </a>
