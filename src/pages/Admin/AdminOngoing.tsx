@@ -66,6 +66,10 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
 
         return matchesSearch && matchesStatus && matchesActiveFilter;
       })
+      .map((vehicle) => ({
+        ...vehicle,
+        daySinceStatut: vehicle.daySinceStatut
+      }))
       .sort((a, b) => daysSince(b.dateCreation) - daysSince(a.dateCreation));
   }, [vehicles, searchQuery, statusFilter, activeFilter]);
 
@@ -78,18 +82,29 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
   }, [vehicles]);
 
   const getStatusCounts = useMemo(() => {
-    if (!vehicles) return { dsp: 0, mecanique: 0, jantes: 0, ct: 0, carrosserie: 0, esthetique: 0 };
-    return vehicles.reduce((acc, vehicle) => {
-      if (vehicle.statusCategory === "Production") {
-        if (vehicle.dsp) acc.dsp++;
-        if (vehicle.mecanique) acc.mecanique++;
-        if (vehicle.jantes) acc.jantes++;
-        if (vehicle.ct) acc.ct++;
-        if (vehicle.carrosserie) acc.carrosserie++;
-        if (vehicle.esthetique) acc.esthetique++;
-      }
-      return acc;
-    }, { dsp: 0, mecanique: 0, jantes: 0, ct: 0, carrosserie: 0, esthetique: 0 });
+    if (!vehicles)
+      return {
+        dsp: 0,
+        mecanique: 0,
+        jantes: 0,
+        ct: 0,
+        carrosserie: 0,
+        esthetique: 0,
+      };
+    return vehicles.reduce(
+      (acc, vehicle) => {
+        if (vehicle.statusCategory === "Production") {
+          if (vehicle.dsp) acc.dsp++;
+          if (vehicle.mecanique) acc.mecanique++;
+          if (vehicle.jantes) acc.jantes++;
+          if (vehicle.ct) acc.ct++;
+          if (vehicle.carrosserie) acc.carrosserie++;
+          if (vehicle.esthetique) acc.esthetique++;
+        }
+        return acc;
+      },
+      { dsp: 0, mecanique: 0, jantes: 0, ct: 0, carrosserie: 0, esthetique: 0 }
+    );
   }, [vehicles]);
 
   const handleSwitchChange = (filter: string) => {
@@ -159,6 +174,9 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                 <th className="w-1/6 px-2 py-3 text-center 2xl:px-6">
                   Jours de rénovation
                 </th>
+                <th className="w-1/6 px-2 py-3 text-center 2xl:px-6">
+                  Jours depuis status
+                </th>
                 {isProductionSelected && (
                   <>
                     <th className="w-1/12 px-4 py-3 text-center">
@@ -169,7 +187,9 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                             checked={activeFilter === "dsp"}
                             onCheckedChange={() => handleSwitchChange("dsp")}
                           />
-                          <span className="text-sm">({getStatusCounts.dsp})</span>
+                          <span className="text-sm">
+                            ({getStatusCounts.dsp})
+                          </span>
                         </div>
                       </div>
                     </th>
@@ -179,9 +199,13 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                         <div className="flex items-center gap-2">
                           <Switch
                             checked={activeFilter === "mecanique"}
-                            onCheckedChange={() => handleSwitchChange("mecanique")}
+                            onCheckedChange={() =>
+                              handleSwitchChange("mecanique")
+                            }
                           />
-                          <span className="text-sm">({getStatusCounts.mecanique})</span>
+                          <span className="text-sm">
+                            ({getStatusCounts.mecanique})
+                          </span>
                         </div>
                       </div>
                     </th>
@@ -193,7 +217,9 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                             checked={activeFilter === "jantes"}
                             onCheckedChange={() => handleSwitchChange("jantes")}
                           />
-                          <span className="text-sm">({getStatusCounts.jantes})</span>
+                          <span className="text-sm">
+                            ({getStatusCounts.jantes})
+                          </span>
                         </div>
                       </div>
                     </th>
@@ -205,7 +231,9 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                             checked={activeFilter === "ct"}
                             onCheckedChange={() => handleSwitchChange("ct")}
                           />
-                          <span className="text-sm">({getStatusCounts.ct})</span>
+                          <span className="text-sm">
+                            ({getStatusCounts.ct})
+                          </span>
                         </div>
                       </div>
                     </th>
@@ -215,9 +243,13 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                         <div className="flex items-center gap-2">
                           <Switch
                             checked={activeFilter === "carrosserie"}
-                            onCheckedChange={() => handleSwitchChange("carrosserie")}
+                            onCheckedChange={() =>
+                              handleSwitchChange("carrosserie")
+                            }
                           />
-                          <span className="text-sm">({getStatusCounts.carrosserie})</span>
+                          <span className="text-sm">
+                            ({getStatusCounts.carrosserie})
+                          </span>
                         </div>
                       </div>
                     </th>
@@ -227,9 +259,13 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                         <div className="flex items-center gap-2">
                           <Switch
                             checked={activeFilter === "esthetique"}
-                            onCheckedChange={() => handleSwitchChange("esthetique")}
+                            onCheckedChange={() =>
+                              handleSwitchChange("esthetique")
+                            }
                           />
-                          <span className="text-sm">({getStatusCounts.esthetique})</span>
+                          <span className="text-sm">
+                            ({getStatusCounts.esthetique})
+                          </span>
                         </div>
                       </div>
                     </th>
@@ -274,6 +310,9 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                     <td className="px-2 py-4 2xl:px-6">{vehicle.modele}</td>
                     <td className="px-2 py-4 text-center 2xl:px-4">
                       {daysSince(vehicle.dateCreation)}
+                    </td>
+                    <td className="px-2 py-4 text-center 2xl:px-4">
+                      {vehicle.daySinceStatut || 0}
                     </td>
                     {isProductionSelected && (
                       <>
