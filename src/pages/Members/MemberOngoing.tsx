@@ -130,6 +130,21 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
     "Transport retour",
   ];
 
+  const getStatusCounts = useMemo(() => {
+    if (!vehicles) return { dsp: 0, mecanique: 0, jantes: 0, ct: 0, carrosserie: 0, esthetique: 0 };
+    return vehicles.reduce((acc, vehicle) => {
+      if (vehicle.statusCategory === "Production") {
+        if (vehicle.dsp) acc.dsp++;
+        if (vehicle.mecanique) acc.mecanique++;
+        if (vehicle.jantes) acc.jantes++;
+        if (vehicle.ct) acc.ct++;
+        if (vehicle.carrosserie) acc.carrosserie++;
+        if (vehicle.esthetique) acc.esthetique++;
+      }
+      return acc;
+    }, { dsp: 0, mecanique: 0, jantes: 0, ct: 0, carrosserie: 0, esthetique: 0 });
+  }, [vehicles]);
+
   return (
     <div className="flex-1 rounded-l-lg border bg-primary pb-8">
       <DashboardHeader
@@ -188,61 +203,73 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
                     <th className="w-1/12 px-4 py-3 text-center">
                       <div className="flex flex-col items-center">
                         <AudioLines className="mb-0.5 inline-block" /> DSP
-                        <Switch
-                          checked={activeFilter === "dsp"}
-                          onCheckedChange={() => handleSwitchChange("dsp")}
-                        />
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            checked={activeFilter === "dsp"}
+                            onCheckedChange={() => handleSwitchChange("dsp")}
+                          />
+                          <span className="text-sm">({getStatusCounts.dsp})</span>
+                        </div>
                       </div>
                     </th>
                     <th className="w-1/12 px-4 py-3 text-center">
                       <div className="flex flex-col items-center">
                         <Wrench className="mb-0.5 inline-block" /> Mécanique
-                        <Switch
-                          checked={activeFilter === "mecanique"}
-                          onCheckedChange={() =>
-                            handleSwitchChange("mecanique")
-                          }
-                        />
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            checked={activeFilter === "mecanique"}
+                            onCheckedChange={() => handleSwitchChange("mecanique")}
+                          />
+                          <span className="text-sm">({getStatusCounts.mecanique})</span>
+                        </div>
                       </div>
                     </th>
                     <th className="w-1/12 px-4 py-3 text-center">
                       <div className="flex flex-col items-center">
                         <LifeBuoy className="mb-0.5 inline-block" /> Jantes
-                        <Switch
-                          checked={activeFilter === "jantes"}
-                          onCheckedChange={() => handleSwitchChange("jantes")}
-                        />
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            checked={activeFilter === "jantes"}
+                            onCheckedChange={() => handleSwitchChange("jantes")}
+                          />
+                          <span className="text-sm">({getStatusCounts.jantes})</span>
+                        </div>
                       </div>
                     </th>
                     <th className="w-1/12 px-4 py-3 text-center">
                       <div className="flex flex-col items-center">
                         <ShieldCheck className="mb-0.5 inline-block" /> CT
-                        <Switch
-                          checked={activeFilter === "ct"}
-                          onCheckedChange={() => handleSwitchChange("ct")}
-                        />
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            checked={activeFilter === "ct"}
+                            onCheckedChange={() => handleSwitchChange("ct")}
+                          />
+                          <span className="text-sm">({getStatusCounts.ct})</span>
+                        </div>
                       </div>
                     </th>
                     <th className="w-1/12 px-4 py-3 text-center">
                       <div className="flex flex-col items-center">
                         <Car className="mb-0.5 inline-block" /> Carrosserie
-                        <Switch
-                          checked={activeFilter === "carrosserie"}
-                          onCheckedChange={() =>
-                            handleSwitchChange("carrosserie")
-                          }
-                        />
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            checked={activeFilter === "carrosserie"}
+                            onCheckedChange={() => handleSwitchChange("carrosserie")}
+                          />
+                          <span className="text-sm">({getStatusCounts.carrosserie})</span>
+                        </div>
                       </div>
                     </th>
                     <th className="w-1/12 px-4 py-3 text-center">
                       <div className="flex flex-col items-center">
                         <SprayCan className="mb-0.5 inline-block" /> Esthétique
-                        <Switch
-                          checked={activeFilter === "esthetique"}
-                          onCheckedChange={() =>
-                            handleSwitchChange("esthetique")
-                          }
-                        />
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            checked={activeFilter === "esthetique"}
+                            onCheckedChange={() => handleSwitchChange("esthetique")}
+                          />
+                          <span className="text-sm">({getStatusCounts.esthetique})</span>
+                        </div>
                       </div>
                     </th>
                   </>

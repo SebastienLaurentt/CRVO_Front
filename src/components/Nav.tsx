@@ -23,9 +23,9 @@ const Nav = () => {
             <div className="space-y-1">
               <NavLink
                 to="/"
-                aria-label="Revenir à l'accueil"
+                aria-label="Revenir à la liste des rénovations"
                 className={({ isActive }) =>
-                  `flex flex-row gap-x-2 items-center font-bold  p-2 rounded-md hover:bg-slate-950 hover:text-slate-50 ${
+                  `flex flex-row gap-x-2 items-center font-bold p-2 rounded-md hover:bg-slate-950 hover:text-slate-50 ${
                     isActive ? "bg-slate-900 text-slate-50" : ""
                   }`
                 }
