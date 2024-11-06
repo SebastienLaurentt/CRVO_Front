@@ -168,18 +168,18 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
           <table className="w-full table-fixed">
             <thead>
               <tr className="sticky top-0 z-10 border-b bg-background text-left">
-                <th className="w-1/6 px-2 py-3 2xl:px-6">Client</th>
-                <th className="w-1/6 px-2 py-3 2xl:px-6">Immatriculation</th>
-                <th className="w-1/6 px-2 py-3 2xl:px-6">Modèle</th>
-                <th className="w-1/6 px-2 py-3 text-center 2xl:px-6">
+                <th className="w-[12%] px-2 py-3 2xl:px-6">Client</th>
+                <th className="w-[12%] px-2 py-3 2xl:px-6">Immatriculation</th>
+                <th className="w-[12%] px-2 py-3 2xl:px-6">Modèle</th>
+                <th className="w-[10%] px-2 py-3 text-center 2xl:px-6">
                   Jours de rénovation
                 </th>
-                <th className="w-1/6 px-2 py-3 text-center 2xl:px-6">
+                <th className="w-[10%] px-2 py-3 text-center 2xl:px-6">
                   Jours depuis status
                 </th>
                 {isProductionSelected && (
                   <>
-                    <th className="w-1/12 px-4 py-3 text-center">
+                    <th className="w-[7%] px-4 py-3 text-center">
                       <div className="flex flex-col items-center">
                         <AudioLines className="mb-0.5 inline-block" /> DSP
                         <div className="flex items-center gap-2">
@@ -193,7 +193,7 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                         </div>
                       </div>
                     </th>
-                    <th className="w-1/12 px-4 py-3 text-center">
+                    <th className="w-[7%] px-4 py-3 text-center">
                       <div className="flex flex-col items-center">
                         <Wrench className="mb-0.5 inline-block" /> Mécanique
                         <div className="flex items-center gap-2">
@@ -209,7 +209,7 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                         </div>
                       </div>
                     </th>
-                    <th className="w-1/12 px-4 py-3 text-center">
+                    <th className="w-[7%] px-4 py-3 text-center">
                       <div className="flex flex-col items-center">
                         <LifeBuoy className="mb-0.5 inline-block" /> Jantes
                         <div className="flex items-center gap-2">
@@ -223,7 +223,7 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                         </div>
                       </div>
                     </th>
-                    <th className="w-1/12 px-4 py-3 text-center">
+                    <th className="w-[7%] px-4 py-3 text-center">
                       <div className="flex flex-col items-center">
                         <ShieldCheck className="mb-0.5 inline-block" /> CT
                         <div className="flex items-center gap-2">
@@ -237,7 +237,7 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                         </div>
                       </div>
                     </th>
-                    <th className="w-1/12 px-4 py-3 text-center">
+                    <th className="w-[7%] px-4 py-3 text-center">
                       <div className="flex flex-col items-center">
                         <Car className="mb-0.5 inline-block" /> Carrosserie
                         <div className="flex items-center gap-2">
@@ -253,7 +253,7 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
                         </div>
                       </div>
                     </th>
-                    <th className="w-1/12 px-4 py-3 text-center">
+                    <th className="w-[7%] px-4 py-3 text-center">
                       <div className="flex flex-col items-center">
                         <SprayCan className="mb-0.5 inline-block" /> Esthétique
                         <div className="flex items-center gap-2">
