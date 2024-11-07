@@ -25,12 +25,6 @@ export const PasswordChangePieChart: React.FC<PasswordChangePieChartProps> = ({
   usersWithPasswordChanged,
   usersWithoutPasswordChanged,
 }) => {
-  const today = new Date().toLocaleDateString("fr-FR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-
   const chartData = [
     {
       name: "Mot de passe changé",
@@ -40,7 +34,7 @@ export const PasswordChangePieChart: React.FC<PasswordChangePieChartProps> = ({
     {
       name: "Mot de passe non changé",
       value: usersWithoutPasswordChanged,
-      fill: "#ef4444",
+      fill: "hsl(0, 84%, 40%)",
     },
   ];
 
@@ -60,8 +54,8 @@ export const PasswordChangePieChart: React.FC<PasswordChangePieChartProps> = ({
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Gestion des mots de passe</CardTitle>
-        <CardDescription>{today}</CardDescription>
+        <CardTitle>Informations Clients</CardTitle>
+        <CardDescription>{totalUsers} clients</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -102,7 +96,7 @@ export const PasswordChangePieChart: React.FC<PasswordChangePieChartProps> = ({
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          Total
+                          Clients
                         </tspan>
                       </text>
                     );

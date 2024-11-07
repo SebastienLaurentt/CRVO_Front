@@ -1,17 +1,18 @@
 import DashboardHeader from "@/components/DashboardHeader";
 import Loader from "@/components/Loader";
 import { PasswordChangePieChart } from "@/components/PasswordChangePieChart";
-import { UserPieChart } from "@/components/UserPieChart"; // Import du nouveau composant
-import { VehiculePieChart } from "@/components/VehiculePieChart";
+import { StatusBarChart } from "@/components/StatusBarChart";
+import { ProductionStatusBarChart } from "@/components/ProductionStatusBarChart";
 import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
-import React from "react";
+import React, { useMemo } from "react";
 
 interface Vehicle {
   _id: string;
   immatriculation: string;
   modele: string;
   dateCreation: string;
+  statusCategory: string;
   user: {
     username: string;
   };
@@ -31,17 +32,14 @@ interface User {
 }
 
 const fetchVehicles = async (): Promise<Vehicle[]> => {
-  const response = await fetch("https://crvo-back.onrender.com/api/vehicles");
+  const token = Cookies.get("token");
+  const response = await fetch("https://crvo-back.onrender.com/api/vehicles", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   if (!response.ok) {
     throw new Error("Erreur lors de la récupération des véhicules.");
-  }
-  return response.json();
-};
-
-const fetchCompletedVehicles = async (): Promise<Vehicle[]> => {
-  const response = await fetch("https://crvo-back.onrender.com/api/completed");
-  if (!response.ok) {
-    throw new Error("Erreur lors de la récupération des véhicules terminés.");
   }
   return response.json();
 };
@@ -72,16 +70,6 @@ const AdminData: React.FC = () => {
   });
 
   const {
-    data: completedVehicles,
-    isLoading: isLoadingCompleted,
-    isError: isErrorCompleted,
-    error: errorCompleted,
-  } = useQuery({
-    queryKey: ["completed-vehicles"],
-    queryFn: fetchCompletedVehicles,
-  });
-
-  const {
     data: members,
     isLoading: isLoadingMembers,
     isError: isErrorMembers,
@@ -91,20 +79,49 @@ const AdminData: React.FC = () => {
     queryFn: fetchMembers,
   });
 
-  if (isErrorVehicles || isErrorCompleted || isErrorMembers) {
+  const vehiclesByStatus = useMemo(() => {
+    if (!vehicles) return {};
+    return vehicles.reduce((acc, vehicle) => {
+      acc[vehicle.statusCategory] = (acc[vehicle.statusCategory] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+  }, [vehicles]);
+
+  const getStatusCounts = useMemo(() => {
+    if (!vehicles) return {
+      dsp: 0,
+      mecanique: 0,
+      jantes: 0,
+      ct: 0,
+      carrosserie: 0,
+      esthetique: 0,
+    };
+    
+    return vehicles.reduce(
+      (acc, vehicle) => {
+        if (vehicle.statusCategory === "Production") {
+          if (vehicle.dsp) acc.dsp++;
+          if (vehicle.mecanique) acc.mecanique++;
+          if (vehicle.jantes) acc.jantes++;
+          if (vehicle.ct) acc.ct++;
+          if (vehicle.carrosserie) acc.carrosserie++;
+          if (vehicle.esthetique) acc.esthetique++;
+        }
+        return acc;
+      },
+      { dsp: 0, mecanique: 0, jantes: 0, ct: 0, carrosserie: 0, esthetique: 0 }
+    );
+  }, [vehicles]);
+
+  if (isErrorVehicles || isErrorMembers) {
     return (
       <div>
         Erreur lors du chargement des données:{" "}
-        {errorVehicles?.message ||
-          errorCompleted?.message ||
-          errorMembers?.message}
+        {errorVehicles?.message || errorMembers?.message}
       </div>
     );
   }
 
-  const ongoingVehicles = vehicles?.length || 0;
-  const completedVehiclesCount = completedVehicles?.length || 0;
-  const totalVehicles = ongoingVehicles + completedVehiclesCount;
   const totalMembers = members?.length || 0;
 
   const usersWithPasswordChanged =
@@ -114,18 +131,14 @@ const AdminData: React.FC = () => {
   return (
     <div className="h-[650px] rounded-l-lg border bg-primary pb-8 2xl:h-[800px]">
       <DashboardHeader title="Graphiques" />
-      {isLoadingVehicles || isLoadingCompleted || isLoadingMembers ? (
+      {isLoadingVehicles || isLoadingMembers ? (
         <div className="flex items-center justify-center py-40">
           <Loader />
         </div>
       ) : (
-        <div className=" mt-8 flex flex-row justify-between px-8">
-          <VehiculePieChart
-            total={totalVehicles}
-            completed={completedVehiclesCount}
-            ongoing={ongoingVehicles}
-          />
-          <UserPieChart totalUsers={totalMembers} />
+        <div className="mt-8 grid grid-cols-3 gap-8 px-8">
+          <StatusBarChart vehiclesByStatus={vehiclesByStatus} />
+          <ProductionStatusBarChart productionCounts={getStatusCounts} />
           <PasswordChangePieChart
             usersWithPasswordChanged={usersWithPasswordChanged}
             usersWithoutPasswordChanged={usersWithoutPasswordChanged}
