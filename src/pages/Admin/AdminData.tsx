@@ -31,18 +31,13 @@ interface User {
   passwordChanged: boolean;
 }
 
-const fetchVehicles = async (): Promise<Vehicle[]> => {
-  const token = Cookies.get("token");
-  const response = await fetch("https://crvo-back.onrender.com/api/vehicles", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  if (!response.ok) {
-    throw new Error("Erreur lors de la récupération des véhicules.");
-  }
-  return response.json();
-};
+interface AdminDataProps {
+  vehicles: Vehicle[] | undefined;
+  isLoadingVehicles: boolean;
+  isErrorVehicles: boolean;
+  errorVehicles: Error | null;
+  syncDate: Date | null | undefined;
+}
 
 const fetchMembers = async (): Promise<User[]> => {
   const token = Cookies.get("token");
@@ -58,17 +53,10 @@ const fetchMembers = async (): Promise<User[]> => {
   return users.filter((user: User) => user.role === "member");
 };
 
-const AdminData: React.FC = () => {
-  const {
-    data: vehicles,
-    isLoading: isLoadingVehicles,
-    isError: isErrorVehicles,
-    error: errorVehicles,
-  } = useQuery({
-    queryKey: ["vehicles"],
-    queryFn: fetchVehicles,
-  });
-
+const AdminData: React.FC<AdminDataProps> = ({
+  vehicles,
+  syncDate
+}) => {
   const {
     data: members,
     isLoading: isLoadingMembers,
@@ -113,11 +101,11 @@ const AdminData: React.FC = () => {
     );
   }, [vehicles]);
 
-  if (isErrorVehicles || isErrorMembers) {
+  if (isErrorMembers) {
     return (
       <div>
         Erreur lors du chargement des données:{" "}
-        {errorVehicles?.message || errorMembers?.message}
+        {errorMembers?.message}
       </div>
     );
   }
@@ -131,19 +119,31 @@ const AdminData: React.FC = () => {
   return (
     <div className="h-[650px] rounded-l-lg border bg-primary pb-8 2xl:h-[800px]">
       <DashboardHeader title="Graphiques" />
-      {isLoadingVehicles || isLoadingMembers ? (
+      {isLoadingMembers ? (
         <div className="flex items-center justify-center py-40">
           <Loader />
         </div>
       ) : (
-        <div className="mt-8 grid grid-cols-3 gap-8 px-8">
-          <StatusBarChart vehiclesByStatus={vehiclesByStatus} />
-          <ProductionStatusBarChart productionCounts={getStatusCounts} />
-          <PasswordChangePieChart
-            usersWithPasswordChanged={usersWithPasswordChanged}
-            usersWithoutPasswordChanged={usersWithoutPasswordChanged}
-          />
-        </div>
+        <>
+          <div className="px-8 py-4">
+            <p>
+              Dernière synchronisation:{" "}
+              <span className="font-medium">
+                {syncDate
+                  ? `${syncDate.toLocaleDateString()} - ${syncDate.toLocaleTimeString()}`
+                  : "Chargement..."}
+              </span>
+            </p>
+          </div>
+          <div className="mt-4 grid grid-cols-3 gap-8 px-8">
+            <StatusBarChart vehiclesByStatus={vehiclesByStatus} />
+            <ProductionStatusBarChart productionCounts={getStatusCounts} />
+            <PasswordChangePieChart
+              usersWithPasswordChanged={usersWithPasswordChanged}
+              usersWithoutPasswordChanged={usersWithoutPasswordChanged}
+            />
+          </div>
+        </>
       )}
     </div>
   );

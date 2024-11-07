@@ -154,7 +154,13 @@ const App = () => {
             element={
               <AdminRoute>
                 <DashboardLayout>
-                  <AdminData />
+                  <AdminData 
+                    vehicles={adminVehicles}
+                    isLoadingVehicles={isLoadingAdminVehicles}
+                    isErrorVehicles={isErrorAdminVehicles}
+                    errorVehicles={errorAdminVehicles}
+                    syncDate={syncDate}
+                  />
                 </DashboardLayout>
               </AdminRoute>
             }
