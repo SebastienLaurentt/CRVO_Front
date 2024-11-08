@@ -173,36 +173,36 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
               : "Chargement..."}
           </span>
         </p>
-        <div className="relative flex flex-row justify-between">
-          <div className="flex flex-row">
+        <div className="flex flex-col space-y-2">
+          <div className="flex flex-row space-x-1">
+            {statusOrder.map((status) => (
+              <Button
+                key={status}
+                variant={statusFilter === status ? "secondary" : "outline"}
+                onClick={() => setStatusFilter(status)}
+              >
+                {status} ({vehicleCountByStatus[status] || 0})
+              </Button>
+            ))}
+          </div>
+          <div className="flex flex-row space-x-2">
             <Input
               placeholder="Recherche"
-              className="text-sm"
+              className="w-[250px] text-sm"
               value={searchQuery}
               hasSearchIcon
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <div className="mx-2 flex flex-row space-x-1">
-              {statusOrder.map((status) => (
-                <Button
-                  key={status}
-                  variant={statusFilter === status ? "secondary" : "outline"}
-                  onClick={() => setStatusFilter(status)}
-                >
-                  {status} ({vehicleCountByStatus[status] || 0})
-                </Button>
-              ))}
-            </div>
+            <Button className="space-x-[5px]" onClick={exportToExcel}>
+              <ChartArea size={20} />
+              <span>Export</span>
+            </Button>
           </div>
-          <Button className="space-x-[5px]" onClick={exportToExcel}>
-            <ChartArea size={20} />
-            <span>Export </span>
-          </Button>
         </div>
       </div>
 
       <div className="relative">
-        <div className="h-[400px] w-full overflow-y-auto px-8 2xl:h-[550px]">
+        <div className="h-[400px] w-full overflow-y-auto px-8 2xl:h-[500px]">
           <table className="w-full table-fixed">
             <thead className="sticky top-0 z-10 bg-background">
               <tr className="border-b text-left">

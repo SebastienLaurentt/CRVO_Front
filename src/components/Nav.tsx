@@ -31,7 +31,7 @@ const Nav = () => {
                 }
               >
                 <Drill size={24} />
-                <span>Liste Rénovations</span>
+                <span>Rénovations</span>
               </NavLink>
             </div>
           </div>
