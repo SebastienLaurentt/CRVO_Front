@@ -139,42 +139,40 @@ const AdminOngoing: React.FC<AdminOngoingProps> = ({
               : "Chargement..."}
           </span>
         </p>
-        <div className="relative flex flex-row justify-between">
-          <div className="flex flex-row space-x-4">
-            <Input
-              placeholder="Recherche"
-              className="text-sm"
-              value={searchQuery}
-              hasSearchIcon
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <div className="flex flex-row space-x-1">
-              {statusOrder.map((status) => (
-                <Button
-                  key={status}
-                  variant={statusFilter === status ? "secondary" : "outline"}
-                  onClick={() => setStatusFilter(status)}
-                >
-                  {status} ({vehicleCountByStatus[status] || 0})
-                </Button>
-              ))}
-            </div>
+        <div className="flex flex-col space-y-2">
+          <div className="flex flex-row space-x-1">
+            {statusOrder.map((status) => (
+              <Button
+                key={status}
+                variant={statusFilter === status ? "secondary" : "outline"}
+                onClick={() => setStatusFilter(status)}
+              >
+                {status} ({vehicleCountByStatus[status] || 0})
+              </Button>
+            ))}
           </div>
+          <Input
+            placeholder="Recherche"
+            className="w-[250px] text-sm"
+            value={searchQuery}
+            hasSearchIcon
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
       </div>
 
       <div className="relative">
-        <div className="h-[400px] w-full overflow-y-auto px-8 2xl:h-[550px]">
+        <div className="h-[400px] w-full overflow-y-auto px-8 2xl:h-[500px]">
           <table className="w-full table-fixed">
             <thead>
               <tr className="sticky top-0 z-10 border-b bg-background text-left">
                 <th className="w-[12%] px-2 py-3 2xl:px-6">Client</th>
-                <th className="w-[12%] px-2 py-3 2xl:px-6">Immatriculation</th>
+                <th className="w-[12%] px-2 py-3 2xl:px-6">Immat</th>
                 <th className="w-[12%] px-2 py-3 2xl:px-6">Modèle</th>
                 <th className="w-[10%] px-2 py-3 text-center 2xl:px-6">
                   Jours de rénovation
                 </th>
-                <th className="w-[10%] px-2 py-3 text-center 2xl:px-6">
+                <th className="w-[12%] px-2 py-3 text-center 2xl:px-6">
                   Jours depuis dernier statut
                 </th>
                 {isProductionSelected && (
