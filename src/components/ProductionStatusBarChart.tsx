@@ -16,12 +16,12 @@ import {
 import { Bar, BarChart, XAxis, YAxis } from "recharts";
 
 const productionStatusColors = {
-  dsp: "hsl(166, 76%, 60%)",         // teal-300
-  mecanique: "hsl(166, 67%, 53%)",    // teal-400
-  jantes: "hsl(166, 64%, 45%)",       // teal-500
-  ct: "hsl(166, 72%, 38%)",           // teal-600
-  carrosserie: "hsl(166, 72%, 31%)",  // teal-700
-  esthetique: "hsl(166, 76%, 25%)",   // teal-800
+  dsp: "hsl(166, 76%, 60%)",         
+  mecanique: "hsl(166, 67%, 53%)",    
+  jantes: "hsl(166, 64%, 45%)",       
+  ct: "hsl(166, 72%, 38%)",           
+  carrosserie: "hsl(166, 72%, 31%)",  
+  esthetique: "hsl(166, 76%, 25%)",   
 };
 
 const productionStatusLabels = {
@@ -42,9 +42,10 @@ interface ProductionStatusBarChartProps {
     carrosserie: number;
     esthetique: number;
   };
+  productionVehiclesCount: number;
 }
 
-export function ProductionStatusBarChart({ productionCounts }: ProductionStatusBarChartProps) {
+export function ProductionStatusBarChart({ productionCounts, productionVehiclesCount }: ProductionStatusBarChartProps) {
   const chartData = Object.entries(productionCounts).map(([status, count]) => ({
     status: productionStatusLabels[status as keyof typeof productionStatusLabels],
     count,
@@ -58,13 +59,11 @@ export function ProductionStatusBarChart({ productionCounts }: ProductionStatusB
     ])
   ) as ChartConfig;
 
-  const totalInProduction = Object.values(productionCounts).reduce((sum, count) => sum + count, 0);
-
   return (
     <Card>
       <CardHeader className="items-center">
         <CardTitle>Statuts en Production</CardTitle>
-        <CardDescription>{totalInProduction} véhicules en attente</CardDescription>
+        <CardDescription>{productionVehiclesCount} véhicules en attente</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-[400px]">

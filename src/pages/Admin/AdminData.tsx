@@ -101,6 +101,10 @@ const AdminData: React.FC<AdminDataProps> = ({
     );
   }, [vehicles]);
 
+  const productionVehiclesCount = useMemo(() => 
+    vehicles?.filter(v => v.statusCategory === "Production").length || 0
+  , [vehicles]);
+
   if (isErrorMembers) {
     return (
       <div>
@@ -137,7 +141,10 @@ const AdminData: React.FC<AdminDataProps> = ({
           </div>
           <div className="mt-4 grid grid-cols-3 gap-8 px-8">
             <StatusBarChart vehiclesByStatus={vehiclesByStatus} />
-            <ProductionStatusBarChart productionCounts={getStatusCounts} />
+            <ProductionStatusBarChart 
+              productionCounts={getStatusCounts} 
+              productionVehiclesCount={productionVehiclesCount}
+            />
             <PasswordChangePieChart
               usersWithPasswordChanged={usersWithPasswordChanged}
               usersWithoutPasswordChanged={usersWithoutPasswordChanged}
