@@ -122,7 +122,6 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
 
   const statusOrder = [
     "Tous",
-    "Livraison",
     "Transport aller",
     "Expertise",
     "Client",
@@ -130,6 +129,7 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
     "Production",
     "Stockage",
     "Transport retour",
+    "Livraison",
   ];
 
   const getStatusCounts = useMemo(() => {
@@ -150,7 +150,9 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
           if (vehicle.jantes) acc.jantes++;
           if (vehicle.ct) acc.ct++;
           if (vehicle.carrosserie) acc.carrosserie++;
-          if (vehicle.esthetique) acc.esthetique++;
+          if (!vehicle.dsp && !vehicle.mecanique && !vehicle.jantes && !vehicle.ct && !vehicle.carrosserie && vehicle.esthetique) {
+            acc.esthetique++;
+          }
         }
         return acc;
       },
@@ -162,7 +164,13 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
     <div className="flex-1 rounded-l-lg border bg-primary pb-8">
       <DashboardHeader
         title="Rénovations en Cours"
-        count={vehicles?.length || 0}
+        count={
+          vehicles?.filter((v) =>
+            ["Magasin", "Client", "Production", "Expertise"].includes(
+              v.statusCategory
+            )
+          ).length || 0
+        }
       />
       <div className="flex flex-col space-y-3 px-8 py-4">
         <p>
