@@ -11,6 +11,7 @@ import AdminOngoing from "./pages/Admin/AdminOngoing";
 import Users from "./pages/Admin/Users";
 import Login from "./pages/Login";
 import MemberOngoing from "./pages/Members/MemberOngoing";
+import MemberData from "./pages/Members/MemberData";
 import CRVOLogo from "/public/images/CRVOLogo.png";
 
 export interface Vehicle {
@@ -127,18 +128,17 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <DashboardLayout>
-                  {role === "admin" && (
+                  {role === "admin" ? (
                     <AdminOngoing
-                      vehicles={adminVehicles || []}
+                      vehicles={adminVehicles}
                       isLoadingVehicles={isLoadingAdminVehicles}
                       isErrorVehicles={isErrorAdminVehicles}
                       errorVehicles={errorAdminVehicles}
                       syncDate={syncDate}
                     />
-                  )}
-                  {role === "member" && (
+                  ) : (
                     <MemberOngoing
-                      vehicles={memberVehicles || []}
+                      vehicles={memberVehicles}
                       isLoadingVehicles={isLoadingMemberVehicles}
                       isErrorVehicles={isErrorMemberVehicles}
                       errorVehicles={errorMemberVehicles}
@@ -152,17 +152,27 @@ const App = () => {
           <Route
             path="/data"
             element={
-              <AdminRoute>
+              <ProtectedRoute>
                 <DashboardLayout>
-                  <AdminData 
-                    vehicles={adminVehicles}
-                    isLoadingVehicles={isLoadingAdminVehicles}
-                    isErrorVehicles={isErrorAdminVehicles}
-                    errorVehicles={errorAdminVehicles}
-                    syncDate={syncDate}
-                  />
+                  {role === "admin" ? (
+                    <AdminData 
+                      vehicles={adminVehicles}
+                      isLoadingVehicles={isLoadingAdminVehicles}
+                      isErrorVehicles={isErrorAdminVehicles}
+                      errorVehicles={errorAdminVehicles}
+                      syncDate={syncDate}
+                    />
+                  ) : (
+                    <MemberData
+                      vehicles={memberVehicles}
+                      isLoadingVehicles={isLoadingMemberVehicles}
+                      isErrorVehicles={isErrorMemberVehicles}
+                      errorVehicles={errorMemberVehicles}
+                      syncDate={syncDate}
+                    />
+                  )}
                 </DashboardLayout>
-              </AdminRoute>
+              </ProtectedRoute>
             }
           />
           <Route

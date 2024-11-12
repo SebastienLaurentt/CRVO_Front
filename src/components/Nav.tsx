@@ -35,22 +35,20 @@ const Nav = () => {
               </NavLink>
             </div>
           </div>
-          {role === "admin" && (
-            <div className="mb-6">
-              <span className="mb-1 font-semibold text-slate-700">Data</span>
-              <NavLink
-                to="/data"
-                className={({ isActive }) =>
-                  `flex flex-row gap-x-2 items-center font-bold  p-2 rounded-md hover:bg-slate-950 hover:text-slate-50 ${
-                    isActive ? "bg-slate-900 text-slate-50" : ""
-                  }`
-                }
-              >
-                <ChartNoAxesCombined size={24} />
-                <span>Graphiques</span>
-              </NavLink>
-            </div>
-          )}
+          <div className="mb-6">
+            <span className="mb-1 font-semibold text-slate-700">Data</span>
+            <NavLink
+              to="/data"
+              className={({ isActive }) =>
+                `flex flex-row gap-x-2 items-center font-bold p-2 rounded-md hover:bg-slate-950 hover:text-slate-50 ${
+                  isActive ? "bg-slate-900 text-slate-50" : ""
+                }`
+              }
+            >
+              <ChartNoAxesCombined size={24} />
+              <span>Graphiques</span>
+            </NavLink>
+          </div>
           {role === "admin" && (
             <>
               <span className="mb-1 font-semibold text-slate-700">Clients</span>
@@ -82,7 +80,7 @@ const Nav = () => {
                 <Button className="space-x-[5px]" asChild>
                   <a href={downloadUrl || ""} download target="_blank">
                     <BookText size={20} />
-                    <span>Graphiques</span>
+                    <span>Autres Graphiques</span>
                   </a>
                 </Button>
               </div>
