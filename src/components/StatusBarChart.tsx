@@ -13,7 +13,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Bar, BarChart, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, XAxis, YAxis, LabelList } from "recharts";
 
 const statusColors = {
   Livraison: "hsl(204, 93%, 60%)",
@@ -88,7 +88,14 @@ export function StatusBarChart({ vehiclesByStatus }: StatusBarChartProps) {
               radius={4}
               fill="hsl(217, 91%, 60%)"
               barSize={40}
-            />
+            >
+              <LabelList
+                position="right"
+                offset={12}
+                className="fill-foreground"
+                fontSize={12}
+              />
+            </Bar>
           </BarChart>
         </ChartContainer>
       </CardContent>

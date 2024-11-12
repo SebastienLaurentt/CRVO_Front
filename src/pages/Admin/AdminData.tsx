@@ -1,6 +1,8 @@
 import DashboardHeader from "@/components/DashboardHeader";
+import { ForecastBarChart } from "@/components/ForecastBarChart";
 import { ProductionStatusBarChart } from "@/components/ProductionStatusBarChart";
 import { StatusBarChart } from "@/components/StatusBarChart";
+
 import React, { useMemo } from "react";
 
 interface Vehicle {
@@ -70,6 +72,66 @@ const AdminData: React.FC<AdminDataProps> = ({ vehicles, syncDate }) => {
     [vehicles]
   );
 
+  const getForecastData = useMemo(() => {
+    if (!vehicles) return [];
+    
+    const activeVehicles = vehicles.filter(v => 
+      !["Stockage", "Transport retour"].includes(v.statusCategory)
+    );
+
+    const currentVehicles = activeVehicles.filter(v => 
+      ["Expertise", "Client", "Magasin", "Production"].includes(v.statusCategory)
+    );
+
+    const forecastRanges = {
+      "Prod actuelle": currentVehicles.length,
+      "1-7 jours": 0,
+      "8-14 jours": 0,
+      "15-21 jours": 0,
+      "22-28 jours": 0,
+      "28+ jours": 0
+    };
+
+    currentVehicles.forEach(vehicle => {
+      let daysToAdd = 3; 
+
+      if (["Transport aller", "Expertise"].includes(vehicle.statusCategory)) {
+        daysToAdd += 20;
+      } else if (["Magasin", "Client"].includes(vehicle.statusCategory)) {
+        daysToAdd += 15;
+      } else if (vehicle.statusCategory === "Production") {
+        if (vehicle.mecanique && vehicle.carrosserie && vehicle.dsp && vehicle.jantes) {
+          daysToAdd += 10;
+        } else if (vehicle.mecanique && vehicle.carrosserie && vehicle.dsp) {
+          daysToAdd += 7;
+        } else if (vehicle.mecanique && vehicle.carrosserie) {
+          daysToAdd += 5;
+        } else if (vehicle.mecanique && vehicle.jantes && vehicle.dsp) {
+          daysToAdd += 7;
+        } else if (vehicle.mecanique && vehicle.dsp) {
+          daysToAdd += 4;
+        } else if (vehicle.mecanique && vehicle.jantes) {
+          daysToAdd += 4;
+        } else if (vehicle.mecanique) {
+          daysToAdd += 1;
+        } else if (vehicle.esthetique) {
+          daysToAdd += 1;
+        }
+      }
+
+      if (daysToAdd <= 7) forecastRanges["1-7 jours"]++;
+      else if (daysToAdd <= 14) forecastRanges["8-14 jours"]++;
+      else if (daysToAdd <= 21) forecastRanges["15-21 jours"]++;
+      else if (daysToAdd <= 28) forecastRanges["22-28 jours"]++;
+      else forecastRanges["28+ jours"]++;
+    });
+
+    return Object.entries(forecastRanges).map(([range, count]) => ({
+      range,
+      vehicles: count
+    }));
+  }, [vehicles]);
+
   return (
     <div className="h-[650px] rounded-l-lg border bg-primary pb-8 2xl:h-[800px]">
       <DashboardHeader title="Graphiques" />
@@ -89,6 +151,7 @@ const AdminData: React.FC<AdminDataProps> = ({ vehicles, syncDate }) => {
           productionCounts={getStatusCounts}
           productionVehiclesCount={productionVehiclesCount}
         />
+        <ForecastBarChart forecastData={getForecastData} />
       </div>
     </div>
   );
