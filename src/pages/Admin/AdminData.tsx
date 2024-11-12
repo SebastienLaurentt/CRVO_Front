@@ -221,7 +221,7 @@ const AdminData: React.FC<AdminDataProps> = ({ vehicles, syncDate }) => {
         />
         <AverageDatesRadialChart averageDates={getAverageDates} />
         <StatusProgressRadialChart progress={getStatusProgress} />
-        <ForecastBarChart forecastData={getForecastData} className="col-span-2" />
+        <ForecastBarChart forecastData={getForecastData}  />
       </div>
     </div>
   );
