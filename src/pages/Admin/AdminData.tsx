@@ -62,7 +62,9 @@ const AdminData: React.FC<AdminDataProps> = ({ vehicles, syncDate }) => {
           if (vehicle.jantes) acc.jantes++;
           if (vehicle.ct) acc.ct++;
           if (vehicle.carrosserie) acc.carrosserie++;
-          if (vehicle.esthetique) acc.esthetique++;
+          if (!vehicle.dsp && !vehicle.mecanique && !vehicle.jantes && !vehicle.ct && !vehicle.carrosserie && vehicle.esthetique) {
+            acc.esthetique++;
+          }
         }
         return acc;
       },
