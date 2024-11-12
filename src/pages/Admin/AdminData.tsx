@@ -213,7 +213,7 @@ const AdminData: React.FC<AdminDataProps> = ({ vehicles, syncDate }) => {
           </span>
         </p>
       </div>
-      <div className="mt-4 grid grid-cols-3 gap-8 px-8">
+      <div className="mt-4 grid grid-cols-2 gap-8 px-8">
         <StatusBarChart vehiclesByStatus={vehiclesByStatus} />
         <ProductionStatusBarChart
           productionCounts={getStatusCounts}
@@ -221,7 +221,7 @@ const AdminData: React.FC<AdminDataProps> = ({ vehicles, syncDate }) => {
         />
         <AverageDatesRadialChart averageDates={getAverageDates} />
         <StatusProgressRadialChart progress={getStatusProgress} />
-        <ForecastBarChart forecastData={getForecastData} />
+        <ForecastBarChart forecastData={getForecastData} className="col-span-2" />
       </div>
     </div>
   );
