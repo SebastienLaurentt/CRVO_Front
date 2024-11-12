@@ -1,7 +1,10 @@
+import { AverageDatesRadialChart } from "@/components/AverageDatesRadialChart";
 import DashboardHeader from "@/components/DashboardHeader";
 import { ForecastBarChart } from "@/components/ForecastBarChart";
 import { ProductionStatusBarChart } from "@/components/ProductionStatusBarChart";
 import { StatusBarChart } from "@/components/StatusBarChart";
+import { StatusProgressRadialChart } from "@/components/StatusProgressRadialChart";
+
 
 import React, { useMemo } from "react";
 
@@ -11,6 +14,7 @@ interface Vehicle {
   modele: string;
   dateCreation: string;
   statusCategory: string;
+  daySinceStatut: number;
   user: {
     username: string;
   };
@@ -74,13 +78,15 @@ const AdminData: React.FC<AdminDataProps> = ({ vehicles, syncDate }) => {
 
   const getForecastData = useMemo(() => {
     if (!vehicles) return [];
-    
-    const activeVehicles = vehicles.filter(v => 
-      !["Stockage", "Transport retour"].includes(v.statusCategory)
+
+    const activeVehicles = vehicles.filter(
+      (v) => !["Stockage", "Transport retour"].includes(v.statusCategory)
     );
 
-    const currentVehicles = activeVehicles.filter(v => 
-      ["Expertise", "Client", "Magasin", "Production"].includes(v.statusCategory)
+    const currentVehicles = activeVehicles.filter((v) =>
+      ["Expertise", "Client", "Magasin", "Production"].includes(
+        v.statusCategory
+      )
     );
 
     const forecastRanges = {
@@ -89,18 +95,23 @@ const AdminData: React.FC<AdminDataProps> = ({ vehicles, syncDate }) => {
       "8-14 jours": 0,
       "15-21 jours": 0,
       "22-28 jours": 0,
-      "28+ jours": 0
+      "28+ jours": 0,
     };
 
-    currentVehicles.forEach(vehicle => {
-      let daysToAdd = 3; 
+    currentVehicles.forEach((vehicle) => {
+      let daysToAdd = 3;
 
       if (["Transport aller", "Expertise"].includes(vehicle.statusCategory)) {
         daysToAdd += 20;
       } else if (["Magasin", "Client"].includes(vehicle.statusCategory)) {
         daysToAdd += 15;
       } else if (vehicle.statusCategory === "Production") {
-        if (vehicle.mecanique && vehicle.carrosserie && vehicle.dsp && vehicle.jantes) {
+        if (
+          vehicle.mecanique &&
+          vehicle.carrosserie &&
+          vehicle.dsp &&
+          vehicle.jantes
+        ) {
           daysToAdd += 10;
         } else if (vehicle.mecanique && vehicle.carrosserie && vehicle.dsp) {
           daysToAdd += 7;
@@ -128,12 +139,91 @@ const AdminData: React.FC<AdminDataProps> = ({ vehicles, syncDate }) => {
 
     return Object.entries(forecastRanges).map(([range, count]) => ({
       range,
-      vehicles: count
+      vehicles: count,
     }));
   }, [vehicles]);
 
+  const daysSince = (dateString: string): number => {
+    const creationDate = new Date(dateString);
+    const today = new Date();
+    const timeDiff = today.getTime() - creationDate.getTime();
+    return Math.floor(timeDiff / (1000 * 3600 * 24));
+  };
+
+  const getAverageDates = useMemo(() => {
+    if (!vehicles) return { active: 0, inactive: 0 };
+
+    const activeVehicles = vehicles.filter((v) =>
+      ["Production", "Magasin", "Expertise", "Client"].includes(
+        v.statusCategory
+      )
+    );
+
+    const inactiveVehicles = vehicles.filter((v) =>
+      ["Stockage", "Transport retour"].includes(v.statusCategory)
+    );
+
+    console.log(
+      "Active vehicles:",
+      activeVehicles.map((v) => ({
+        status: v.statusCategory,
+        dateCreation: v.dateCreation,
+        days: daysSince(v.dateCreation),
+      }))
+    );
+
+    const activeAvg =
+      activeVehicles.length > 0
+        ? activeVehicles.reduce(
+            (sum, v) => sum + daysSince(v.dateCreation),
+            0
+          ) / activeVehicles.length
+        : 0;
+
+    const inactiveAvg =
+      inactiveVehicles.length > 0
+        ? inactiveVehicles.reduce(
+            (sum, v) => sum + daysSince(v.dateCreation),
+            0
+          ) / inactiveVehicles.length
+        : 0;
+
+    console.log("Active average days:", activeAvg);
+    console.log("Inactive average days:", inactiveAvg);
+
+    return {
+      active: Math.round(activeAvg),
+      inactive: Math.round(inactiveAvg),
+    };
+  }, [vehicles]);
+
+  const getStatusProgress = useMemo(() => {
+    if (!vehicles) return { active: 0, inactive: 0 };
+
+    const activeVehicles = vehicles.filter((v) =>
+      ["Production", "Magasin", "Expertise", "Client"].includes(v.statusCategory)
+    );
+
+    const inactiveVehicles = vehicles.filter((v) =>
+      ["Stockage", "Transport retour"].includes(v.statusCategory)
+    );
+
+    const activeAvg = activeVehicles.length > 0
+      ? activeVehicles.reduce((sum, v) => sum + (v.daySinceStatut || 0), 0) / activeVehicles.length
+      : 0;
+
+    const inactiveAvg = inactiveVehicles.length > 0
+      ? inactiveVehicles.reduce((sum, v) => sum + (v.daySinceStatut || 0), 0) / inactiveVehicles.length
+      : 0;
+
+    return {
+      active: Math.round(activeAvg),
+      inactive: Math.round(inactiveAvg),
+    };
+  }, [vehicles]);
+
   return (
-    <div className="h-[650px] rounded-l-lg border bg-primary pb-8 2xl:h-[800px]">
+    <div className="rounded-l-lg border bg-primary pb-8">
       <DashboardHeader title="Graphiques" />
       <div className="px-8 py-4">
         <p>
@@ -151,6 +241,8 @@ const AdminData: React.FC<AdminDataProps> = ({ vehicles, syncDate }) => {
           productionCounts={getStatusCounts}
           productionVehiclesCount={productionVehiclesCount}
         />
+        <AverageDatesRadialChart averageDates={getAverageDates} />
+        <StatusProgressRadialChart progress={getStatusProgress} />
         <ForecastBarChart forecastData={getForecastData} />
       </div>
     </div>
