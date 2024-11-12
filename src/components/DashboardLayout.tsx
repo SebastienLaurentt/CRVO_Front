@@ -5,9 +5,9 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   return (
-    <div className="min-h-screen">
+    <div className="flex min-h-screen">
       <Nav />
-      <main className="ml-[240px] p-6 2xl:ml-[360px] 3xl:mx-auto 3xl:w-[2000px] 3xl:gap-x-8">
+      <main className="flex-1 p-6 3xl:mx-auto 3xl:w-[2000px] 3xl:gap-x-8">
         {children}
       </main>
     </div>

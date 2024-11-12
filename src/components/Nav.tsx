@@ -12,7 +12,7 @@ const Nav = () => {
   };
 
   return (
-    <nav className="fixed left-0 top-0 flex h-screen w-[240px] flex-col justify-between bg-white px-4 py-40 2xl:w-[360px] 2xl:px-12">
+    <nav className="flex h-screen w-[240px] flex-col justify-between bg-white px-4 py-40 2xl:w-[360px] 2xl:px-12">
       <div className="">
         <img src={CRVOLogo} alt="Logo CRVO" className="mb-12 w-full" />
         <div className="flex flex-col">
