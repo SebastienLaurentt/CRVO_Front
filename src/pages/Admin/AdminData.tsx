@@ -159,19 +159,6 @@ const AdminData: React.FC<AdminDataProps> = ({ vehicles, syncDate }) => {
       )
     );
 
-    const inactiveVehicles = vehicles.filter((v) =>
-      ["Stockage", "Transport retour"].includes(v.statusCategory)
-    );
-
-    console.log(
-      "Active vehicles:",
-      activeVehicles.map((v) => ({
-        status: v.statusCategory,
-        dateCreation: v.dateCreation,
-        days: daysSince(v.dateCreation),
-      }))
-    );
-
     const activeAvg =
       activeVehicles.length > 0
         ? activeVehicles.reduce(
@@ -180,20 +167,9 @@ const AdminData: React.FC<AdminDataProps> = ({ vehicles, syncDate }) => {
           ) / activeVehicles.length
         : 0;
 
-    const inactiveAvg =
-      inactiveVehicles.length > 0
-        ? inactiveVehicles.reduce(
-            (sum, v) => sum + daysSince(v.dateCreation),
-            0
-          ) / inactiveVehicles.length
-        : 0;
-
-    console.log("Active average days:", activeAvg);
-    console.log("Inactive average days:", inactiveAvg);
-
     return {
       active: Math.round(activeAvg),
-      inactive: Math.round(inactiveAvg),
+      inactive: 16,
     };
   }, [vehicles]);
 
