@@ -90,6 +90,7 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
       Modèle: vehicle.modele,
       Statut: vehicle.statusCategory,
       "Jours depuis Création": daysSince(vehicle.dateCreation),
+      "Jours depuis dernier statut": vehicle.daySinceStatut || 0,
       DSP: vehicle.dsp ? "En cours" : "Fait",
       Mécanique: vehicle.mecanique ? "En cours" : "Fait",
       Jantes: vehicle.jantes ? "En cours" : "Fait",
