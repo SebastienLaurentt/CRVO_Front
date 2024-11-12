@@ -209,7 +209,7 @@ const AdminData: React.FC<AdminDataProps> = ({ vehicles, syncDate }) => {
           <span className="font-medium">
             {syncDate
               ? `${syncDate.toLocaleDateString()} - ${syncDate.toLocaleTimeString()}`
-              : "Chargement..."}
+              : "Chargement.."}
           </span>
         </p>
       </div>
