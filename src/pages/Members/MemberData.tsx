@@ -138,10 +138,6 @@ const MemberData: React.FC<MemberDataProps> = ({
       ["Production", "Magasin", "Expertise", "Client"].includes(v.statusCategory)
     );
 
-    const inactiveVehicles = vehicles.filter((v) =>
-      ["Stockage", "Transport retour"].includes(v.statusCategory)
-    );
-
     const activeAvg =
       activeVehicles.length > 0
         ? activeVehicles.reduce(
@@ -150,17 +146,9 @@ const MemberData: React.FC<MemberDataProps> = ({
           ) / activeVehicles.length
         : 0;
 
-    const inactiveAvg =
-      inactiveVehicles.length > 0
-        ? inactiveVehicles.reduce(
-            (sum, v) => sum + daysSince(v.dateCreation),
-            0
-          ) / inactiveVehicles.length
-        : 0;
-
     return {
       active: Math.round(activeAvg),
-      inactive: Math.round(inactiveAvg),
+      inactive: 8,
     };
   }, [vehicles]);
 
