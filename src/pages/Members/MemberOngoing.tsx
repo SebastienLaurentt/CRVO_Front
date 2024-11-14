@@ -151,9 +151,7 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
           if (vehicle.jantes) acc.jantes++;
           if (vehicle.ct) acc.ct++;
           if (vehicle.carrosserie) acc.carrosserie++;
-          if (!vehicle.dsp && !vehicle.mecanique && !vehicle.jantes && !vehicle.ct && !vehicle.carrosserie && vehicle.esthetique) {
-            acc.esthetique++;
-          }
+          if (vehicle.esthetique) acc.esthetique++;
         }
         return acc;
       },
@@ -378,10 +376,8 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
                           )}
                         </td>
                         <td className="p-4 text-center">
-                          {vehicle.esthetique ? (
+                          {vehicle.esthetique && (
                             <CalendarClock className="inline-block text-[#fbbf24]" />
-                          ) : (
-                            <BadgeCheck className="inline-block text-[#16a34a]" />
                           )}
                         </td>
                       </>

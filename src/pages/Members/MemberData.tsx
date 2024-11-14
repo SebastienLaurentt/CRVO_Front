@@ -1,9 +1,8 @@
+import { AverageDatesRadialChart } from "@/components/AverageDatesRadialChart";
 import DashboardHeader from "@/components/DashboardHeader";
 import { ForecastBarChart } from "@/components/ForecastBarChart";
 import { ProductionStatusBarChart } from "@/components/ProductionStatusBarChart";
 import { StatusBarChart } from "@/components/StatusBarChart";
-import { AverageDatesRadialChart } from "@/components/AverageDatesRadialChart";
-import { StatusProgressRadialChart } from "@/components/StatusProgressRadialChart";
 import React, { useMemo } from "react";
 import { Vehicle } from "../../App";
 
@@ -15,12 +14,12 @@ interface MemberDataProps {
   syncDate: Date | null | undefined;
 }
 
-const MemberData: React.FC<MemberDataProps> = ({ 
+const MemberData: React.FC<MemberDataProps> = ({
   vehicles,
   isLoadingVehicles,
   isErrorVehicles,
   errorVehicles,
-  syncDate 
+  syncDate,
 }) => {
   const daysSince = (dateString: string): number => {
     const creationDate = new Date(dateString);
@@ -56,9 +55,7 @@ const MemberData: React.FC<MemberDataProps> = ({
           if (vehicle.jantes) acc.jantes++;
           if (vehicle.ct) acc.ct++;
           if (vehicle.carrosserie) acc.carrosserie++;
-          if (!vehicle.dsp && !vehicle.mecanique && !vehicle.jantes && !vehicle.ct && !vehicle.carrosserie && vehicle.esthetique) {
-            acc.esthetique++;
-          }
+          if (vehicle.esthetique) acc.esthetique++;
         }
         return acc;
       },
@@ -67,19 +64,22 @@ const MemberData: React.FC<MemberDataProps> = ({
   }, [vehicles]);
 
   const productionVehiclesCount = useMemo(
-    () => vehicles?.filter((v) => v.statusCategory === "Production").length || 0,
+    () =>
+      vehicles?.filter((v) => v.statusCategory === "Production").length || 0,
     [vehicles]
   );
 
   const getForecastData = useMemo(() => {
     if (!vehicles) return [];
-    
-    const activeVehicles = vehicles.filter(v => 
-      !["Stockage", "Transport retour"].includes(v.statusCategory)
+
+    const activeVehicles = vehicles.filter(
+      (v) => !["Stockage", "Transport retour"].includes(v.statusCategory)
     );
 
-    const currentVehicles = activeVehicles.filter(v => 
-      ["Expertise", "Client", "Magasin", "Production"].includes(v.statusCategory)
+    const currentVehicles = activeVehicles.filter((v) =>
+      ["Expertise", "Client", "Magasin", "Production"].includes(
+        v.statusCategory
+      )
     );
 
     const forecastRanges = {
@@ -88,18 +88,23 @@ const MemberData: React.FC<MemberDataProps> = ({
       "8-14 jours": 0,
       "15-21 jours": 0,
       "22-28 jours": 0,
-      "28+ jours": 0
+      "28+ jours": 0,
     };
 
-    currentVehicles.forEach(vehicle => {
-      let daysToAdd = 3; 
+    currentVehicles.forEach((vehicle) => {
+      let daysToAdd = 3;
 
       if (["Transport aller", "Expertise"].includes(vehicle.statusCategory)) {
         daysToAdd += 20;
       } else if (["Magasin", "Client"].includes(vehicle.statusCategory)) {
         daysToAdd += 15;
       } else if (vehicle.statusCategory === "Production") {
-        if (vehicle.mecanique && vehicle.carrosserie && vehicle.dsp && vehicle.jantes) {
+        if (
+          vehicle.mecanique &&
+          vehicle.carrosserie &&
+          vehicle.dsp &&
+          vehicle.jantes
+        ) {
           daysToAdd += 10;
         } else if (vehicle.mecanique && vehicle.carrosserie && vehicle.dsp) {
           daysToAdd += 7;
@@ -127,7 +132,7 @@ const MemberData: React.FC<MemberDataProps> = ({
 
     return Object.entries(forecastRanges).map(([range, count]) => ({
       range,
-      vehicles: count
+      vehicles: count,
     }));
   }, [vehicles]);
 
@@ -135,7 +140,13 @@ const MemberData: React.FC<MemberDataProps> = ({
     if (!vehicles) return { active: 0, inactive: 0 };
 
     const activeVehicles = vehicles.filter((v) =>
-      ["Production", "Magasin", "Expertise", "Client"].includes(v.statusCategory)
+      ["Production", "Magasin", "Expertise", "Client"].includes(
+        v.statusCategory
+      )
+    );
+
+    const inactiveVehicles = vehicles.filter((v) =>
+      ["Stockage", "Transport retour"].includes(v.statusCategory)
     );
 
     const activeAvg =
@@ -146,30 +157,13 @@ const MemberData: React.FC<MemberDataProps> = ({
           ) / activeVehicles.length
         : 0;
 
-    return {
-      active: Math.round(activeAvg),
-      inactive: 8,
-    };
-  }, [vehicles]);
-
-  const getStatusProgress = useMemo(() => {
-    if (!vehicles) return { active: 0, inactive: 0 };
-
-    const activeVehicles = vehicles.filter((v) =>
-      ["Production", "Magasin", "Expertise", "Client"].includes(v.statusCategory)
-    );
-
-    const inactiveVehicles = vehicles.filter((v) =>
-      ["Stockage", "Transport retour"].includes(v.statusCategory)
-    );
-
-    const activeAvg = activeVehicles.length > 0
-      ? activeVehicles.reduce((sum, v) => sum + (v.daySinceStatut || 0), 0) / activeVehicles.length
-      : 0;
-
-    const inactiveAvg = inactiveVehicles.length > 0
-      ? inactiveVehicles.reduce((sum, v) => sum + (v.daySinceStatut || 0), 0) / inactiveVehicles.length
-      : 0;
+    const inactiveAvg =
+      inactiveVehicles.length > 0
+        ? inactiveVehicles.reduce(
+            (sum, v) => sum + (v.daySinceStatut || 0),
+            0
+          ) / inactiveVehicles.length
+        : 0;
 
     return {
       active: Math.round(activeAvg),
@@ -182,7 +176,14 @@ const MemberData: React.FC<MemberDataProps> = ({
   }
 
   if (isErrorVehicles) {
-    return <div>Erreur: {errorVehicles instanceof Error ? errorVehicles.message : "Une erreur est survenue"}</div>;
+    return (
+      <div>
+        Erreur:{" "}
+        {errorVehicles instanceof Error
+          ? errorVehicles.message
+          : "Une erreur est survenue"}
+      </div>
+    );
   }
 
   return (
@@ -205,11 +206,10 @@ const MemberData: React.FC<MemberDataProps> = ({
           productionVehiclesCount={productionVehiclesCount}
         />
         <AverageDatesRadialChart averageDates={getAverageDates} />
-        <StatusProgressRadialChart progress={getStatusProgress} />
-        <ForecastBarChart forecastData={getForecastData}  />
+        <ForecastBarChart forecastData={getForecastData} />
       </div>
     </div>
   );
 };
 
-export default MemberData; 
+export default MemberData;
