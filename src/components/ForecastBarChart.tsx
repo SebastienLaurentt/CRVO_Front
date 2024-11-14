@@ -1,6 +1,10 @@
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis, Cell } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis } from "recharts";
 
 interface ForecastData {
   range: string;
@@ -22,29 +26,31 @@ export function ForecastBarChart({ forecastData }: ForecastBarChartProps) {
   const getBarColor = (range: string) => {
     switch (range) {
       case "Prod actuelle":
-        return "#0a0a0a"; 
+        return "#0a0a0a";
       case "1-7 jours":
-        return "#262626"; 
+        return "#262626";
       case "8-14 jours":
-        return "#404040"; 
+        return "#404040";
       case "15-21 jours":
-        return "#525252"; 
+        return "#525252";
       case "22-28 jours":
-        return "#737373"; 
+        return "#737373";
       case "28+ jours":
-        return "#a3a3a3"; 
+        return "#a3a3a3";
       default:
-        return "#334155"; 
+        return "#334155";
     }
   };
 
   return (
     <Card>
       <CardHeader className="items-center">
-        <CardTitle className="text-slate-900">Estimation des Livraisons</CardTitle>
+        <CardTitle className="text-slate-900">
+          Estimation des Livraisons
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="h-[250px]">
+        <ChartContainer config={chartConfig} className="mx-auto h-[250px]">
           <BarChart
             data={forecastData}
             margin={{
@@ -54,10 +60,7 @@ export function ForecastBarChart({ forecastData }: ForecastBarChartProps) {
               bottom: 20,
             }}
           >
-            <CartesianGrid 
-              vertical={false} 
-              stroke="#e2e8f0"
-            />
+            <CartesianGrid vertical={false} stroke="#e2e8f0" />
             <XAxis
               dataKey="range"
               tickLine={false}
@@ -69,14 +72,11 @@ export function ForecastBarChart({ forecastData }: ForecastBarChartProps) {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar 
-              dataKey="vehicles" 
-              radius={8}
-            >
+            <Bar dataKey="vehicles" radius={8}>
               {forecastData.map((entry) => (
-                <Cell 
-                  key={`cell-${entry.range}`} 
-                  fill={getBarColor(entry.range)} 
+                <Cell
+                  key={`cell-${entry.range}`}
+                  fill={getBarColor(entry.range)}
                 />
               ))}
               <LabelList
@@ -91,4 +91,4 @@ export function ForecastBarChart({ forecastData }: ForecastBarChartProps) {
       </CardContent>
     </Card>
   );
-} 
+}

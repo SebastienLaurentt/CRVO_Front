@@ -85,19 +85,29 @@ const MemberOngoing: React.FC<MemberOngoingProps> = ({
 
     const workbook = XLSX.utils.book_new();
 
-    const data = vehicles.map((vehicle) => ({
-      Immatriculation: vehicle.immatriculation,
-      Modèle: vehicle.modele,
-      Statut: vehicle.statusCategory,
-      "Jours depuis Création": daysSince(vehicle.dateCreation),
-      "Jours depuis dernier statut": vehicle.daySinceStatut || 0,
-      DSP: vehicle.dsp ? "En cours" : "Fait",
-      Mécanique: vehicle.mecanique ? "En cours" : "Fait",
-      Jantes: vehicle.jantes ? "En cours" : "Fait",
-      CT: vehicle.ct ? "En cours" : "Fait",
-      Carrosserie: vehicle.carrosserie ? "En cours" : "Fait",
-      Esthétique: vehicle.esthetique ? "En cours" : "Fait",
-    }));
+    const data = vehicles.map((vehicle) => {
+      const baseData = {
+        Immatriculation: vehicle.immatriculation,
+        Modèle: vehicle.modele,
+        Statut: vehicle.statusCategory,
+        "Jours depuis Création": daysSince(vehicle.dateCreation),
+        "Jours depuis dernier statut": vehicle.daySinceStatut || 0,
+      };
+
+      if (vehicle.statusCategory === "Production") {
+        return {
+          ...baseData,
+          DSP: vehicle.dsp ? "En cours" : "Fait",
+          Mécanique: vehicle.mecanique ? "En cours" : "Fait",
+          Jantes: vehicle.jantes ? "En cours" : "Fait",
+          CT: vehicle.ct ? "En cours" : "Fait",
+          Carrosserie: vehicle.carrosserie ? "En cours" : "Fait",
+          Esthétique: vehicle.esthetique ? "En cours" : "",
+        };
+      }
+
+      return baseData;
+    });
 
     const worksheet = XLSX.utils.json_to_sheet(data);
 
